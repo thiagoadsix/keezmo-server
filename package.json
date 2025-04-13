@@ -1,7 +1,7 @@
 {
-  "name": "ts-node-template",
+  "name": "keezmo",
   "version": "1.0.0",
-  "description": "Template for a Node.js project with TypeScript",
+  "description": "API for Keezmo",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
@@ -14,15 +14,28 @@
     "release": "standard-version"
   },
   "keywords": [
-    "template",
+    "keezmo",
     "node",
-    "typescript"
+    "typescript",
+    "aws",
+    "api",
+    "rest",
+    "serverless"
   ],
   "author": "Thiago Andrade Silva",
   "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.788.0",
+    "@aws-sdk/lib-dynamodb": "^3.788.0",
+    "@middy/core": "^6.1.6",
+    "aws-cdk-lib": "^2.189.0",
+    "constructs": "^10.4.2"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.5.0",
-    "@types/node": "^22.5.4",
+    "@serverless/typescript": "^4.11.1",
+    "@types/aws-lambda": "^8.10.149",
+    "@types/node": "^22.14.1",
     "commitizen": "^4.3.1",
     "commitlint": "^19.5.0",
     "cz-conventional-changelog": "^3.3.0",
@@ -31,8 +44,8 @@
     "nodemon": "^3.1.4",
     "standard-version": "^9.5.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4",
-    "vitest": "^3.0.9"
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
   },
   "config": {
     "commitizen": {
