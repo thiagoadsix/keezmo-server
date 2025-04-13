@@ -1,0 +1,42 @@
+{
+  "name": "ts-node-template",
+  "version": "1.0.0",
+  "description": "Template for a Node.js project with TypeScript",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "node dist/index.js",
+    "dev": "nodemon",
+    "prepare": "husky",
+    "commit": "git add . && git-cz",
+    "release": "standard-version"
+  },
+  "keywords": [
+    "template",
+    "node",
+    "typescript"
+  ],
+  "author": "Thiago Andrade Silva",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/config-conventional": "^19.5.0",
+    "@types/node": "^22.5.4",
+    "commitizen": "^4.3.1",
+    "commitlint": "^19.5.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "cz-customizable": "^7.0.0",
+    "husky": "^9.1.6",
+    "nodemon": "^3.1.4",
+    "standard-version": "^9.5.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4",
+    "vitest": "^3.0.9"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    }
+  }
+}
