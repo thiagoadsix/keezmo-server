@@ -1,4 +1,7 @@
+import { Card } from '@/domain/entities/card'
 import { DeckType } from '@/domain/value-objects/deck-type'
+
+import { mockId } from '../mocks/generate-id.mock'
 
 export const validDeckProps = {
   title: 'Math Concepts',
@@ -16,6 +19,32 @@ export const validMultipleChoiceDeckProps = {
   title: 'History Quiz',
   description: 'Test your knowledge of world history',
   type: new DeckType('multiple_choice'),
+}
+
+export const validDeckWithCardsProps = {
+  title: 'Geography',
+  description: 'Geography questions',
+  type: new DeckType('multiple_choice'),
+  cards: [
+    new Card({
+      deckId: mockId,
+      question: 'What is the capital of France?',
+      answer: 'Paris',
+      options: ['London', 'Paris', 'Berlin', 'Madrid'],
+      answerIndex: 1,
+      createdAt: '2023-01-01T10:00:00Z',
+      updatedAt: '2023-01-01T10:00:00Z',
+    }),
+    new Card({
+      deckId: mockId,
+      question: 'What is the capital of Germany?',
+      answer: 'Berlin',
+      options: ['London', 'Paris', 'Berlin', 'Madrid'],
+      answerIndex: 2,
+      createdAt: '2023-01-01T10:00:00Z',
+      updatedAt: '2023-01-01T10:00:00Z',
+    }),
+  ],
 }
 
 export const invalidDeckPropsWithEmptyTitle = {

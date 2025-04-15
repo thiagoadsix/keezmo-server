@@ -1,4 +1,4 @@
-import { InvalidDeckTypeError } from '@/domain/errors/invalid-deck-type-error'
+import { InvalidDeckTypeError } from '@/domain/errors/deck/invalid-deck-type-error'
 
 export enum DeckTypeEnum {
   FLASHCARD = 'flashcard',

@@ -1,5 +1,6 @@
-import { InvalidDeckDescriptionError } from '@/domain/errors/invalid-deck-description-error'
-import { InvalidDeckTitleError } from '@/domain/errors/invalid-deck-title-error'
+import { Card } from '@/domain/entities/card'
+import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error'
+import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
 import { DeckType } from '@/domain/value-objects/deck-type'
 
 import { generateId } from '@/shared/utils/generate-id'
@@ -8,6 +9,7 @@ interface DeckProps {
   title: string
   description: string
   type: DeckType
+  cards?: Card[]
   createdAt?: string
   updatedAt?: string
 }
@@ -17,6 +19,7 @@ export class Deck {
   public title: string
   public description: string
   public type: DeckType
+  public cards: Card[]
   public readonly createdAt: string
   public updatedAt: string
 
@@ -33,6 +36,7 @@ export class Deck {
     this.title = props.title
     this.description = props.description
     this.type = props.type
+    this.cards = props.cards || []
     this.createdAt = props.createdAt || new Date().toISOString()
     this.updatedAt = props.updatedAt || this.createdAt
   }
@@ -66,5 +70,19 @@ export class Deck {
   public updateType(newType: DeckType): void {
     this.type = newType
     this.updatedAt = new Date().toISOString()
+  }
+
+  public addCard(card: Card): void {
+    this.cards.push(card)
+    this.updatedAt = new Date().toISOString()
+  }
+
+  public removeCard(cardId: string): void {
+    this.cards = this.cards.filter((card) => card.id !== cardId)
+    this.updatedAt = new Date().toISOString()
+  }
+
+  public getCardById(cardId: string): Card | undefined {
+    return this.cards.find((card) => card.id === cardId)
   }
 }

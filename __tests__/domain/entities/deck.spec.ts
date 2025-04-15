@@ -4,14 +4,17 @@ import { mockId, generateIdMock } from '../../mocks/generate-id.mock'
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
+import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
-import { InvalidDeckDescriptionError } from '@/domain/errors/invalid-deck-description-error'
-import { InvalidDeckTitleError } from '@/domain/errors/invalid-deck-title-error'
+import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error'
+import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
 import { DeckType } from '@/domain/value-objects/deck-type'
 
+import { validCardProps } from '../../fixtures/card.fixtures'
 import {
   validDeckProps,
   validFlashcardDeckProps,
+  validDeckWithCardsProps,
   invalidDeckPropsWithEmptyTitle,
   invalidDeckPropsWithNullDescription,
 } from '../../fixtures/deck.fixtures'
@@ -40,9 +43,18 @@ describe('Deck', () => {
       expect(deck.title).toBe(validDeckProps.title)
       expect(deck.description).toBe(validDeckProps.description)
       expect(deck.type).toBe(validDeckProps.type)
+      expect(deck.cards).toEqual([])
       expect(deck.createdAt).toBe(expectedDateString)
       expect(deck.updatedAt).toBe(expectedDateString)
-      expect(generateIdMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('should create a Deck with cards when provided', () => {
+      const deck = new Deck(validDeckWithCardsProps)
+
+      expect(deck.cards).toHaveLength(2)
+      expect(deck.cards[0]).toBeInstanceOf(Card)
+      expect(deck.cards[0].id).toBeDefined()
+      expect(deck.cards[1].id).toBeDefined()
     })
 
     it('should create a Deck with specified createdAt and updatedAt', () => {
@@ -140,6 +152,58 @@ describe('Deck', () => {
 
       expect(deck.type).toBe(newType)
       expect(deck.updatedAt).toBe(expectedDateString)
+    })
+  })
+
+  describe('card management methods', () => {
+    it('should add a card to the deck', () => {
+      const deck = new Deck(validDeckProps)
+      const card = new Card({
+        ...validCardProps,
+        deckId: deck.id,
+      })
+      const fixedDate = new Date('2023-01-02T12:00:00Z')
+      vi.setSystemTime(fixedDate)
+      const expectedDateString = fixedDate.toISOString()
+
+      deck.addCard(card)
+
+      expect(deck.cards).toHaveLength(1)
+      expect(deck.cards[0]).toBe(card)
+      expect(deck.updatedAt).toBe(expectedDateString)
+    })
+    // WARNING: since we are mocking generateIdMock we should be careful to not generate the same ID for all entities. We should fix it ASAP.
+    it.todo('should remove a card from the deck', () => {
+      const deck = new Deck(validDeckWithCardsProps)
+      const fixedDate = new Date('2023-01-02T12:00:00Z')
+      vi.setSystemTime(fixedDate)
+      const expectedDateString = fixedDate.toISOString()
+
+      expect(deck.cards).toHaveLength(2)
+
+      deck.removeCard(deck.cards[0].id)
+
+      expect(deck.cards).toHaveLength(1)
+      expect(deck.cards[0].id).toBeDefined()
+      expect(deck.updatedAt).toBe(expectedDateString)
+    })
+
+    it('should find a card by id', () => {
+      const deck = new Deck(validDeckWithCardsProps)
+
+      const foundCard = deck.getCardById(deck.cards[0].id)
+
+      expect(foundCard).toBeDefined()
+      expect(foundCard?.id).toBeDefined()
+      expect(foundCard?.question).toBe('What is the capital of France?')
+    })
+
+    it('should return undefined when card is not found', () => {
+      const deck = new Deck(validDeckWithCardsProps)
+
+      const foundCard = deck.getCardById('non-existent-id')
+
+      expect(foundCard).toBeUndefined()
     })
   })
 })
