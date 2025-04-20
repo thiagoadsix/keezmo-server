@@ -1,5 +1,5 @@
 import { Card } from '@/domain/entities/card'
-import { DeckType } from '@/domain/value-objects/deck-type'
+import { DeckType } from '@/domain/value-objects'
 
 import { mockId } from '../mocks/generate-id.mock'
 

@@ -1,7 +1,7 @@
 import { Card } from '@/domain/entities/card'
 import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error'
 import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
-import { DeckType } from '@/domain/value-objects/deck-type'
+import { DeckType } from '@/domain/value-objects'
 
 import { generateId } from '@/shared/utils/generate-id'
 

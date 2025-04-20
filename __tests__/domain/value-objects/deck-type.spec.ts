@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { InvalidDeckTypeError } from '@/domain/errors/deck/invalid-deck-type-error'
-import { DeckType, DeckTypeEnum } from '@/domain/value-objects/deck-type'
+import { DeckType, DeckTypeEnum } from '@/domain/value-objects'
 
 describe('DeckType', () => {
   describe('constructor', () => {

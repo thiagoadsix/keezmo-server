@@ -8,7 +8,7 @@ import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
 import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error'
 import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
-import { DeckType } from '@/domain/value-objects/deck-type'
+import { DeckType } from '@/domain/value-objects'
 
 import { validCardProps } from '../../fixtures/card.fixtures'
 import {
@@ -173,18 +173,43 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(expectedDateString)
     })
     // WARNING: since we are mocking generateIdMock we should be careful to not generate the same ID for all entities. We should fix it ASAP.
-    it.todo('should remove a card from the deck', () => {
-      const deck = new Deck(validDeckWithCardsProps)
+    it('should remove a card from the deck', () => {
+      // Create a fresh deck without cards
+      const deck = new Deck(validDeckProps)
+
+      // Create cards with manually assigned IDs instead of using generateId
+      const card1 = new Card({
+        deckId: deck.id,
+        question: 'Question 1',
+        answer: 'Answer 1',
+      })
+
+      const card2 = new Card({
+        deckId: deck.id,
+        question: 'Question 2',
+        answer: 'Answer 2',
+      })
+
+      // Manually set card IDs to ensure they're unique
+      Object.defineProperty(card1, 'id', { value: 'card-id-1' })
+      Object.defineProperty(card2, 'id', { value: 'card-id-2' })
+
+      // Add cards to the deck
+      deck.addCard(card1)
+      deck.addCard(card2)
+
       const fixedDate = new Date('2023-01-02T12:00:00Z')
       vi.setSystemTime(fixedDate)
       const expectedDateString = fixedDate.toISOString()
 
       expect(deck.cards).toHaveLength(2)
+      expect(deck.cards[0].id).toBe('card-id-1')
+      expect(deck.cards[1].id).toBe('card-id-2')
 
-      deck.removeCard(deck.cards[0].id)
+      deck.removeCard('card-id-1')
 
       expect(deck.cards).toHaveLength(1)
-      expect(deck.cards[0].id).toBeDefined()
+      expect(deck.cards[0].id).toBe('card-id-2')
       expect(deck.updatedAt).toBe(expectedDateString)
     })
 
