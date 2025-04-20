@@ -13,6 +13,7 @@ import { validDeckProps } from '../../../fixtures/deck.fixtures'
 
 describe('CreateDeckUseCase', () => {
   let useCase: CreateDeckUseCase
+  const userId = 'user-123'
 
   beforeEach(() => {
     useCase = new CreateDeckUseCase(mockDeckRepository)
@@ -29,6 +30,7 @@ describe('CreateDeckUseCase', () => {
   describe('Unit Tests', () => {
     it('should create a deck without cards successfully', async () => {
       const request = {
+        userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
         type: 'flashcard',
@@ -39,6 +41,7 @@ describe('CreateDeckUseCase', () => {
       expect(mockDeckRepository.save).toHaveBeenCalledTimes(1)
       const savedDeck = mockDeckRepository.save.mock.calls[0][0]
       expect(savedDeck.id).toBe(mockId)
+      expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.title).toBe(request.title)
       expect(savedDeck.description).toBe(request.description)
       expect(savedDeck.type.getValue()).toBe('flashcard')
@@ -47,6 +50,7 @@ describe('CreateDeckUseCase', () => {
 
     it('should create a deck with cards successfully', async () => {
       const request = {
+        userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
         type: 'multiple_choice',
@@ -69,6 +73,7 @@ describe('CreateDeckUseCase', () => {
       expect(mockDeckRepository.save).toHaveBeenCalledTimes(1)
       const savedDeck = mockDeckRepository.save.mock.calls[0][0]
       expect(savedDeck.id).toBe(mockId)
+      expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.title).toBe(request.title)
       expect(savedDeck.type.getValue()).toBe('multiple_choice')
       expect(savedDeck.cards).toHaveLength(2)
@@ -83,6 +88,7 @@ describe('CreateDeckUseCase', () => {
 
     it('should propagate errors from repository', async () => {
       const request = {
+        userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
         type: 'flashcard',
@@ -99,6 +105,7 @@ describe('CreateDeckUseCase', () => {
     it('Given valid deck data, When execute is called, Then repository save is invoked with correct deck', async () => {
       // Given
       const request = {
+        userId,
         title: 'Advanced Physics',
         description: 'Physics concepts for advanced students',
         type: 'flashcard',
@@ -110,6 +117,7 @@ describe('CreateDeckUseCase', () => {
       // Then
       expect(mockDeckRepository.save).toHaveBeenCalledTimes(1)
       const savedDeck = mockDeckRepository.save.mock.calls[0][0]
+      expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.title).toBe(request.title)
       expect(savedDeck.description).toBe(request.description)
       expect(savedDeck.type.getValue()).toBe('flashcard')
@@ -118,6 +126,7 @@ describe('CreateDeckUseCase', () => {
     it('Given deck data with 2 cards, When execute is called, Then deck contains exactly 2 cards with matching content', async () => {
       // Given
       const request = {
+        userId,
         title: 'Geography Quiz',
         description: 'Test your geography knowledge',
         type: 'multiple_choice',
@@ -138,6 +147,7 @@ describe('CreateDeckUseCase', () => {
 
       // Then
       const savedDeck = mockDeckRepository.save.mock.calls[0][0]
+      expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.cards).toHaveLength(2)
       expect(savedDeck.cards[0].question).toBe(request.cards[0].question)
       expect(savedDeck.cards[0].answer).toBe(request.cards[0].answer)
@@ -148,6 +158,7 @@ describe('CreateDeckUseCase', () => {
     it('Given missing title, When execute is called, Then promise rejects with InvalidDeckTitleError', async () => {
       // Given
       const request = {
+        userId,
         title: '',
         description: validDeckProps.description,
         type: 'flashcard',
@@ -161,6 +172,7 @@ describe('CreateDeckUseCase', () => {
     it('Given invalid card data, When execute is called, Then promise rejects with error', async () => {
       // Given
       const request = {
+        userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
         type: 'flashcard',

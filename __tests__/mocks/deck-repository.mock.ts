@@ -5,6 +5,8 @@ import { DeckRepository } from '@/domain/interfaces/deck-repository'
 type MockedFunction<T> = T & {
   mock: { calls: any[][] }
   mockRejectedValueOnce: (value: Error) => void
+  mockResolvedValue: (value: any) => void
+  mockResolvedValueOnce: (value: any) => void
 }
 
 type MockedRepository<T> = {

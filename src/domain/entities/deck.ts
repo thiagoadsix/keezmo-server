@@ -6,6 +6,7 @@ import { DeckType } from '@/domain/value-objects'
 import { generateId } from '@/shared/utils/generate-id'
 
 interface DeckProps {
+  userId: string
   title: string
   description: string
   type: DeckType
@@ -16,6 +17,7 @@ interface DeckProps {
 
 export class Deck {
   public readonly id: string
+  public readonly userId: string
   public title: string
   public description: string
   public type: DeckType
@@ -33,6 +35,7 @@ export class Deck {
     }
 
     this.id = generateId()
+    this.userId = props.userId
     this.title = props.title
     this.description = props.description
     this.type = props.type

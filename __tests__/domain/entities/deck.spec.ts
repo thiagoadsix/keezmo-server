@@ -40,6 +40,7 @@ describe('Deck', () => {
 
       expect(deck).toBeInstanceOf(Deck)
       expect(deck.id).toBe(mockId)
+      expect(deck.userId).toBe(validDeckProps.userId)
       expect(deck.title).toBe(validDeckProps.title)
       expect(deck.description).toBe(validDeckProps.description)
       expect(deck.type).toBe(validDeckProps.type)

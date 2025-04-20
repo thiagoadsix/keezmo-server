@@ -4,6 +4,7 @@ import { DeckRepository } from '@/domain/interfaces/deck-repository'
 import { DeckType } from '@/domain/value-objects/deck-type'
 
 interface CreateDeckRequest {
+  userId: string
   title: string
   description: string
   type: string
@@ -26,6 +27,7 @@ export class CreateDeckUseCase {
     const deckType = new DeckType(request.type)
 
     const deck = new Deck({
+      userId: request.userId,
       title: request.title,
       description: request.description,
       type: deckType,
