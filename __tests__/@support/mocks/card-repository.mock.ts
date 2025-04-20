@@ -16,5 +16,6 @@ type MockedRepository<T> = {
 }
 
 export const mockCardRepository: MockedRepository<CardRepository> = {
+  findByDeckId: vi.fn(),
   deleteByIds: vi.fn(),
 }
