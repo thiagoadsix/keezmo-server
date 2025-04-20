@@ -1,3 +1,5 @@
 export * from './invalid-deck-description-error'
 export * from './invalid-deck-title-error'
 export * from './invalid-deck-type-error'
+export * from './deck-deletion-error'
+export * from './deck-not-found-error'
