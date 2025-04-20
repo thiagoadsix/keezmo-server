@@ -1,0 +1,145 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 🧪 Cursor Rules: Testing Use Cases
+
+These rules guide writing high‑quality, maintainable tests for all use cases in the Keezmo project, ensuring maximum coverage and clarity by combining **unit‑centric** techniques with **behavior‑driven** (BDD) scenarios.
+
+---
+
+## 📁 File Organization
+
+- **Location**: Each use case gets its own test file under:
+  ```
+  __tests__/domain/use-cases/<usecase-name>/<usecase-name>.usecase.spec.ts
+  ```
+- **Naming**:
+  - Test files match the use case: `create-deck.usecase.spec.ts`
+  - Top-level `describe` uses the class name: `describe('CreateDeckUseCase', ...)`
+
+## 🛠 Unit‑Centric Testing Rules
+
+1. **Mock Dependencies**
+   - Ensure a `__tests__/mock` folder exists to house all mock implementations.
+   - Place repository mocks (e.g., `deck-repository.mock.ts`) in `__tests__/mock` and import them into your tests.
+   - Example:
+     ```ts
+     // __tests__/mock/deck-repository.mock.ts
+     import { DeckRepository } from '@/domain/interfaces/deck-repository';
+     export const mockDeckRepository = { save: jest.fn() } as unknown as DeckRepository;
+     ```
+
+2. **Fixtures**
+   - Maintain a `__tests__/fixtures` folder for common test data fixtures (e.g., valid request objects).
+   - Example:
+     ```ts
+     // __tests__/fixtures/create-deck.fixture.ts
+     export const validCreateDeckRequest = {
+       title: 'T',
+       description: 'D',
+       type: 'public',
+       cards: [{ question: 'Q', answer: 'A' }],
+     };
+     ```
+
+3. **Isolate SUT**
+   - Test only the use case logic; do not hit external systems.
+
+4. **Edge‑Case Coverage**
+   - Titles/types missing or invalid → expect exceptions.
+   - Empty `cards` array → ensure `save()` called once, no cards added.
+
+5. **Happy Path**
+   - Valid input without cards → deck created with default state.
+   - Valid input with cards → each `deck.addCard` and `save` called.
+
+6. **Grouping Tests**
+   - Wrap related unit tests in a `describe('Unit Tests', () => { ... })` block for clarity.
+
+7. **Assertions**
+   - Use `expect(mockRepo.save).toHaveBeenCalledWith(deck)`
+   - Inspect deck instance properties.
+
+8. **No tests at log**
+   - Do not test console logs assertions
+
+## 🤝 BDD‑Style Scenarios
+
+1. **Scenario Grouping**
+   - Encapsulate high‑level BDD scenarios in a `describe('BDD Scenarios', () => { ... })` block to distinguish from unit tests.
+
+Write high‑level scenarios using **Given/When/Then** in the same test file:
+
+- **Given** valid deck data
+  **When** `execute(request)` is called
+  **Then** repository `save()` is invoked once with a `Deck` having correct title, description, type
+
+- **Given** deck data with 3 cards
+  **When** `execute(request)` is called
+  **Then** deck instance contains exactly 3 cards with matching content
+
+- **Given** missing title
+  **When** `execute(request)` is called
+  **Then** promise rejects with `InvalidTitleError`
+
+Write high‑level scenarios using **Given/When/Then** in the same test file:
+
+- **Given** valid deck data
+  **When** `execute(request)` is called
+  **Then** repository `save()` is invoked once with a `Deck` having correct title, description, type
+
+- **Given** deck data with 3 cards
+  **When** `execute(request)` is called
+  **Then** deck instance contains exactly 3 cards with matching content
+
+- **Given** missing title
+  **When** `execute(request)` is called
+  **Then** promise rejects with `InvalidTitleError`
+
+## 🔍 Example Skeleton
+
+```ts
+import { CreateDeckUseCase } from '../create-deck.usecase';
+import { DeckRepository } from '@/domain/interfaces/deck-repository';
+import { Deck } from '@/domain/entities/deck';
+
+describe('CreateDeckUseCase', () => {
+  let useCase: CreateDeckUseCase;
+  let mockRepo: jest.Mocked<DeckRepository>;
+
+  beforeEach(() => {
+    mockRepo = { save: jest.fn() } as any;
+    useCase = new CreateDeckUseCase(mockRepo);
+  });
+
+  describe('Unit Tests', () => {
+    it('should save deck without cards', async () => {
+      const req = { title: 'T', description: 'D', type: 'public' };
+      await useCase.execute(req);
+      expect(mockRepo.save).toHaveBeenCalledTimes(1);
+      const savedDeck = mockRepo.save.mock.calls[0][0];
+      expect(savedDeck.cards).toHaveLength(0);
+    });
+
+    it('should add cards when provided', async () => {
+      const cards = [{ question: 'Q', answer: 'A' }];
+      await useCase.execute({ title: 'T', description: 'D', type: 'public', cards });
+      expect(mockRepo.save).toHaveBeenCalledTimes(1);
+      expect(mockRepo.save.mock.calls[0][0].cards).toHaveLength(1);
+    });
+  });
+
+  describe('BDD Scenarios', () => {
+    it('Given missing title, When execute, Then throws error', async () => {
+      await expect(useCase.execute({ title: '', description: 'D', type: 'public' }))
+        .rejects.toThrow('Title cannot be empty');
+    });
+  });
+});
+```
+
+---
+
+> Follow these rules to achieve at least **100% coverage** of your use case classes with clear, maintainable tests.

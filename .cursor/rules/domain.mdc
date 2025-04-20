@@ -1,6 +1,6 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
 
@@ -180,6 +180,28 @@ src/
 
 - **Markdown Usage**:\
   You may use markdown formatting in your commit messages, code comments, or documentation, but it is not mandatory.
+
+## Use Case Implementation Guidelines
+
+### Directory & Naming Convention
+
+- Place each use case file under a folder matching its domain in `src/domain/use-cases/`.
+- Within `use-cases/`, create a subfolder named after the aggregate or module (e.g., `deck`).
+- Name the file using kebab-case `<action>-<aggregate>.usecase.ts`. For example:
+  ```bash
+  src/domain/use-cases/deck/create-deck.usecase.ts
+  ```
+- The exported class should be PascalCase ending with UseCase, e.g., CreateDeckUseCase.
+
+All application use cases must adhere to the following rules to ensure consistency and maintainability:
+
+- **Dependency Injection**: Use constructor injection with interfaces to decouple use cases from concrete implementations.
+- **Entity Behavior**: Leverage domain entities within your use case to enforce business rules; do not duplicate logic outside entities.
+- **Logging**: Add appropriate logging at key points (start, success, error) within the `execute` function to facilitate debugging and monitoring.
+- **Execute Entry Point**: Each use case class must expose an `execute(...)` method as the primary entry point for business logic.
+- **Private Helpers**: Factor out complex or repeated logic into private helper methods within the use case class.
+- **Consistency**: Follow naming conventions and file placement (`src/domain/use-cases/`) to organize use case implementations.
+- **Consistency & Organization**: Follow naming conventions and file placement (src/domain/use-cases/) to organize use case implementations.
 
 ---
 
