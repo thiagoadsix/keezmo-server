@@ -1,5 +1,5 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../mocks/generate-id.mock'
+import { mockId, generateIdMock } from '../../@support/mocks/generate-id.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
@@ -10,14 +10,14 @@ import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-d
 import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
 import { DeckType } from '@/domain/value-objects'
 
-import { validCardProps } from '../../fixtures/card.fixtures'
+import { validCardProps } from '../../@support/fixtures/card.fixtures'
 import {
   validDeckProps,
   validFlashcardDeckProps,
   validDeckWithCardsProps,
   invalidDeckPropsWithEmptyTitle,
   invalidDeckPropsWithNullDescription,
-} from '../../fixtures/deck.fixtures'
+} from '../../@support/fixtures/deck.fixtures'
 
 describe('Deck', () => {
   beforeEach(() => {

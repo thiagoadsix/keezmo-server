@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../../mocks/generate-id.mock'
-import { mockDeckRepository } from '../../../mocks/deck-repository.mock'
+import { mockId, generateIdMock } from '../../../@support/mocks/generate-id.mock'
+import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
@@ -11,7 +11,7 @@ import { FindDecksByUserUseCase } from '@/domain/use-cases/deck/find-decks-by-us
 import {
   validDeckProps,
   validDeckWithCardsProps,
-} from '../../../fixtures/deck.fixtures'
+} from '../../../@support/fixtures/deck.fixtures'
 
 describe('FindDecksByUserUseCase', () => {
   let useCase: FindDecksByUserUseCase

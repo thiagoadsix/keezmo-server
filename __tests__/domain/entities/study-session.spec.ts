@@ -1,5 +1,5 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../mocks/generate-id.mock'
+import { mockId, generateIdMock } from '../../@support/mocks/generate-id.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
@@ -20,7 +20,7 @@ import {
   invalidSessionPropsWithInvalidStudyType,
   invalidFlashcardSessionWithHits,
   invalidMultipleChoiceSessionWithRatings,
-} from '../../fixtures/study-session.fixtures'
+} from '../../@support/fixtures/study-session.fixtures'
 
 describe('StudySession', () => {
   beforeEach(() => {

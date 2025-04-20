@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../../mocks/generate-id.mock'
-import { mockDeckRepository } from '../../../mocks/deck-repository.mock'
+import { mockId, generateIdMock } from '../../../@support/mocks/generate-id.mock'
+import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
@@ -8,8 +8,8 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 import { Card } from '@/domain/entities/card'
 import { CreateDeckUseCase } from '@/domain/use-cases/deck/create-deck.usecase'
 
-import { validCardProps } from '../../../fixtures/card.fixtures'
-import { validDeckProps } from '../../../fixtures/deck.fixtures'
+import { validCardProps } from '../../../@support/fixtures/card.fixtures'
+import { validDeckProps } from '../../../@support/fixtures/deck.fixtures'
 
 describe('CreateDeckUseCase', () => {
   let useCase: CreateDeckUseCase

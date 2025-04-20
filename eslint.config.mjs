@@ -50,6 +50,11 @@ const config = [
               group: 'internal',
               position: 'after',
             },
+            {
+              pattern: '@/tests/**',
+              group: 'internal',
+              position: 'after',
+            },
           ],
           pathGroupsExcludedImportTypes: ['builtin'],
         },
