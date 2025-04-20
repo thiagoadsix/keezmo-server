@@ -1,10 +1,10 @@
-import { generateId } from '@/shared/utils/generate-id'
+import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/invalid-question-metadata-error'
+import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
+import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
+import { StudyType } from '@/domain/types/study.type'
+import { Rating } from '@/domain/value-objects'
 
-import { InvalidQuestionMetadataError } from '../errors/study-session/invalid-question-metadata-error'
-import { InvalidStudyTypeError } from '../errors/study-session/invalid-study-type-error'
-import { StudySessionValidationError } from '../errors/study-session/study-session-validation-error'
-import { StudyType } from '../types/study.type'
-import { Rating } from '../value-objects'
+import { generateId } from '@/shared/utils/generate-id'
 
 interface StudySessionRating {
   questionId: string
