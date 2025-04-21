@@ -1,0 +1,8 @@
+import { StudySession } from '../entities/study-session'
+
+export interface StudySessionRepository {
+  findById(id: string): Promise<StudySession | null>
+  findByUserId(userId: string): Promise<StudySession[]>
+  save(studySession: StudySession): Promise<void>
+  deleteById(id: string): Promise<void>
+}
