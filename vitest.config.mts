@@ -20,7 +20,18 @@ export default defineConfig({
       '__tests__/**/*.test.+(ts|tsx|js)',
       '__tests__/**/*.spec.+(ts|tsx|js)',
     ],
-    exclude: ['__tests__/fixtures/**', '__tests__/mocks/**'],
+    exclude: ['__tests__/fixtures/**', '__tests__/mocks/**', 'src/**/index.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        '__tests__/fixtures/**',
+        '__tests__/mocks/**',
+        'src/**/index.ts',
+        'src/domain/interfaces/**',
+        'src/domain/types/**',
+      ],
+    },
     root: './',
   },
 
