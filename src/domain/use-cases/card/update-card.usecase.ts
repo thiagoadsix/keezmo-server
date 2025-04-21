@@ -1,0 +1,110 @@
+import { Card } from '@/domain/entities/card'
+import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
+import { CardUpdateError } from '@/domain/errors/card/card-update-error'
+import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
+import { CardRepository } from '@/domain/interfaces/card-repository'
+import { DeckRepository } from '@/domain/interfaces/deck-repository'
+
+interface CardData {
+  question: string
+  answer: string
+  options: string[]
+  answerIndex: number
+}
+
+interface UpdateCardRequest {
+  deckId: string
+  cardId: string
+  data: Partial<CardData>
+}
+
+export class UpdateCardUseCase {
+  constructor(
+    private readonly cardRepository: CardRepository,
+    private readonly deckRepository: DeckRepository,
+  ) {}
+
+  async execute(request: UpdateCardRequest): Promise<Card> {
+    console.log(
+      `Starting UpdateCardUseCase for deckId: ${request.deckId}, cardId: ${request.cardId}`,
+    )
+
+    try {
+      const deck = await this.deckRepository.findById(request.deckId)
+
+      if (!deck) {
+        console.log(`Deck with ID ${request.deckId} not found`)
+        throw new DeckNotFoundError(request.deckId, 'unknown')
+      }
+
+      const card = await this.cardRepository.findById(request.cardId)
+
+      if (!card) {
+        console.log(
+          `Card with ID ${request.cardId} not found in deck ${request.deckId}`,
+        )
+        throw new CardNotFoundError(request.cardId, request.deckId)
+      }
+
+      if (card.deckId !== request.deckId) {
+        console.log(
+          `Card with ID ${request.cardId} belongs to deck ${card.deckId}, not ${request.deckId}`,
+        )
+        throw new CardNotFoundError(request.cardId, request.deckId)
+      }
+
+      this.updateCardFields(card, request.data)
+
+      await this.cardRepository.save(card)
+
+      console.log(
+        `Successfully updated card ${request.cardId} in deck ${request.deckId}`,
+      )
+      return card
+    } catch (error) {
+      if (
+        error instanceof DeckNotFoundError ||
+        error instanceof CardNotFoundError
+      ) {
+        throw error
+      }
+
+      console.error(
+        `Error updating card ${request.cardId} in deck ${request.deckId}: ${(error as Error).message}`,
+      )
+      throw new CardUpdateError(request.cardId, request.deckId, error as Error)
+    }
+  }
+
+  private updateCardFields(
+    card: Card,
+    updateData: UpdateCardRequest['data'],
+  ): void {
+    if (
+      updateData.question !== undefined &&
+      updateData.question !== card.question
+    ) {
+      card.updateQuestion(updateData.question)
+    }
+
+    if (updateData.answer !== undefined && updateData.answer !== card.answer) {
+      card.updateAnswer(updateData.answer)
+    }
+
+    if (
+      updateData.options !== undefined &&
+      JSON.stringify(updateData.options) !== JSON.stringify(card.options)
+    ) {
+      card.updateOptions(updateData.options)
+    }
+
+    if (
+      updateData.answerIndex !== undefined &&
+      updateData.answerIndex !== card.answerIndex &&
+      card.options &&
+      card.options.length > 0
+    ) {
+      card.updateAnswerIndex(updateData.answerIndex)
+    }
+  }
+}

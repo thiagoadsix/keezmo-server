@@ -18,11 +18,6 @@ import { UpdateCardsUseCase } from '@/domain/use-cases/card/update-cards.usecase
 
 import { validDeckProps } from '../../../@support/fixtures/deck.fixtures'
 
-// Need to mock generate-id to give consistent IDs for cards
-vi.mock('@/shared/utils/generate-id', () => ({
-  generateId: () => mockId,
-}))
-
 describe('UpdateCardsUseCase', () => {
   let useCase: UpdateCardsUseCase
   let mockDeck: Deck
