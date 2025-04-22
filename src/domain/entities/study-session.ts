@@ -2,13 +2,13 @@ import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/inva
 import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
 import { StudyType } from '@/domain/types/study.type'
-import { Rating } from '@/domain/value-objects'
+import { Difficulty } from '@/domain/value-objects'
 
 import { generateId } from '@/shared/utils/generate-id'
 
 interface StudySessionRating {
   questionId: string
-  rating: Rating
+  difficulty: Difficulty
 }
 
 // TODO: for now we'll use as interface

@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import { DomainError } from '@/domain/errors/domain-error'
 import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/invalid-question-metadata-error'
-import { InvalidStudySessionRatingError } from '@/domain/errors/study-session/invalid-study-session-rating-error'
+import { InvalidStudySessionDifficultyError } from '@/domain/errors/study-session/invalid-study-session-difficulty-error'
 import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
 import { StudyType } from '@/domain/types'
-import { RatingEnum } from '@/domain/value-objects'
+import { DifficultyEnum } from '@/domain/value-objects'
 
 describe('StudySession Domain Errors', () => {
   describe('InvalidStudyTypeError', () => {
@@ -58,20 +58,20 @@ describe('StudySession Domain Errors', () => {
     })
   })
 
-  describe('InvalidStudySessionRatingError', () => {
+  describe('InvalidStudySessionDifficultyError', () => {
     it('should extend DomainError', () => {
-      const error = new InvalidStudySessionRatingError('invalid-rating')
+      const error = new InvalidStudySessionDifficultyError('invalid-difficulty')
       expect(error).toBeInstanceOf(DomainError)
     })
 
     it('should set the correct error message and name', () => {
-      const invalidRating = 'invalid-rating'
-      const error = new InvalidStudySessionRatingError(invalidRating)
+      const invalidDifficulty = 'invalid-difficulty'
+      const error = new InvalidStudySessionDifficultyError(invalidDifficulty)
 
       expect(error.message).toBe(
-        `The Study Session rating ${invalidRating} is invalid. Valid ratings are: ${Object.values(RatingEnum).join(', ')}`,
+        `The Study Session difficulty ${invalidDifficulty} is invalid. Valid difficulties are: ${Object.values(DifficultyEnum).join(', ')}`,
       )
-      expect(error.name).toBe('InvalidStudySessionRatingError')
+      expect(error.name).toBe('InvalidStudySessionDifficultyError')
     })
   })
 })

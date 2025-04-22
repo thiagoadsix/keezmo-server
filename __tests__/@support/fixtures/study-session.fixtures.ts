@@ -1,6 +1,6 @@
 import { QuestionMetadata } from '@/domain/entities/study-session'
 import { StudyType } from '@/domain/types'
-import { Rating, RatingEnum } from '@/domain/value-objects'
+import { Difficulty, DifficultyEnum } from '@/domain/value-objects'
 
 import { mockId } from '../mocks/generate-id.mock'
 
@@ -40,11 +40,11 @@ export const validFlashcardSessionProps = {
   ratings: [
     {
       questionId: 'question-1',
-      rating: new Rating(RatingEnum.EASY),
+      difficulty: new Difficulty(DifficultyEnum.EASY),
     },
     {
       questionId: 'question-2',
-      rating: new Rating(RatingEnum.HARD),
+      difficulty: new Difficulty(DifficultyEnum.HARD),
     },
   ],
 }
@@ -104,7 +104,7 @@ export const invalidMultipleChoiceSessionWithRatings = {
   ratings: [
     {
       questionId: 'question-1',
-      rating: new Rating(RatingEnum.EASY),
+      difficulty: new Difficulty(DifficultyEnum.EASY),
     },
   ],
 }

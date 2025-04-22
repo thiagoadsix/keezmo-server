@@ -7,6 +7,7 @@ import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { StudySession } from '@/domain/entities/study-session'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
 import { CreateStudySessionUseCase } from '@/domain/use-cases/study-session/create-study-session.usecase'
+import { DifficultyEnum } from '@/domain/value-objects'
 
 describe('CreateStudySessionUseCase', () => {
   let useCase: CreateStudySessionUseCase
@@ -25,8 +26,8 @@ describe('CreateStudySessionUseCase', () => {
         startTime: '2023-01-01T10:00:00Z',
         endTime: '2023-01-01T10:30:00Z',
         ratings: [
-          { questionId: 'question-1', rating: 'easy' },
-          { questionId: 'question-2', rating: 'hard' },
+          { questionId: 'question-1', difficulty: DifficultyEnum.EASY },
+          { questionId: 'question-2', difficulty: DifficultyEnum.HARD },
         ],
       }
 
@@ -121,7 +122,9 @@ describe('CreateStudySessionUseCase', () => {
         totalQuestions: 10,
         startTime: '2023-01-01T10:00:00Z',
         endTime: '2023-01-01T10:30:00Z',
-        ratings: [{ questionId: 'question-1', rating: 'easy' }],
+        ratings: [
+          { questionId: 'question-1', difficulty: DifficultyEnum.EASY },
+        ],
       }
 
       await useCase.execute(request)

@@ -10,7 +10,7 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { StudySession } from '@/domain/entities/study-session'
 import { FindStudySessionsByUserUseCase } from '@/domain/use-cases/study-session/find-study-sessions-by-user.usecase'
-import { Rating } from '@/domain/value-objects/rating'
+import { Difficulty } from '@/domain/value-objects'
 
 describe('FindStudySessionsByUserUseCase', () => {
   let useCase: FindStudySessionsByUserUseCase
@@ -37,7 +37,7 @@ describe('FindStudySessionsByUserUseCase', () => {
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyType: 'flashcard',
-        ratings: [{ questionId: 'q1', rating: new Rating('normal') }],
+        ratings: [{ questionId: 'q1', difficulty: new Difficulty('normal') }],
       }),
     ]
 

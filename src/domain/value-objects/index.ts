@@ -1,2 +1,2 @@
 export * from './deck-type'
-export * from './rating'
+export * from './difficulty'

@@ -1,7 +1,7 @@
 import { StudySession, QuestionMetadata } from '@/domain/entities/study-session'
 import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
 import { StudyType } from '@/domain/types/study.type'
-import { Rating } from '@/domain/value-objects'
+import { Difficulty, DifficultyEnum } from '@/domain/value-objects'
 
 interface CreateStudySessionRequest {
   deckId: string
@@ -12,7 +12,7 @@ interface CreateStudySessionRequest {
 
   ratings?: Array<{
     questionId: string
-    rating: string
+    difficulty: DifficultyEnum
   }>
 
   hits?: number
@@ -47,7 +47,7 @@ export class CreateStudySessionUseCase {
       Object.assign(studySessionProps, {
         ratings: request.ratings.map((r) => ({
           questionId: r.questionId,
-          rating: new Rating(r.rating),
+          difficulty: new Difficulty(r.difficulty),
         })),
       })
     } else if (request.studyType === 'multiple_choice') {

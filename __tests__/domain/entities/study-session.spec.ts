@@ -9,7 +9,7 @@ import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/inva
 import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
 import { StudyType } from '@/domain/types'
-import { Rating, RatingEnum } from '@/domain/value-objects'
+import { Difficulty, DifficultyEnum } from '@/domain/value-objects'
 
 import {
   validMultipleChoiceSessionProps,
@@ -190,7 +190,7 @@ describe('StudySession', () => {
 
       const newRating = {
         questionId: 'question-3',
-        rating: new Rating(RatingEnum.NORMAL),
+        difficulty: new Difficulty(DifficultyEnum.NORMAL),
       }
 
       session.addRating(newRating)
@@ -205,7 +205,7 @@ describe('StudySession', () => {
 
       const rating = {
         questionId: 'question-1',
-        rating: new Rating(RatingEnum.EASY),
+        difficulty: new Difficulty(DifficultyEnum.EASY),
       }
 
       expect(() => session.addRating(rating)).toThrow(
