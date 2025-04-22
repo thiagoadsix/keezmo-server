@@ -1,5 +1,8 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../../@support/mocks/generate-id.mock'
+import {
+  mockId,
+  generateIdMock,
+} from '../../../@support/mocks/generate-id.mock'
 import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
 /* eslint-enable import/order */
 
@@ -33,7 +36,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        type: 'flashcard',
+        studyMode: 'flashcard',
       }
 
       await useCase.execute(request)
@@ -44,7 +47,7 @@ describe('CreateDeckUseCase', () => {
       expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.title).toBe(request.title)
       expect(savedDeck.description).toBe(request.description)
-      expect(savedDeck.type.getValue()).toBe('flashcard')
+      expect(savedDeck.studyMode.getValue()).toBe('flashcard')
       expect(savedDeck.cards).toEqual([])
     })
 
@@ -53,7 +56,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        type: 'multiple_choice',
+        studyMode: 'multiple_choice',
         cards: [
           {
             question: validCardProps.question,
@@ -75,7 +78,7 @@ describe('CreateDeckUseCase', () => {
       expect(savedDeck.id).toBe(mockId)
       expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.title).toBe(request.title)
-      expect(savedDeck.type.getValue()).toBe('multiple_choice')
+      expect(savedDeck.studyMode.getValue()).toBe('multiple_choice')
       expect(savedDeck.cards).toHaveLength(2)
       expect(savedDeck.cards[0]).toBeInstanceOf(Card)
       expect(savedDeck.cards[0].question).toBe(request.cards[0].question)
@@ -91,7 +94,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        type: 'flashcard',
+        studyMode: 'flashcard',
       }
 
       const repoError = new Error('Database connection failed')
@@ -108,7 +111,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: 'Advanced Physics',
         description: 'Physics concepts for advanced students',
-        type: 'flashcard',
+        studyMode: 'flashcard',
       }
 
       // When
@@ -120,7 +123,7 @@ describe('CreateDeckUseCase', () => {
       expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.title).toBe(request.title)
       expect(savedDeck.description).toBe(request.description)
-      expect(savedDeck.type.getValue()).toBe('flashcard')
+      expect(savedDeck.studyMode.getValue()).toBe('flashcard')
     })
 
     it('Given deck data with 2 cards, When execute is called, Then deck contains exactly 2 cards with matching content', async () => {
@@ -129,7 +132,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: 'Geography Quiz',
         description: 'Test your geography knowledge',
-        type: 'multiple_choice',
+        studyMode: 'multiple_choice',
         cards: [
           {
             question: 'What is the capital of Japan?',
@@ -161,7 +164,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: '',
         description: validDeckProps.description,
-        type: 'flashcard',
+        studyMode: 'flashcard',
       }
 
       // When/Then
@@ -175,7 +178,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        type: 'flashcard',
+        studyMode: 'flashcard',
         cards: [
           {
             question: '',

@@ -1,13 +1,13 @@
 import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
 import { DeckRepository } from '@/domain/interfaces/deck-repository'
-import { DeckType } from '@/domain/value-objects/deck-type'
+import { StudyMode, StudyModeEnum } from '@/domain/value-objects'
 
 interface CreateDeckRequest {
   userId: string
   title: string
   description: string
-  type: string
+  studyMode: StudyModeEnum
   cards?: Array<{
     question: string
     answer: string
@@ -24,13 +24,13 @@ export class CreateDeckUseCase {
   async execute(request: CreateDeckRequest): Promise<CreateDeckResponse> {
     console.log(`Starting CreateDeckUseCase with title: ${request.title}`)
 
-    const deckType = new DeckType(request.type)
+    const studyMode = new StudyMode(request.studyMode)
 
     const deck = new Deck({
       userId: request.userId,
       title: request.title,
       description: request.description,
-      type: deckType,
+      studyMode,
     })
 
     if (request.cards && request.cards.length > 0) {

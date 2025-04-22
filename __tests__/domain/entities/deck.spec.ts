@@ -8,7 +8,7 @@ import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
 import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error'
 import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
-import { DeckType } from '@/domain/value-objects'
+import { StudyMode } from '@/domain/value-objects'
 
 import { validCardProps } from '../../@support/fixtures/card.fixtures'
 import {
@@ -43,7 +43,7 @@ describe('Deck', () => {
       expect(deck.userId).toBe(validDeckProps.userId)
       expect(deck.title).toBe(validDeckProps.title)
       expect(deck.description).toBe(validDeckProps.description)
-      expect(deck.type).toBe(validDeckProps.type)
+      expect(deck.studyMode).toBe(validDeckProps.studyMode)
       expect(deck.cards).toEqual([])
       expect(deck.createdAt).toBe(expectedDateString)
       expect(deck.updatedAt).toBe(expectedDateString)
@@ -144,14 +144,14 @@ describe('Deck', () => {
   describe('updateType', () => {
     it('should update the type and updatedAt', () => {
       const deck = new Deck(validFlashcardDeckProps)
-      const newType = new DeckType('multiple_choice')
+      const newStudyMode = new StudyMode('multiple_choice')
       const fixedDate = new Date('2023-01-02T12:00:00Z')
       vi.setSystemTime(fixedDate)
       const expectedDateString = fixedDate.toISOString()
 
-      deck.updateType(newType)
+      deck.updateStudyMode(newStudyMode)
 
-      expect(deck.type).toBe(newType)
+      expect(deck.studyMode).toBe(newStudyMode)
       expect(deck.updatedAt).toBe(expectedDateString)
     })
   })

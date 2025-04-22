@@ -2,12 +2,12 @@ import { Deck } from '@/domain/entities/deck'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { DeckUpdateError } from '@/domain/errors/deck/deck-update-error'
 import { DeckRepository } from '@/domain/interfaces/deck-repository'
-import { DeckType } from '@/domain/value-objects'
+import { StudyMode } from '@/domain/value-objects'
 
 interface DeckUpdateData {
   title: string
   description: string
-  type: string
+  studyMode: string
 }
 
 interface UpdateDeckRequest {
@@ -71,8 +71,11 @@ export class UpdateDeckUseCase {
       deck.updateDescription(updateData.description)
     }
 
-    if (updateData.type && updateData.type !== deck.type.getValue()) {
-      deck.updateType(new DeckType(updateData.type))
+    if (
+      updateData.studyMode &&
+      updateData.studyMode !== deck.studyMode.getValue()
+    ) {
+      deck.updateStudyMode(new StudyMode(updateData.studyMode))
     }
   }
 }

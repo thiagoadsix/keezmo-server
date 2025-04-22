@@ -1,7 +1,7 @@
 import { Card } from '@/domain/entities/card'
 import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error'
 import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
-import { DeckType } from '@/domain/value-objects'
+import { StudyMode } from '@/domain/value-objects'
 
 import { generateId } from '@/shared/utils/generate-id'
 
@@ -9,7 +9,7 @@ interface DeckProps {
   userId: string
   title: string
   description: string
-  type: DeckType
+  studyMode: StudyMode
   cards?: Card[]
   createdAt?: string
   updatedAt?: string
@@ -20,7 +20,7 @@ export class Deck {
   public readonly userId: string
   public title: string
   public description: string
-  public type: DeckType
+  public studyMode: StudyMode
   public cards: Card[]
   public readonly createdAt: string
   public updatedAt: string
@@ -38,7 +38,7 @@ export class Deck {
     this.userId = props.userId
     this.title = props.title
     this.description = props.description
-    this.type = props.type
+    this.studyMode = props.studyMode
     this.cards = props.cards || []
     this.createdAt = props.createdAt || new Date().toISOString()
     this.updatedAt = props.updatedAt || this.createdAt
@@ -70,8 +70,8 @@ export class Deck {
     this.updatedAt = new Date().toISOString()
   }
 
-  public updateType(newType: DeckType): void {
-    this.type = newType
+  public updateStudyMode(newStudyMode: StudyMode): void {
+    this.studyMode = newStudyMode
     this.updatedAt = new Date().toISOString()
   }
 

@@ -1,19 +1,19 @@
-import { StudySession, QuestionMetadata } from '@/domain/entities/study-session'
+import {
+  StudySession,
+  QuestionMetadata,
+  StudySessionRating,
+} from '@/domain/entities/study-session'
 import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
-import { StudyType } from '@/domain/types/study.type'
-import { Difficulty, DifficultyEnum } from '@/domain/value-objects'
+import { StudyModeEnum } from '@/domain/value-objects'
 
 interface CreateStudySessionRequest {
   deckId: string
-  studyType: StudyType
+  studyMode: StudyModeEnum
   totalQuestions: number
   startTime: string
   endTime: string
 
-  ratings?: Array<{
-    questionId: string
-    difficulty: DifficultyEnum
-  }>
+  ratings?: StudySessionRating[]
 
   hits?: number
   misses?: number
@@ -32,7 +32,7 @@ export class CreateStudySessionUseCase {
   ): Promise<CreateStudySessionResponse> {
     console.log('Starting CreateStudySessionUseCase execution', {
       deckId: request.deckId,
-      studyType: request.studyType,
+      studyMode: request.studyMode,
       totalQuestions: request.totalQuestions,
     })
 
@@ -40,17 +40,17 @@ export class CreateStudySessionUseCase {
       deckId: request.deckId,
       startTime: request.startTime,
       endTime: request.endTime,
-      studyType: request.studyType,
+      studyMode: request.studyMode,
     }
 
-    if (request.studyType === 'flashcard' && request.ratings) {
+    if (request.studyMode === StudyModeEnum.FLASHCARD && request.ratings) {
       Object.assign(studySessionProps, {
         ratings: request.ratings.map((r) => ({
           questionId: r.questionId,
-          difficulty: new Difficulty(r.difficulty),
+          difficulty: r.difficulty,
         })),
       })
-    } else if (request.studyType === 'multiple_choice') {
+    } else if (request.studyMode === StudyModeEnum.MULTIPLE_CHOICE) {
       Object.assign(studySessionProps, {
         hits: request.hits || 0,
         misses: request.misses || 0,
@@ -65,7 +65,7 @@ export class CreateStudySessionUseCase {
     console.log('Study session created successfully', {
       id: studySession.id,
       deckId: studySession.deckId,
-      studyType: studySession.studyType,
+      studyMode: studySession.studyMode,
     })
   }
 }

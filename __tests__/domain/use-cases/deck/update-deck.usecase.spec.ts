@@ -12,7 +12,7 @@ import { Deck } from '@/domain/entities/deck'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { DeckUpdateError } from '@/domain/errors/deck/deck-update-error'
 import { UpdateDeckUseCase } from '@/domain/use-cases/deck/update-deck.usecase'
-import { DeckType } from '@/domain/value-objects'
+import { StudyMode } from '@/domain/value-objects'
 
 import { validDeckProps } from '../../../@support/fixtures/deck.fixtures'
 
@@ -22,7 +22,7 @@ describe('UpdateDeckUseCase', () => {
   const userId = 'user-123'
   const initialTitle = 'Math Concepts'
   const initialDescription = 'Basic math concepts for beginners'
-  const initialType = 'flashcard'
+  const initialStudyMode = 'flashcard'
 
   beforeEach(() => {
     useCase = new UpdateDeckUseCase(mockDeckRepository)
@@ -32,7 +32,7 @@ describe('UpdateDeckUseCase', () => {
     mockDeck = new Deck(validDeckProps)
     vi.spyOn(mockDeck, 'updateTitle')
     vi.spyOn(mockDeck, 'updateDescription')
-    vi.spyOn(mockDeck, 'updateType')
+    vi.spyOn(mockDeck, 'updateStudyMode')
 
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck)
     mockDeckRepository.save.mockResolvedValue(undefined)
@@ -76,13 +76,19 @@ describe('UpdateDeckUseCase', () => {
       expect(result).toBe(mockDeck)
     })
 
-    it('should update deck type when it changes', async () => {
-      const newType = 'multiple_choice'
-      const request = { deckId: mockId, userId, data: { type: newType } }
+    it('should update deck study mode when it changes', async () => {
+      const newStudyMode = 'multiple_choice'
+      const request = {
+        deckId: mockId,
+        userId,
+        data: { studyMode: newStudyMode },
+      }
 
       const result = await useCase.execute(request)
 
-      expect(mockDeck.updateType).toHaveBeenCalledWith(expect.any(DeckType))
+      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
+        expect.any(StudyMode),
+      )
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
       expect(result).toBe(mockDeck)
     })
@@ -94,7 +100,7 @@ describe('UpdateDeckUseCase', () => {
 
       expect(mockDeck.updateTitle).not.toHaveBeenCalled()
       expect(mockDeck.updateDescription).not.toHaveBeenCalled()
-      expect(mockDeck.updateType).not.toHaveBeenCalled()
+      expect(mockDeck.updateStudyMode).not.toHaveBeenCalled()
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
     })
 
@@ -105,7 +111,7 @@ describe('UpdateDeckUseCase', () => {
         data: {
           title: initialTitle,
           description: initialDescription,
-          type: initialType,
+          studyMode: initialStudyMode,
         },
       }
 
@@ -113,21 +119,21 @@ describe('UpdateDeckUseCase', () => {
 
       expect(mockDeck.updateTitle).not.toHaveBeenCalled()
       expect(mockDeck.updateDescription).not.toHaveBeenCalled()
-      expect(mockDeck.updateType).not.toHaveBeenCalled()
+      expect(mockDeck.updateStudyMode).not.toHaveBeenCalled()
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
     })
 
     it('should update multiple fields when they all change', async () => {
       const newTitle = 'Advanced Math'
       const newDescription = 'Advanced topics in mathematics'
-      const newType = 'multiple_choice'
+      const newStudyMode = 'multiple_choice'
       const request = {
         deckId: mockId,
         userId,
         data: {
           title: newTitle,
           description: newDescription,
-          type: newType,
+          studyMode: newStudyMode,
         },
       }
 
@@ -135,7 +141,9 @@ describe('UpdateDeckUseCase', () => {
 
       expect(mockDeck.updateTitle).toHaveBeenCalledWith(newTitle)
       expect(mockDeck.updateDescription).toHaveBeenCalledWith(newDescription)
-      expect(mockDeck.updateType).toHaveBeenCalledWith(expect.any(DeckType))
+      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
+        expect.any(StudyMode),
+      )
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
     })
 
@@ -184,7 +192,7 @@ describe('UpdateDeckUseCase', () => {
         data: {
           title: initialTitle,
           description: initialDescription,
-          type: initialType,
+          studyMode: initialStudyMode,
         },
       }
 
@@ -194,7 +202,7 @@ describe('UpdateDeckUseCase', () => {
       // Then
       expect(mockDeck.updateTitle).not.toHaveBeenCalled()
       expect(mockDeck.updateDescription).not.toHaveBeenCalled()
-      expect(mockDeck.updateType).not.toHaveBeenCalled()
+      expect(mockDeck.updateStudyMode).not.toHaveBeenCalled()
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
     })
 
@@ -206,7 +214,7 @@ describe('UpdateDeckUseCase', () => {
         data: {
           title: 'New Title',
           description: 'New Description',
-          type: 'multiple_choice',
+          studyMode: 'multiple_choice',
         },
       }
 
@@ -216,7 +224,9 @@ describe('UpdateDeckUseCase', () => {
       // Then
       expect(mockDeck.updateTitle).toHaveBeenCalledWith('New Title')
       expect(mockDeck.updateDescription).toHaveBeenCalledWith('New Description')
-      expect(mockDeck.updateType).toHaveBeenCalledWith(expect.any(DeckType))
+      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
+        expect.any(StudyMode),
+      )
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
       expect(result).toBe(mockDeck)
     })

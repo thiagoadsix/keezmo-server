@@ -1,5 +1,8 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../../@support/mocks/generate-id.mock'
+import {
+  mockId,
+  generateIdMock,
+} from '../../../@support/mocks/generate-id.mock'
 import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
 /* eslint-enable import/order */
 

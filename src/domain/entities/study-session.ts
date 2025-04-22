@@ -1,12 +1,11 @@
+import { InvalidStudyModeError } from '@/domain/errors/deck'
 import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/invalid-question-metadata-error'
-import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
-import { StudyType } from '@/domain/types/study.type'
-import { Difficulty } from '@/domain/value-objects'
+import { Difficulty, StudyModeEnum } from '@/domain/value-objects'
 
 import { generateId } from '@/shared/utils/generate-id'
 
-interface StudySessionRating {
+export interface StudySessionRating {
   questionId: string
   difficulty: Difficulty
 }
@@ -23,7 +22,7 @@ interface StudySessionProps {
   deckId: string
   startTime: string
   endTime: string
-  studyType: StudyType
+  studyMode: StudyModeEnum
   // DOC: will be used only for studyType equals to multiple_choice
   questionsMetadata?: QuestionMetadata[] | null
 
@@ -41,7 +40,7 @@ export class StudySession {
   public deckId: string
   public startTime: string
   public endTime: string
-  public studyType: StudyType
+  public studyMode: StudyModeEnum
   public questionsMetadata?: QuestionMetadata[] | null
   public hits?: number | null
   public misses?: number | null
@@ -58,14 +57,14 @@ export class StudySession {
     this.deckId = props.deckId
     this.startTime = props.startTime
     this.endTime = props.endTime
-    this.studyType = props.studyType
+    this.studyMode = props.studyMode
     this.questionsMetadata = props.questionsMetadata || []
 
     // Set based on study type
-    if (this.studyType === 'multiple_choice') {
+    if (this.studyMode === StudyModeEnum.MULTIPLE_CHOICE) {
       this.hits = props.hits || 0
       this.misses = props.misses || 0
-    } else if (this.studyType === 'flashcard') {
+    } else if (this.studyMode === StudyModeEnum.FLASHCARD) {
       this.ratings = props.ratings || []
     }
 
@@ -87,14 +86,14 @@ export class StudySession {
     }
 
     if (
-      props.studyType !== 'multiple_choice' &&
-      props.studyType !== 'flashcard'
+      props.studyMode !== StudyModeEnum.MULTIPLE_CHOICE &&
+      props.studyMode !== StudyModeEnum.FLASHCARD
     ) {
-      throw new InvalidStudyTypeError(props.studyType)
+      throw new InvalidStudyModeError(props.studyMode)
     }
 
     if (
-      props.studyType === 'multiple_choice' &&
+      props.studyMode === StudyModeEnum.MULTIPLE_CHOICE &&
       props.ratings &&
       props.ratings.length > 0
     ) {
@@ -104,7 +103,7 @@ export class StudySession {
     }
 
     if (
-      props.studyType === 'flashcard' &&
+      props.studyMode === StudyModeEnum.FLASHCARD &&
       (props.hits !== undefined || props.misses !== undefined)
     ) {
       throw new StudySessionValidationError(
@@ -153,7 +152,7 @@ export class StudySession {
   }
 
   public addRating(rating: StudySessionRating): void {
-    if (this.studyType !== 'flashcard') {
+    if (this.studyMode !== StudyModeEnum.FLASHCARD) {
       throw new StudySessionValidationError(
         'Ratings can only be added to flashcard study sessions',
       )
@@ -174,7 +173,7 @@ export class StudySession {
   }
 
   public incrementHits(): void {
-    if (this.studyType !== 'multiple_choice') {
+    if (this.studyMode !== StudyModeEnum.MULTIPLE_CHOICE) {
       throw new StudySessionValidationError(
         'Hits can only be incremented in multiple choice study sessions',
       )
@@ -185,7 +184,7 @@ export class StudySession {
   }
 
   public incrementMisses(): void {
-    if (this.studyType !== 'multiple_choice') {
+    if (this.studyMode !== StudyModeEnum.MULTIPLE_CHOICE) {
       throw new StudySessionValidationError(
         'Misses can only be incremented in multiple choice study sessions',
       )
@@ -221,7 +220,7 @@ export class StudySession {
   }
 
   public getAccuracy(): number {
-    if (this.studyType === 'multiple_choice') {
+    if (this.studyMode === StudyModeEnum.MULTIPLE_CHOICE) {
       const total = (this.hits || 0) + (this.misses || 0)
       return total > 0 ? ((this.hits || 0) / total) * 100 : 0
     }

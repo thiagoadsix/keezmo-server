@@ -1,2 +1,2 @@
-export * from './deck-type'
 export * from './difficulty'
+export * from './study-mode'

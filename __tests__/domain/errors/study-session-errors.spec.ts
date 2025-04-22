@@ -1,28 +1,27 @@
 import { describe, expect, it } from 'vitest'
 
+import { InvalidStudyModeError } from '@/domain/errors/deck'
 import { DomainError } from '@/domain/errors/domain-error'
 import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/invalid-question-metadata-error'
 import { InvalidStudySessionDifficultyError } from '@/domain/errors/study-session/invalid-study-session-difficulty-error'
-import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
-import { StudyType } from '@/domain/types'
-import { DifficultyEnum } from '@/domain/value-objects'
+import { DifficultyEnum, StudyModeEnum } from '@/domain/value-objects'
 
 describe('StudySession Domain Errors', () => {
-  describe('InvalidStudyTypeError', () => {
+  describe('InvalidStudyModeError', () => {
     it('should extend DomainError', () => {
-      const error = new InvalidStudyTypeError('invalid-type')
+      const error = new InvalidStudyModeError('invalid-mode')
       expect(error).toBeInstanceOf(DomainError)
     })
 
     it('should set the correct error message and name', () => {
-      const invalidType = 'invalid-type'
-      const error = new InvalidStudyTypeError(invalidType)
+      const invalidStudyMode = 'invalid-study-mode'
+      const error = new InvalidStudyModeError(invalidStudyMode)
 
       expect(error.message).toBe(
-        `The Study Session type ${invalidType} is invalid. Valid types are: ${'multiple_choice' as StudyType} and ${'flashcard' as StudyType}`,
+        `The study mode "${invalidStudyMode}" is invalid. Valid modes are: ${StudyModeEnum.MULTIPLE_CHOICE}, ${StudyModeEnum.FLASHCARD}.`,
       )
-      expect(error.name).toBe('InvalidStudyTypeError')
+      expect(error.name).toBe('InvalidStudyModeError')
     })
   })
 

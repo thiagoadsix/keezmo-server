@@ -10,7 +10,7 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { StudySession } from '@/domain/entities/study-session'
 import { FindStudySessionsByUserUseCase } from '@/domain/use-cases/study-session/find-study-sessions-by-user.usecase'
-import { Difficulty } from '@/domain/value-objects'
+import { Difficulty, StudyModeEnum } from '@/domain/value-objects'
 
 describe('FindStudySessionsByUserUseCase', () => {
   let useCase: FindStudySessionsByUserUseCase
@@ -28,7 +28,7 @@ describe('FindStudySessionsByUserUseCase', () => {
         deckId: 'deck-1',
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
-        studyType: 'multiple_choice',
+        studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         hits: 5,
         misses: 2,
       }),
@@ -36,7 +36,7 @@ describe('FindStudySessionsByUserUseCase', () => {
         deckId: 'deck-2',
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
-        studyType: 'flashcard',
+        studyMode: StudyModeEnum.FLASHCARD,
         ratings: [{ questionId: 'q1', difficulty: new Difficulty('normal') }],
       }),
     ]

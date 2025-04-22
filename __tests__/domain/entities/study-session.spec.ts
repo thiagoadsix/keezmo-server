@@ -5,11 +5,14 @@ import { mockId, generateIdMock } from '../../@support/mocks/generate-id.mock'
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { StudySession, QuestionMetadata } from '@/domain/entities/study-session'
+import { InvalidStudyModeError } from '@/domain/errors/deck'
 import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/invalid-question-metadata-error'
-import { InvalidStudyTypeError } from '@/domain/errors/study-session/invalid-study-type-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
-import { StudyType } from '@/domain/types'
-import { Difficulty, DifficultyEnum } from '@/domain/value-objects'
+import {
+  Difficulty,
+  DifficultyEnum,
+  StudyModeEnum,
+} from '@/domain/value-objects'
 
 import {
   validMultipleChoiceSessionProps,
@@ -46,7 +49,7 @@ describe('StudySession', () => {
       expect(session.deckId).toBe(validMultipleChoiceSessionProps.deckId)
       expect(session.startTime).toBe(validMultipleChoiceSessionProps.startTime)
       expect(session.endTime).toBe(validMultipleChoiceSessionProps.endTime)
-      expect(session.studyType).toBe('multiple_choice' as StudyType)
+      expect(session.studyMode).toBe(StudyModeEnum.MULTIPLE_CHOICE)
       expect(session.questionsMetadata).toEqual(
         validMultipleChoiceSessionProps.questionsMetadata,
       )
@@ -63,7 +66,7 @@ describe('StudySession', () => {
         questionsMetadata: [],
       })
 
-      expect(session.studyType).toBe('flashcard' as StudyType)
+      expect(session.studyMode).toBe(StudyModeEnum.FLASHCARD)
       expect(session.ratings).toEqual(validFlashcardSessionProps.ratings)
       expect(session.hits).toBeUndefined()
       expect(session.misses).toBeUndefined()
@@ -87,10 +90,10 @@ describe('StudySession', () => {
       )
     })
 
-    it('should throw when study type is invalid', () => {
+    it('should throw when study mode is invalid', () => {
       expect(
         () => new StudySession(invalidSessionPropsWithInvalidStudyType),
-      ).toThrow(InvalidStudyTypeError)
+      ).toThrow(InvalidStudyModeError)
     })
 
     it('should throw when flashcard session has hits/misses', () => {

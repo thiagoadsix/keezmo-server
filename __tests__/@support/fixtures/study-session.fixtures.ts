@@ -1,6 +1,9 @@
 import { QuestionMetadata } from '@/domain/entities/study-session'
-import { StudyType } from '@/domain/types'
-import { Difficulty, DifficultyEnum } from '@/domain/value-objects'
+import {
+  Difficulty,
+  DifficultyEnum,
+  StudyModeEnum,
+} from '@/domain/value-objects'
 
 import { mockId } from '../mocks/generate-id.mock'
 
@@ -25,7 +28,7 @@ export const validMultipleChoiceSessionProps = {
   deckId: mockId,
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'multiple_choice' as StudyType,
+  studyMode: StudyModeEnum.MULTIPLE_CHOICE,
   questionsMetadata: [...baseQuestionMetadata],
   hits: 5,
   misses: 2,
@@ -36,7 +39,7 @@ export const validFlashcardSessionProps = {
   deckId: mockId,
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'flashcard' as StudyType,
+  studyMode: StudyModeEnum.FLASHCARD,
   ratings: [
     {
       questionId: 'question-1',
@@ -54,7 +57,7 @@ export const invalidSessionPropsWithoutDeckId = {
   deckId: '',
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'multiple_choice' as StudyType,
+  studyMode: StudyModeEnum.MULTIPLE_CHOICE,
   questionsMetadata: [...baseQuestionMetadata],
 }
 
@@ -62,7 +65,7 @@ export const invalidSessionPropsWithoutStartTime = {
   deckId: mockId,
   startTime: '',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'multiple_choice' as StudyType,
+  studyMode: StudyModeEnum.MULTIPLE_CHOICE,
   questionsMetadata: [...baseQuestionMetadata],
 }
 
@@ -70,7 +73,7 @@ export const invalidSessionPropsWithoutEndTime = {
   deckId: mockId,
   startTime: '2023-05-15T10:00:00Z',
   endTime: '',
-  studyType: 'multiple_choice' as StudyType,
+  studyMode: StudyModeEnum.MULTIPLE_CHOICE,
   questionsMetadata: [...baseQuestionMetadata],
 }
 
@@ -79,7 +82,7 @@ export const invalidSessionPropsWithInvalidStudyType = {
   deckId: mockId,
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'invalid-type' as StudyType,
+  studyMode: 'invalid-type' as StudyModeEnum,
   questionsMetadata: [...baseQuestionMetadata],
 }
 
@@ -88,7 +91,7 @@ export const invalidFlashcardSessionWithHits = {
   deckId: mockId,
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'flashcard' as StudyType,
+  studyMode: StudyModeEnum.FLASHCARD,
   questionsMetadata: [...baseQuestionMetadata],
   hits: 5,
   misses: 3,
@@ -99,7 +102,7 @@ export const invalidMultipleChoiceSessionWithRatings = {
   deckId: mockId,
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
-  studyType: 'multiple_choice' as StudyType,
+  studyMode: StudyModeEnum.MULTIPLE_CHOICE,
   questionsMetadata: [...baseQuestionMetadata],
   ratings: [
     {
