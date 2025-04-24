@@ -1,38 +1,14 @@
 import { InvalidStudyModeError } from '@/domain/errors/deck'
-import { InvalidQuestionMetadataError } from '@/domain/errors/study-session/invalid-question-metadata-error'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
-import { Difficulty, StudyModeEnum } from '@/domain/value-objects'
+import { StudyModeEnum } from '@/domain/value-objects'
 
 import { generateId } from '@/shared/utils/generate-id'
-
-export interface StudySessionRating {
-  questionId: string
-  difficulty: Difficulty
-}
-
-// TODO: for now we'll use as interface
-export interface QuestionMetadata {
-  questionId: string
-  attempts: number
-  consecutiveHits: number
-  errors: number
-}
 
 interface StudySessionProps {
   deckId: string
   startTime: string
   endTime: string
   studyMode: StudyModeEnum
-  // DOC: will be used only for studyType equals to multiple_choice
-  questionsMetadata?: QuestionMetadata[] | null
-
-  // DOC: will be used only for studyType equals to multiple_choice
-  hits?: number | null
-  misses?: number | null
-
-  // DOC: will be used only for studyType equals to flashcard
-  // PROBLEM: this is just terrible, what a terrible decision I made here
-  ratings?: StudySessionRating[]
 }
 
 export class StudySession {
@@ -41,12 +17,6 @@ export class StudySession {
   public startTime: string
   public endTime: string
   public studyMode: StudyModeEnum
-  public questionsMetadata?: QuestionMetadata[] | null
-  public hits?: number | null
-  public misses?: number | null
-  // PROBLEM: this is just terrible, what a terrible decision I made here
-  public ratings?: StudySessionRating[] | null
-
   public readonly createdAt: string
   public updatedAt: string
 
@@ -58,15 +28,6 @@ export class StudySession {
     this.startTime = props.startTime
     this.endTime = props.endTime
     this.studyMode = props.studyMode
-    this.questionsMetadata = props.questionsMetadata || []
-
-    // Set based on study type
-    if (this.studyMode === StudyModeEnum.MULTIPLE_CHOICE) {
-      this.hits = props.hits || 0
-      this.misses = props.misses || 0
-    } else if (this.studyMode === StudyModeEnum.FLASHCARD) {
-      this.ratings = props.ratings || []
-    }
 
     this.createdAt = new Date().toISOString()
     this.updatedAt = this.createdAt
@@ -91,107 +52,6 @@ export class StudySession {
     ) {
       throw new InvalidStudyModeError(props.studyMode)
     }
-
-    if (
-      props.studyMode === StudyModeEnum.MULTIPLE_CHOICE &&
-      props.ratings &&
-      props.ratings.length > 0
-    ) {
-      throw new StudySessionValidationError(
-        'Ratings are only applicable for flashcard study type',
-      )
-    }
-
-    if (
-      props.studyMode === StudyModeEnum.FLASHCARD &&
-      (props.hits !== undefined || props.misses !== undefined)
-    ) {
-      throw new StudySessionValidationError(
-        'Hits and misses are only applicable for multiple choice study type',
-      )
-    }
-  }
-
-  public addQuestionMetadata(metadata: QuestionMetadata): void {
-    if (!this.questionsMetadata) {
-      this.questionsMetadata = []
-    }
-
-    if (!metadata.questionId) {
-      throw new InvalidQuestionMetadataError('Question ID is required')
-    }
-
-    this.questionsMetadata.push(metadata)
-    this.updatedAt = new Date().toISOString()
-  }
-
-  public updateQuestionMetadata(
-    questionId: string,
-    updates: Partial<QuestionMetadata>,
-  ): void {
-    if (!this.questionsMetadata) {
-      this.questionsMetadata = []
-    }
-
-    const index = this.questionsMetadata.findIndex(
-      (qm) => qm.questionId === questionId,
-    )
-
-    if (index === -1) {
-      throw new InvalidQuestionMetadataError(
-        `Question with id ${questionId} not found in study session`,
-      )
-    }
-
-    this.questionsMetadata[index] = {
-      ...this.questionsMetadata[index],
-      ...updates,
-    }
-
-    this.updatedAt = new Date().toISOString()
-  }
-
-  public addRating(rating: StudySessionRating): void {
-    if (this.studyMode !== StudyModeEnum.FLASHCARD) {
-      throw new StudySessionValidationError(
-        'Ratings can only be added to flashcard study sessions',
-      )
-    }
-
-    if (!rating.questionId) {
-      throw new InvalidQuestionMetadataError(
-        'Question ID is required for rating',
-      )
-    }
-
-    if (!this.ratings) {
-      this.ratings = []
-    }
-
-    this.ratings.push(rating)
-    this.updatedAt = new Date().toISOString()
-  }
-
-  public incrementHits(): void {
-    if (this.studyMode !== StudyModeEnum.MULTIPLE_CHOICE) {
-      throw new StudySessionValidationError(
-        'Hits can only be incremented in multiple choice study sessions',
-      )
-    }
-
-    this.hits = (this.hits || 0) + 1
-    this.updatedAt = new Date().toISOString()
-  }
-
-  public incrementMisses(): void {
-    if (this.studyMode !== StudyModeEnum.MULTIPLE_CHOICE) {
-      throw new StudySessionValidationError(
-        'Misses can only be incremented in multiple choice study sessions',
-      )
-    }
-
-    this.misses = (this.misses || 0) + 1
-    this.updatedAt = new Date().toISOString()
   }
 
   public setEndTime(endTime: string): void {
@@ -200,36 +60,13 @@ export class StudySession {
     }
 
     this.endTime = endTime
-    this.updatedAt = new Date().toISOString()
   }
 
-  public getTotalAttempts(): number {
-    if (!this.questionsMetadata) {
-      return 0
+  public setStartTime(startTime: string): void {
+    if (!startTime) {
+      throw new StudySessionValidationError('Start time is required')
     }
 
-    return this.questionsMetadata.reduce((sum, qm) => sum + qm.attempts, 0)
-  }
-
-  public getTotalErrors(): number {
-    if (!this.questionsMetadata) {
-      return 0
-    }
-
-    return this.questionsMetadata.reduce((sum, qm) => sum + qm.errors, 0)
-  }
-
-  public getAccuracy(): number {
-    if (this.studyMode === StudyModeEnum.MULTIPLE_CHOICE) {
-      const total = (this.hits || 0) + (this.misses || 0)
-      return total > 0 ? ((this.hits || 0) / total) * 100 : 0
-    }
-
-    const totalAttempts = this.getTotalAttempts()
-    const totalErrors = this.getTotalErrors()
-
-    return totalAttempts > 0
-      ? ((totalAttempts - totalErrors) / totalAttempts) * 100
-      : 0
+    this.startTime = startTime
   }
 }

@@ -1,8 +1,4 @@
-import {
-  StudySession,
-  QuestionMetadata,
-  StudySessionRating,
-} from '@/domain/entities/study-session'
+import { StudySession } from '@/domain/entities/study-session'
 import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
 import { StudyModeEnum } from '@/domain/value-objects'
 
@@ -12,12 +8,6 @@ interface CreateStudySessionRequest {
   totalQuestions: number
   startTime: string
   endTime: string
-
-  ratings?: StudySessionRating[]
-
-  hits?: number
-  misses?: number
-  questionsMetadata?: QuestionMetadata[]
 }
 
 type CreateStudySessionResponse = void
@@ -41,21 +31,6 @@ export class CreateStudySessionUseCase {
       startTime: request.startTime,
       endTime: request.endTime,
       studyMode: request.studyMode,
-    }
-
-    if (request.studyMode === StudyModeEnum.FLASHCARD && request.ratings) {
-      Object.assign(studySessionProps, {
-        ratings: request.ratings.map((r) => ({
-          questionId: r.questionId,
-          difficulty: r.difficulty,
-        })),
-      })
-    } else if (request.studyMode === StudyModeEnum.MULTIPLE_CHOICE) {
-      Object.assign(studySessionProps, {
-        hits: request.hits || 0,
-        misses: request.misses || 0,
-        questionsMetadata: request.questionsMetadata || [],
-      })
     }
 
     const studySession = new StudySession(studySessionProps)

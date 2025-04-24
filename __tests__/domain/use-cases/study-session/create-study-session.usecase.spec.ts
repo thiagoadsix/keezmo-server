@@ -7,7 +7,7 @@ import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { StudySession } from '@/domain/entities/study-session'
 import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error'
 import { CreateStudySessionUseCase } from '@/domain/use-cases/study-session/create-study-session.usecase'
-import { Difficulty, StudyModeEnum } from '@/domain/value-objects'
+import { StudyModeEnum } from '@/domain/value-objects'
 
 describe('CreateStudySessionUseCase', () => {
   let useCase: CreateStudySessionUseCase
@@ -25,10 +25,6 @@ describe('CreateStudySessionUseCase', () => {
         totalQuestions: 10,
         startTime: '2023-01-01T10:00:00Z',
         endTime: '2023-01-01T10:30:00Z',
-        ratings: [
-          { questionId: 'question-1', difficulty: new Difficulty('easy') },
-          { questionId: 'question-2', difficulty: new Difficulty('hard') },
-        ],
       }
 
       await useCase.execute(request)
@@ -39,7 +35,6 @@ describe('CreateStudySessionUseCase', () => {
       expect(savedSession).toBeInstanceOf(StudySession)
       expect(savedSession.deckId).toBe(request.deckId)
       expect(savedSession.studyMode).toBe(StudyModeEnum.FLASHCARD)
-      expect(savedSession.ratings).toHaveLength(2)
     })
 
     it('should create a multiple choice study session', async () => {
@@ -49,22 +44,6 @@ describe('CreateStudySessionUseCase', () => {
         totalQuestions: 10,
         startTime: '2023-01-01T10:00:00Z',
         endTime: '2023-01-01T10:30:00Z',
-        hits: 8,
-        misses: 2,
-        questionsMetadata: [
-          {
-            questionId: 'question-1',
-            attempts: 1,
-            consecutiveHits: 1,
-            errors: 0,
-          },
-          {
-            questionId: 'question-2',
-            attempts: 2,
-            consecutiveHits: 0,
-            errors: 1,
-          },
-        ],
       }
 
       await useCase.execute(request)
@@ -75,9 +54,6 @@ describe('CreateStudySessionUseCase', () => {
       expect(savedSession).toBeInstanceOf(StudySession)
       expect(savedSession.deckId).toBe(request.deckId)
       expect(savedSession.studyMode).toBe(request.studyMode)
-      expect(savedSession.hits).toBe(request.hits)
-      expect(savedSession.misses).toBe(request.misses)
-      expect(savedSession.questionsMetadata).toHaveLength(2)
     })
 
     it('should create a multiple choice study session with default hits and misses', async () => {
@@ -92,10 +68,6 @@ describe('CreateStudySessionUseCase', () => {
       await useCase.execute(request)
 
       expect(mockStudySessionRepository.save).toHaveBeenCalledTimes(1)
-
-      const savedSession = mockStudySessionRepository.save.mock.calls[0][0]
-      expect(savedSession.hits).toBe(0)
-      expect(savedSession.misses).toBe(0)
     })
 
     it('should throw an error if repository fails', async () => {
@@ -122,9 +94,6 @@ describe('CreateStudySessionUseCase', () => {
         totalQuestions: 10,
         startTime: '2023-01-01T10:00:00Z',
         endTime: '2023-01-01T10:30:00Z',
-        ratings: [
-          { questionId: 'question-1', difficulty: new Difficulty('easy') },
-        ],
       }
 
       await useCase.execute(request)
@@ -133,8 +102,6 @@ describe('CreateStudySessionUseCase', () => {
       const savedSession = mockStudySessionRepository.save.mock.calls[0][0]
       expect(savedSession.deckId).toBe(request.deckId)
       expect(savedSession.studyMode).toBe(StudyModeEnum.FLASHCARD)
-      expect(savedSession.ratings).toHaveLength(1)
-      expect(savedSession.ratings[0].questionId).toBe('question-1')
     })
 
     it('Given valid multiple choice study session data, When execute is called, Then repository save is invoked with correct data', async () => {
@@ -144,8 +111,6 @@ describe('CreateStudySessionUseCase', () => {
         totalQuestions: 10,
         startTime: '2023-01-01T10:00:00Z',
         endTime: '2023-01-01T10:30:00Z',
-        hits: 7,
-        misses: 3,
       }
 
       await useCase.execute(request)
@@ -154,8 +119,6 @@ describe('CreateStudySessionUseCase', () => {
       const savedSession = mockStudySessionRepository.save.mock.calls[0][0]
       expect(savedSession.deckId).toBe(request.deckId)
       expect(savedSession.studyMode).toBe(StudyModeEnum.MULTIPLE_CHOICE)
-      expect(savedSession.hits).toBe(7)
-      expect(savedSession.misses).toBe(3)
     })
 
     it('Given invalid study data with no deckId, When execute is called, Then it throws StudySessionValidationError', async () => {
