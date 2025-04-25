@@ -41,8 +41,6 @@ describe('UpdateCardsUseCase', () => {
           deckId: mockId,
           question: 'What is the capital of France?',
           answer: 'Paris',
-          options: ['London', 'Paris', 'Berlin', 'Madrid'],
-          answerIndex: 1,
         }),
         { id: card1Id },
       ),
@@ -51,8 +49,6 @@ describe('UpdateCardsUseCase', () => {
           deckId: mockId,
           question: 'What is the capital of Germany?',
           answer: 'Berlin',
-          options: ['London', 'Paris', 'Berlin', 'Madrid'],
-          answerIndex: 2,
         }),
         { id: card2Id },
       ),
@@ -69,8 +65,6 @@ describe('UpdateCardsUseCase', () => {
     mockCards.forEach((card) => {
       vi.spyOn(card, 'updateQuestion')
       vi.spyOn(card, 'updateAnswer')
-      vi.spyOn(card, 'updateOptions')
-      vi.spyOn(card, 'updateAnswerIndex')
     })
   })
 
@@ -117,29 +111,6 @@ describe('UpdateCardsUseCase', () => {
       expect(result).toHaveLength(2)
       expect(result).toContain(card1)
       expect(result).toContain(card2)
-    })
-
-    it('should update options and answerIndex separately', async () => {
-      const card = mockCards[0]
-      const newOptions = ['Option A', 'Option B', 'Option C', 'Option D']
-      const newAnswerIndex = 2
-
-      const request = {
-        deckId,
-        cards: [
-          {
-            id: card.id,
-            options: newOptions,
-            answerIndex: newAnswerIndex,
-          },
-        ],
-      }
-
-      await useCase.execute(request)
-
-      expect(card.updateOptions).toHaveBeenCalledWith(newOptions)
-      expect(card.updateAnswerIndex).toHaveBeenCalledWith(newAnswerIndex)
-      expect(mockCardRepository.save).toHaveBeenCalledWith(card)
     })
 
     it('should throw DeckNotFoundError when deck is not found', async () => {

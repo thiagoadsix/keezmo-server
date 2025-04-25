@@ -5,16 +5,13 @@ import { mockId, generateIdMock } from '../../@support/mocks/generate-id.mock'
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { Card } from '@/domain/entities/card'
-import { InvalidAnswerIndexError } from '@/domain/errors/card/invalid-answer-index-error'
 import { InvalidCardAnswerError } from '@/domain/errors/card/invalid-card-answer-error'
 import { InvalidCardQuestionError } from '@/domain/errors/card/invalid-card-question-error'
 
 import {
   validCardProps,
-  validCardPropsWithOptions,
   invalidCardPropsWithEmptyQuestion,
   invalidCardPropsWithEmptyAnswer,
-  invalidCardPropsWithInvalidAnswerIndex,
 } from '../../@support/fixtures/card.fixtures'
 
 describe('Card', () => {
@@ -41,18 +38,9 @@ describe('Card', () => {
       expect(card.deckId).toBe(validCardProps.deckId)
       expect(card.question).toBe(validCardProps.question)
       expect(card.answer).toBe(validCardProps.answer)
-      expect(card.options).toBeUndefined()
-      expect(card.answerIndex).toBeUndefined()
       expect(card.createdAt).toBe(expectedDateString)
       expect(card.updatedAt).toBe(expectedDateString)
       expect(generateIdMock).toHaveBeenCalledTimes(1)
-    })
-
-    it('should create a valid Card entity with options and answer index', () => {
-      const card = new Card(validCardPropsWithOptions)
-
-      expect(card.options).toEqual(validCardPropsWithOptions.options)
-      expect(card.answerIndex).toBe(validCardPropsWithOptions.answerIndex)
     })
 
     it('should create a Card with specified id, createdAt and updatedAt', () => {
@@ -78,12 +66,6 @@ describe('Card', () => {
     it('should throw InvalidCardAnswerError when answer is empty', () => {
       expect(() => new Card(invalidCardPropsWithEmptyAnswer)).toThrow(
         InvalidCardAnswerError,
-      )
-    })
-
-    it('should throw InvalidAnswerIndexError when answer index is out of bounds', () => {
-      expect(() => new Card(invalidCardPropsWithInvalidAnswerIndex)).toThrow(
-        InvalidAnswerIndexError,
       )
     })
   })
@@ -127,60 +109,6 @@ describe('Card', () => {
       const card = new Card(validCardProps)
 
       expect(() => card.updateAnswer('')).toThrow(InvalidCardAnswerError)
-    })
-  })
-
-  describe('updateOptions', () => {
-    it('should update the options and updatedAt', () => {
-      const card = new Card(validCardPropsWithOptions)
-      const newOptions = ['Madrid', 'Berlin', 'Paris', 'Rome', 'London']
-      const fixedDate = new Date('2023-01-02T12:00:00Z')
-      vi.setSystemTime(fixedDate)
-      const expectedDateString = fixedDate.toISOString()
-
-      card.updateOptions(newOptions)
-
-      expect(card.options).toEqual(newOptions)
-      expect(card.updatedAt).toBe(expectedDateString)
-    })
-
-    it('should reset answerIndex when it becomes invalid after updating options', () => {
-      const card = new Card(validCardPropsWithOptions)
-      const newOptions = ['Option 1']
-
-      card.updateOptions(newOptions)
-
-      expect(card.options).toEqual(newOptions)
-      expect(card.answerIndex).toBeUndefined()
-    })
-  })
-
-  describe('updateAnswerIndex', () => {
-    it('should update the answerIndex and updatedAt', () => {
-      const card = new Card(validCardPropsWithOptions)
-      const newAnswerIndex = 2
-      const fixedDate = new Date('2023-01-02T12:00:00Z')
-      vi.setSystemTime(fixedDate)
-      const expectedDateString = fixedDate.toISOString()
-
-      card.updateAnswerIndex(newAnswerIndex)
-
-      expect(card.answerIndex).toBe(newAnswerIndex)
-      expect(card.updatedAt).toBe(expectedDateString)
-    })
-
-    it('should throw InvalidAnswerIndexError when new index is out of bounds', () => {
-      const card = new Card(validCardPropsWithOptions)
-
-      expect(() => card.updateAnswerIndex(10)).toThrow(InvalidAnswerIndexError)
-    })
-
-    it('should throw Error when no options are available', () => {
-      const card = new Card(validCardProps) // No options
-
-      expect(() => card.updateAnswerIndex(0)).toThrow(
-        'Cannot set answer index when no options are available',
-      )
     })
   })
 })

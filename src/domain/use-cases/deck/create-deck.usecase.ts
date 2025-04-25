@@ -11,8 +11,6 @@ interface CreateDeckRequest {
   cards?: Array<{
     question: string
     answer: string
-    options?: string[]
-    answerIndex?: number
   }>
 }
 
@@ -41,8 +39,6 @@ export class CreateDeckUseCase {
           deckId: deck.id,
           question: cardData.question,
           answer: cardData.answer,
-          options: cardData.options,
-          answerIndex: cardData.answerIndex,
         })
 
         deck.addCard(card)

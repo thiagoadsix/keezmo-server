@@ -39,8 +39,6 @@ describe('UpdateCardUseCase', () => {
         deckId: mockId,
         question: 'What is the capital of France?',
         answer: 'Paris',
-        options: ['London', 'Paris', 'Berlin', 'Madrid'],
-        answerIndex: 1,
       }),
       { id: cardId },
     )
@@ -55,8 +53,6 @@ describe('UpdateCardUseCase', () => {
     // Set up spies on card methods after clearAllMocks
     vi.spyOn(mockCard, 'updateQuestion')
     vi.spyOn(mockCard, 'updateAnswer')
-    vi.spyOn(mockCard, 'updateOptions')
-    vi.spyOn(mockCard, 'updateAnswerIndex')
   })
 
   afterEach(() => {
@@ -101,26 +97,6 @@ describe('UpdateCardUseCase', () => {
       expect(result).toBe(mockCard)
     })
 
-    it('should update options and answerIndex when provided', async () => {
-      const newOptions = ['Option A', 'Option B', 'Option C', 'Option D']
-      const newAnswerIndex = 2
-
-      const request = {
-        deckId,
-        cardId,
-        data: {
-          options: newOptions,
-          answerIndex: newAnswerIndex,
-        },
-      }
-
-      await useCase.execute(request)
-
-      expect(mockCard.updateOptions).toHaveBeenCalledWith(newOptions)
-      expect(mockCard.updateAnswerIndex).toHaveBeenCalledWith(newAnswerIndex)
-      expect(mockCardRepository.save).toHaveBeenCalledWith(mockCard)
-    })
-
     it('should update multiple fields when provided together', async () => {
       const request = {
         deckId,
@@ -128,8 +104,6 @@ describe('UpdateCardUseCase', () => {
         data: {
           question: 'New question',
           answer: 'New answer',
-          options: ['A', 'B', 'C', 'D'],
-          answerIndex: 3,
         },
       }
 
@@ -137,8 +111,6 @@ describe('UpdateCardUseCase', () => {
 
       expect(mockCard.updateQuestion).toHaveBeenCalledWith('New question')
       expect(mockCard.updateAnswer).toHaveBeenCalledWith('New answer')
-      expect(mockCard.updateOptions).toHaveBeenCalledWith(['A', 'B', 'C', 'D'])
-      expect(mockCard.updateAnswerIndex).toHaveBeenCalledWith(3)
       expect(mockCardRepository.save).toHaveBeenCalledWith(mockCard)
     })
 

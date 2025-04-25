@@ -10,6 +10,7 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { Card } from '@/domain/entities/card'
 import { CreateDeckUseCase } from '@/domain/use-cases/deck/create-deck.usecase'
+import { StudyModeEnum } from '@/domain/value-objects'
 
 import { validCardProps } from '../../../@support/fixtures/card.fixtures'
 import { validDeckProps } from '../../../@support/fixtures/deck.fixtures'
@@ -36,7 +37,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        studyMode: 'flashcard',
+        studyMode: StudyModeEnum.FLASHCARD,
       }
 
       await useCase.execute(request)
@@ -56,13 +57,11 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        studyMode: 'multiple_choice',
+        studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         cards: [
           {
             question: validCardProps.question,
             answer: validCardProps.answer,
-            options: ['London', 'Paris', 'Berlin', 'Madrid'],
-            answerIndex: 1,
           },
           {
             question: 'What is the capital of Germany?',
@@ -83,8 +82,6 @@ describe('CreateDeckUseCase', () => {
       expect(savedDeck.cards[0]).toBeInstanceOf(Card)
       expect(savedDeck.cards[0].question).toBe(request.cards[0].question)
       expect(savedDeck.cards[0].answer).toBe(request.cards[0].answer)
-      expect(savedDeck.cards[0].options).toEqual(request.cards[0].options)
-      expect(savedDeck.cards[0].answerIndex).toBe(request.cards[0].answerIndex)
       expect(savedDeck.cards[1].question).toBe(request.cards[1].question)
       expect(savedDeck.cards[1].answer).toBe(request.cards[1].answer)
     })
@@ -94,7 +91,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        studyMode: 'flashcard',
+        studyMode: StudyModeEnum.FLASHCARD,
       }
 
       const repoError = new Error('Database connection failed')
@@ -111,7 +108,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: 'Advanced Physics',
         description: 'Physics concepts for advanced students',
-        studyMode: 'flashcard',
+        studyMode: StudyModeEnum.FLASHCARD,
       }
 
       // When
@@ -132,7 +129,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: 'Geography Quiz',
         description: 'Test your geography knowledge',
-        studyMode: 'multiple_choice',
+        studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         cards: [
           {
             question: 'What is the capital of Japan?',
@@ -164,7 +161,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: '',
         description: validDeckProps.description,
-        studyMode: 'flashcard',
+        studyMode: StudyModeEnum.FLASHCARD,
       }
 
       // When/Then
@@ -178,7 +175,7 @@ describe('CreateDeckUseCase', () => {
         userId,
         title: validDeckProps.title,
         description: validDeckProps.description,
-        studyMode: 'flashcard',
+        studyMode: StudyModeEnum.FLASHCARD,
         cards: [
           {
             question: '',

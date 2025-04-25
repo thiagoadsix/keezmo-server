@@ -1,4 +1,3 @@
-import { InvalidAnswerIndexError } from '@/domain/errors/card/invalid-answer-index-error'
 import { InvalidCardAnswerError } from '@/domain/errors/card/invalid-card-answer-error'
 import { InvalidCardQuestionError } from '@/domain/errors/card/invalid-card-question-error'
 
@@ -8,8 +7,6 @@ interface CardProps {
   deckId: string
   question: string
   answer: string
-  options?: string[]
-  answerIndex?: number
   createdAt?: string
   updatedAt?: string
 }
@@ -19,8 +16,6 @@ export class Card {
   public readonly deckId: string
   public question: string
   public answer: string
-  public options?: string[]
-  public answerIndex?: number
   public readonly createdAt: string
   public updatedAt: string
 
@@ -33,25 +28,10 @@ export class Card {
       throw new InvalidCardAnswerError(props.answer)
     }
 
-    if (
-      props.options &&
-      props.options.length > 0 &&
-      props.answerIndex !== undefined
-    ) {
-      if (!this.isValidAnswerIndex(props.answerIndex, props.options.length)) {
-        throw new InvalidAnswerIndexError(
-          props.answerIndex,
-          props.options.length,
-        )
-      }
-    }
-
     this.id = generateId()
     this.deckId = props.deckId
     this.question = props.question
     this.answer = props.answer
-    this.options = props.options
-    this.answerIndex = props.answerIndex
     this.createdAt = props.createdAt || new Date().toISOString()
     this.updatedAt = props.updatedAt || this.createdAt
   }
@@ -85,32 +65,6 @@ export class Card {
     }
 
     this.answer = newAnswer
-    this.updatedAt = new Date().toISOString()
-  }
-
-  public updateOptions(newOptions: string[]): void {
-    this.options = newOptions
-
-    if (
-      this.answerIndex !== undefined &&
-      !this.isValidAnswerIndex(this.answerIndex, newOptions.length)
-    ) {
-      this.answerIndex = undefined
-    }
-
-    this.updatedAt = new Date().toISOString()
-  }
-
-  public updateAnswerIndex(newAnswerIndex: number): void {
-    if (!this.options || this.options.length === 0) {
-      throw new Error('Cannot set answer index when no options are available')
-    }
-
-    if (!this.isValidAnswerIndex(newAnswerIndex, this.options.length)) {
-      throw new InvalidAnswerIndexError(newAnswerIndex, this.options.length)
-    }
-
-    this.answerIndex = newAnswerIndex
     this.updatedAt = new Date().toISOString()
   }
 }

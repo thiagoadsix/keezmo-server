@@ -10,8 +10,6 @@ export const validCardPropsWithOptions = {
   deckId: mockId,
   question: 'What is the capital of France?',
   answer: 'Paris',
-  options: ['London', 'Paris', 'Berlin', 'Madrid'],
-  answerIndex: 1,
 }
 
 export const invalidCardPropsWithEmptyQuestion = {
@@ -30,6 +28,4 @@ export const invalidCardPropsWithInvalidAnswerIndex = {
   deckId: mockId,
   question: 'What is the capital of France?',
   answer: 'Paris',
-  options: ['London', 'Paris', 'Berlin', 'Madrid'],
-  answerIndex: 5,
 }

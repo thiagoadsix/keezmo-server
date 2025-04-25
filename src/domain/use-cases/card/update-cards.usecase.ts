@@ -9,8 +9,6 @@ interface CardToUpdate {
   id: string
   question?: string
   answer?: string
-  options?: string[]
-  answerIndex?: number
 }
 
 interface UpdateCardsRequest {
@@ -96,22 +94,6 @@ export class UpdateCardsUseCase {
 
     if (updateData.answer !== undefined && updateData.answer !== card.answer) {
       card.updateAnswer(updateData.answer)
-    }
-
-    if (
-      updateData.options !== undefined &&
-      JSON.stringify(updateData.options) !== JSON.stringify(card.options)
-    ) {
-      card.updateOptions(updateData.options)
-    }
-
-    if (
-      updateData.answerIndex !== undefined &&
-      updateData.answerIndex !== card.answerIndex &&
-      card.options &&
-      card.options.length > 0
-    ) {
-      card.updateAnswerIndex(updateData.answerIndex)
     }
   }
 }
