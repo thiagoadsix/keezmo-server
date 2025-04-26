@@ -7,9 +7,9 @@ import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { DeleteCardUseCase } from '@/domain/use-cases/card/delete-card.usecase'
 import { StudyMode } from '@/domain/value-objects'
 
-import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
-import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
-import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+import { mockCardRepository } from '../../../@support/mocks/repositories/card-repository.mock'
+import { mockDeckRepository } from '../../../@support/mocks/repositories/deck-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock'
 
 describe('DeleteCardUseCase', () => {
   const userId = 'user-123'

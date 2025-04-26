@@ -2,7 +2,7 @@
 import {
   mockId,
   generateIdMock,
-} from '../../../@support/mocks/generate-id.mock'
+} from '../../../@support/mocks/shared/utils/generate-id.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
@@ -11,7 +11,7 @@ import { StudySession } from '@/domain/entities/study-session'
 import { FindStudySessionsByUserUseCase } from '@/domain/use-cases/study-session/find-study-sessions-by-user.usecase'
 import { StudyModeEnum } from '@/domain/value-objects'
 
-import { mockStudySessionRepository } from '../../../@support/mocks/study-session-repository.mock'
+import { mockStudySessionRepository } from '../../../@support/mocks/repositories/study-session-repository.mock'
 
 describe('FindStudySessionsByUserUseCase', () => {
   let useCase: FindStudySessionsByUserUseCase

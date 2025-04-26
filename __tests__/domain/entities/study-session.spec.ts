@@ -1,5 +1,8 @@
 /* eslint-disable import/order */
-import { mockId, generateIdMock } from '../../@support/mocks/generate-id.mock'
+import {
+  mockId,
+  generateIdMock,
+} from '../../@support/mocks/shared/utils/generate-id.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'

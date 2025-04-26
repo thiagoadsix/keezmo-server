@@ -3,7 +3,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { Progress } from '@/domain/entities/progress'
 import { InitializeProgressUseCase } from '@/domain/use-cases/progress/initialize-progress.usecase'
 
-import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock'
 
 describe('InitializeProgressUseCase', () => {
   let sut: InitializeProgressUseCase

@@ -1,7 +1,7 @@
 import { Card } from '@/domain/entities/card'
 import { StudyMode } from '@/domain/value-objects'
 
-import { mockId } from '../mocks/generate-id.mock'
+import { mockId } from '../mocks/shared/utils/generate-id.mock'
 
 export const validDeckProps = {
   userId: 'user-123',

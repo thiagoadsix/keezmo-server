@@ -1,6 +1,6 @@
 import { StudyModeEnum } from '@/domain/value-objects'
 
-import { mockId } from '../mocks/generate-id.mock'
+import { mockId } from '../mocks/shared/utils/generate-id.mock'
 
 export const validMultipleChoiceSessionProps = {
   deckId: mockId,

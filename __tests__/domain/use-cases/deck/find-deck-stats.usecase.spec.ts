@@ -10,9 +10,9 @@ import { ProgressRepository } from '@/domain/interfaces/progress-repository'
 import { FindDeckStatsUseCase } from '@/domain/use-cases/deck/find-deck-stats.usecase'
 import { StudyMode } from '@/domain/value-objects'
 
-import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
-import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
-import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+import { mockCardRepository } from '../../../@support/mocks/repositories/card-repository.mock'
+import { mockDeckRepository } from '../../../@support/mocks/repositories/deck-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock'
 
 describe('FindDeckStatsUseCase', () => {
   let deckRepository: DeckRepository

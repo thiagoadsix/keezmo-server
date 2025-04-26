@@ -8,8 +8,8 @@ import { SM2SchedulerService } from '@/domain/services/sm2-scheduler.service'
 import { ReviewCardUseCase } from '@/domain/use-cases/progress/review-card.usecase'
 import { DifficultyEnum } from '@/domain/value-objects'
 
-import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
-import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+import { mockCardRepository } from '../../../@support/mocks/repositories/card-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock'
 
 vi.mock('@/domain/services/sm2-scheduler.service', () => ({
   SM2SchedulerService: {

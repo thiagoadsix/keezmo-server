@@ -1,5 +1,5 @@
 /* eslint-disable import/order */
-import { mockStudySessionRepository } from '../../../@support/mocks/study-session-repository.mock'
+import { mockStudySessionRepository } from '../../../@support/mocks/repositories/study-session-repository.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, vi } from 'vitest'

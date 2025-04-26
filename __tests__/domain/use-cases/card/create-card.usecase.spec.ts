@@ -5,9 +5,9 @@ import { Progress } from '@/domain/entities/progress'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { CreateCardUseCase } from '@/domain/use-cases/card/create-card.usecase'
 
-import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
-import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
-import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+import { mockCardRepository } from '../../../@support/mocks/repositories/card-repository.mock'
+import { mockDeckRepository } from '../../../@support/mocks/repositories/deck-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock'
 
 describe('CreateCardUseCase', () => {
   const userId = 'user-123'

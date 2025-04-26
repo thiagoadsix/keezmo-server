@@ -4,8 +4,8 @@ import { Card } from '@/domain/entities/card'
 import { Progress } from '@/domain/entities/progress'
 import { FindDueCardsUseCase } from '@/domain/use-cases/progress/find-due-cards.usecase'
 
-import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
-import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+import { mockCardRepository } from '../../../@support/mocks/repositories/card-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock'
 
 describe('FindDueCardsUseCase', () => {
   let sut: FindDueCardsUseCase
