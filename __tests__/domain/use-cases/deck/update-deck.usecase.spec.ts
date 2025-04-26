@@ -3,7 +3,6 @@ import {
   mockId,
   generateIdMock,
 } from '../../../@support/mocks/generate-id.mock'
-import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
 /* eslint-enable import/order */
 
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
@@ -15,6 +14,7 @@ import { UpdateDeckUseCase } from '@/domain/use-cases/deck/update-deck.usecase'
 import { StudyMode } from '@/domain/value-objects'
 
 import { validDeckProps } from '../../../@support/fixtures/deck.fixtures'
+import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
 
 describe('UpdateDeckUseCase', () => {
   let useCase: UpdateDeckUseCase

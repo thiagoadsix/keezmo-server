@@ -16,7 +16,6 @@ describe('DeleteCardUseCase', () => {
   const deckId = 'deck-123'
   const cardId = 'card-123'
 
-  // Create mock objects
   const mockDeck = new Deck({
     userId,
     title: 'Test Deck',
@@ -35,25 +34,18 @@ describe('DeleteCardUseCase', () => {
   let sut: DeleteCardUseCase
 
   beforeEach(() => {
-    // Reset all mocks
     vi.resetAllMocks()
 
-    // Set up default successful case mocks
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck)
     mockCardRepository.findById.mockResolvedValue(mockCard)
     mockProgressRepository.deleteById.mockResolvedValue(undefined)
     mockCardRepository.deleteById.mockResolvedValue(undefined)
 
-    // Create SUT (System Under Test)
     sut = new DeleteCardUseCase(
       mockCardRepository,
       mockDeckRepository,
       mockProgressRepository,
     )
-
-    // Mock console methods
-    vi.spyOn(console, 'log').mockImplementation(() => {})
-    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   it('should delete card and its progress successfully', async () => {

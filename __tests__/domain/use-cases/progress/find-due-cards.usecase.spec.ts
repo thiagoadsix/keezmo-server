@@ -2,17 +2,15 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 import { Card } from '@/domain/entities/card'
 import { Progress } from '@/domain/entities/progress'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
 import { FindDueCardsUseCase } from '@/domain/use-cases/progress/find-due-cards.usecase'
 
+import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+
 describe('FindDueCardsUseCase', () => {
-  let progressRepository: ProgressRepository
-  let cardRepository: CardRepository
   let sut: FindDueCardsUseCase
   const today = new Date('2023-05-15T12:00:00Z')
 
-  // Sample data
   const mockDeckId = '123e4567-e89b-12d3-a456-426614174000'
 
   const mockProgress1 = new Progress({
@@ -21,7 +19,7 @@ describe('FindDueCardsUseCase', () => {
     interval: 10,
     repetitions: 3,
     easeFactor: 2.5,
-    nextReview: '2023-05-15T10:00:00Z', // Due today (earlier than current time)
+    nextReview: '2023-05-15T10:00:00Z',
   })
 
   const mockProgress2 = new Progress({
@@ -30,7 +28,7 @@ describe('FindDueCardsUseCase', () => {
     interval: 5,
     repetitions: 2,
     easeFactor: 2.2,
-    nextReview: '2023-05-14T12:00:00Z', // Due yesterday
+    nextReview: '2023-05-14T12:00:00Z',
   })
 
   const mockCard1 = new Card({
@@ -51,61 +49,39 @@ describe('FindDueCardsUseCase', () => {
     answer: 'Answer 3',
   })
 
-  // Setup mockId property on cards to match progress cardIds
   Object.defineProperty(mockCard1, 'id', { value: 'card-1' })
   Object.defineProperty(mockCard2, 'id', { value: 'card-2' })
   Object.defineProperty(mockCard3, 'id', { value: 'card-3' })
 
   beforeEach(() => {
-    // Reset date for each test
     vi.setSystemTime(today)
+    vi.resetAllMocks()
 
-    // Mock repositories
-    progressRepository = {
-      findByCardAndDeck: vi.fn(),
-      findDueCards: vi.fn(),
-      save: vi.fn(),
-      update: vi.fn(),
-      deleteById: vi.fn(),
-    }
+    sut = new FindDueCardsUseCase(mockProgressRepository, mockCardRepository)
 
-    cardRepository = {
-      findById: vi.fn(),
-      findByDeckId: vi.fn(),
-      save: vi.fn(),
-      deleteById: vi.fn(),
-      deleteByIds: vi.fn(),
-    }
-
-    // Create SUT (System Under Test)
-    sut = new FindDueCardsUseCase(progressRepository, cardRepository)
-
-    // Spy on console.log
     vi.spyOn(console, 'log').mockImplementation(() => {})
   })
 
   it('should return due cards ordered by interval (highest first)', async () => {
     // Arrange
-    vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([
+    mockProgressRepository.findDueCards.mockResolvedValue([
       mockProgress1,
       mockProgress2,
     ])
 
-    vi.mocked(cardRepository.findById).mockImplementation(async (id) => {
-      if (id === 'card-1') return mockCard1
-      if (id === 'card-2') return mockCard2
-      return null
-    })
+    // Setup the card repository to return the right cards for each ID
+    mockCardRepository.findById.mockResolvedValueOnce(mockCard1)
+    mockCardRepository.findById.mockResolvedValueOnce(mockCard2)
 
     // Act
     const result = await sut.execute({ date: today })
 
     // Assert
-    expect(progressRepository.findDueCards).toHaveBeenCalledWith(
+    expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
       undefined,
     )
-    expect(cardRepository.findById).toHaveBeenCalledTimes(2)
+    expect(mockCardRepository.findById).toHaveBeenCalledTimes(2)
     expect(result).toHaveLength(2)
 
     // Check if properly ordered by interval (highest first)
@@ -118,16 +94,14 @@ describe('FindDueCardsUseCase', () => {
   it('should filter by deckId when provided', async () => {
     // Arrange
     const specificDeckId = 'specific-deck'
-    vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([
-      mockProgress1,
-    ])
-    vi.mocked(cardRepository.findById).mockResolvedValueOnce(mockCard1)
+    mockProgressRepository.findDueCards.mockResolvedValue([mockProgress1])
+    mockCardRepository.findById.mockResolvedValue(mockCard1)
 
     // Act
     await sut.execute({ date: today, deckId: specificDeckId })
 
     // Assert
-    expect(progressRepository.findDueCards).toHaveBeenCalledWith(
+    expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
       specificDeckId,
     )
@@ -135,7 +109,7 @@ describe('FindDueCardsUseCase', () => {
 
   it('should return empty array when no due cards found', async () => {
     // Arrange
-    vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([])
+    mockProgressRepository.findDueCards.mockResolvedValue([])
 
     // Act
     const result = await sut.execute()
@@ -143,21 +117,19 @@ describe('FindDueCardsUseCase', () => {
     // Assert
     expect(result).toEqual([])
     // Verify we don't do unnecessary card fetching
-    expect(cardRepository.findById).not.toHaveBeenCalled()
+    expect(mockCardRepository.findById).not.toHaveBeenCalled()
   })
 
   it('should exclude cards that could not be found', async () => {
     // Arrange
-    vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([
+    mockProgressRepository.findDueCards.mockResolvedValue([
       mockProgress1,
       mockProgress2,
     ])
 
     // Only mockCard1 exists, mockCard2 is "deleted"
-    vi.mocked(cardRepository.findById).mockImplementation(async (id) => {
-      if (id === 'card-1') return mockCard1
-      return null
-    })
+    mockCardRepository.findById.mockResolvedValueOnce(mockCard1)
+    mockCardRepository.findById.mockResolvedValueOnce(null)
 
     // Act
     const result = await sut.execute()
@@ -169,13 +141,13 @@ describe('FindDueCardsUseCase', () => {
 
   it('should use current date when no date provided', async () => {
     // Arrange
-    vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([])
+    mockProgressRepository.findDueCards.mockResolvedValue([])
 
     // Act
     await sut.execute() // No date provided
 
     // Assert
-    expect(progressRepository.findDueCards).toHaveBeenCalledWith(
+    expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
       undefined,
     )

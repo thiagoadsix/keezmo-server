@@ -29,11 +29,9 @@ describe('UpdateCardUseCase', () => {
     vi.useFakeTimers()
     generateIdMock.mockReturnValue(mockId)
 
-    // Create mock instances
     useCase = new UpdateCardUseCase(mockCardRepository, mockDeckRepository)
     mockDeck = new Deck(validDeckProps)
 
-    // Create mock card with predetermined ID
     mockCard = Object.assign(
       new Card({
         deckId: mockId,
@@ -43,14 +41,12 @@ describe('UpdateCardUseCase', () => {
       { id: cardId },
     )
 
-    // Mock repository responses
     mockDeckRepository.findById.mockResolvedValue(mockDeck)
     mockCardRepository.findById.mockResolvedValue(mockCard)
     mockCardRepository.save.mockResolvedValue(undefined)
 
     vi.clearAllMocks()
 
-    // Set up spies on card methods after clearAllMocks
     vi.spyOn(mockCard, 'updateQuestion')
     vi.spyOn(mockCard, 'updateAnswer')
   })
