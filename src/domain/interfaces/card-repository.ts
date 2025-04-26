@@ -6,4 +6,5 @@ export interface CardRepository {
   save(card: Card): Promise<void>
   deleteById(id: string): Promise<void>
   deleteByIds(ids: string[]): Promise<void>
+  saveBatch(cards: Card[]): Promise<void>
 }

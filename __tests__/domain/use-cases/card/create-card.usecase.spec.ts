@@ -1,0 +1,87 @@
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+
+import { Card } from '@/domain/entities/card'
+import { Progress } from '@/domain/entities/progress'
+import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
+import { CreateCardUseCase } from '@/domain/use-cases/card/create-card.usecase'
+
+import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
+import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+
+describe('CreateCardUseCase', () => {
+  const userId = 'user-123'
+  const deckId = 'deck-123'
+  const validCardData = {
+    question: 'Test question',
+    answer: 'Test answer',
+  }
+
+  let sut: CreateCardUseCase
+
+  beforeEach(() => {
+    vi.resetAllMocks()
+
+    mockDeckRepository.findByIdAndUserId.mockResolvedValue({
+      id: deckId,
+      userId,
+    })
+    mockCardRepository.save.mockResolvedValue(undefined)
+    mockProgressRepository.save.mockResolvedValue(undefined)
+
+    sut = new CreateCardUseCase(
+      mockCardRepository,
+      mockDeckRepository,
+      mockProgressRepository,
+    )
+  })
+
+  it('should create a card and its initial progress successfully', async () => {
+    // Arrange
+    const request = {
+      deckId,
+      userId,
+      data: validCardData,
+    }
+
+    // Act
+    const result = await sut.execute(request)
+
+    // Assert
+    expect(result).toHaveProperty('card')
+    expect(result).toHaveProperty('progress')
+    expect(result.card).toBeInstanceOf(Card)
+    expect(result.progress).toBeInstanceOf(Progress)
+    expect(result.card.question).toBe(validCardData.question)
+    expect(result.card.answer).toBe(validCardData.answer)
+    expect(result.card.deckId).toBe(deckId)
+    expect(result.progress.cardId).toBe(result.card.id)
+    expect(result.progress.deckId).toBe(deckId)
+    expect(result.progress.repetitions).toBe(0)
+
+    expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+      deckId,
+      userId,
+    )
+    expect(mockCardRepository.save).toHaveBeenCalledWith(expect.any(Card))
+    expect(mockProgressRepository.save).toHaveBeenCalledWith(
+      expect.any(Progress),
+    )
+  })
+
+  it('should throw DeckNotFoundError when deck does not exist', async () => {
+    // Arrange
+    mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null)
+
+    const request = {
+      deckId: 'non-existent-deck',
+      userId,
+      data: validCardData,
+    }
+
+    // Act & Assert
+    await expect(sut.execute(request)).rejects.toThrow(DeckNotFoundError)
+    expect(mockCardRepository.save).not.toHaveBeenCalled()
+    expect(mockProgressRepository.save).not.toHaveBeenCalled()
+  })
+})

@@ -21,4 +21,5 @@ export const mockProgressRepository: MockedRepository<ProgressRepository> = {
   save: vi.fn(),
   update: vi.fn(),
   deleteById: vi.fn(),
+  saveBatch: vi.fn(),
 }

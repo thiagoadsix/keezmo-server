@@ -21,4 +21,5 @@ export const mockCardRepository: MockedRepository<CardRepository> = {
   save: vi.fn(),
   deleteById: vi.fn(),
   deleteByIds: vi.fn(),
+  saveBatch: vi.fn(),
 }
