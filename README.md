@@ -27,6 +27,7 @@ __tests__/
 Contém as regras de negócio puras e isoladas.
 
 - entities/: Entidades com identidade e comportamentos próprios.
+- errors/: Erros para representar exceções a nível de domínio.
 - value-objects/: Objetos imutáveis com validações.
 - interfaces/: Contratos como UserRepository, Hasher, etc.
 - services/: Lógica de negócio que não pertence a uma entidade específica.
