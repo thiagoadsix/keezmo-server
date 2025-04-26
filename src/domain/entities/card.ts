@@ -46,10 +46,6 @@ export class Card {
     return answer !== null && answer !== undefined && answer.trim().length > 0
   }
 
-  private isValidAnswerIndex(index: number, optionsLength: number): boolean {
-    return index >= 0 && index < optionsLength
-  }
-
   public updateQuestion(newQuestion: string): void {
     if (!this.isValidQuestion(newQuestion)) {
       throw new InvalidCardQuestionError(newQuestion)

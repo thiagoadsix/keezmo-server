@@ -6,12 +6,6 @@ export const validCardProps = {
   answer: 'Paris',
 }
 
-export const validCardPropsWithOptions = {
-  deckId: mockId,
-  question: 'What is the capital of France?',
-  answer: 'Paris',
-}
-
 export const invalidCardPropsWithEmptyQuestion = {
   deckId: mockId,
   question: '',
@@ -22,10 +16,4 @@ export const invalidCardPropsWithEmptyAnswer = {
   deckId: mockId,
   question: 'What is the capital of France?',
   answer: '',
-}
-
-export const invalidCardPropsWithInvalidAnswerIndex = {
-  deckId: mockId,
-  question: 'What is the capital of France?',
-  answer: 'Paris',
 }
