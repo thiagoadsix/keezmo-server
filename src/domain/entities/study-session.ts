@@ -7,7 +7,7 @@ import { generateId } from '@/shared/utils/generate-id'
 interface StudySessionProps {
   deckId: string
   startTime: string
-  endTime: string
+  endTime?: string | null
   studyMode: StudyModeEnum
 }
 
@@ -15,7 +15,7 @@ export class StudySession {
   public readonly id: string
   public deckId: string
   public startTime: string
-  public endTime: string
+  public endTime?: string | null
   public studyMode: StudyModeEnum
   public readonly createdAt: string
   public updatedAt: string
@@ -40,10 +40,6 @@ export class StudySession {
 
     if (!props.startTime) {
       throw new StudySessionValidationError('Start time is required')
-    }
-
-    if (!props.endTime) {
-      throw new StudySessionValidationError('End time is required')
     }
 
     if (

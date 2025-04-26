@@ -14,7 +14,7 @@ import {
   validFlashcardSessionProps,
   invalidSessionPropsWithoutDeckId,
   invalidSessionPropsWithoutStartTime,
-  invalidSessionPropsWithoutEndTime,
+  // invalidSessionPropsWithoutEndTime,
   invalidSessionPropsWithInvalidStudyType,
 } from '../../@support/fixtures/study-session.fixtures'
 
@@ -65,12 +65,6 @@ describe('StudySession', () => {
       expect(
         () => new StudySession(invalidSessionPropsWithoutStartTime),
       ).toThrow(StudySessionValidationError)
-    })
-
-    it('should throw when endTime is missing', () => {
-      expect(() => new StudySession(invalidSessionPropsWithoutEndTime)).toThrow(
-        StudySessionValidationError,
-      )
     })
 
     it('should throw when study mode is invalid', () => {
