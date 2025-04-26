@@ -1,6 +1,7 @@
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { CardRepository } from '@/domain/interfaces/card-repository'
 import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import { ProgressRepository } from '@/domain/interfaces/progress-repository'
 
 interface DeleteDeckRequest {
   deckId: string
@@ -13,6 +14,7 @@ export class DeleteDeckUseCase {
   constructor(
     private readonly deckRepository: DeckRepository,
     private readonly cardRepository: CardRepository,
+    private readonly progressRepository: ProgressRepository,
   ) {}
 
   async execute(request: DeleteDeckRequest): Promise<DeleteDeckResponse> {
@@ -38,6 +40,9 @@ export class DeleteDeckUseCase {
         `Deleting ${cardIds.length} cards from deck ${request.deckId}`,
       )
       await this.cardRepository.deleteByIds(cardIds)
+
+      console.log(`Deleting progress for cards ${cardIds}`)
+      await this.progressRepository.deleteByDeckId(request.deckId)
     }
 
     console.log(`Deleting deck ${request.deckId}`)

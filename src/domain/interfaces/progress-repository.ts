@@ -7,4 +7,5 @@ export interface ProgressRepository {
   update(progress: Progress): Promise<void>
   deleteById(id: string): Promise<void>
   saveBatch(progresses: Progress[]): Promise<void>
+  deleteByDeckId(deckId: string): Promise<void>
 }

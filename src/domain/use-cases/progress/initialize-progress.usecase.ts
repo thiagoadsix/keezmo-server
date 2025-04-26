@@ -1,12 +1,12 @@
 import { Progress } from '@/domain/entities/progress'
 import { ProgressRepository } from '@/domain/interfaces/progress-repository'
 
-type InitializeProgressParams = {
+type InitializeProgressRequest = {
   cardId: string
   deckId: string
 }
 
-type InitializeProgressResult = {
+type InitializeProgressResponse = {
   progress: Progress
   isNew: boolean
 }
@@ -17,7 +17,7 @@ export class InitializeProgressUseCase {
   public async execute({
     cardId,
     deckId,
-  }: InitializeProgressParams): Promise<InitializeProgressResult> {
+  }: InitializeProgressRequest): Promise<InitializeProgressResponse> {
     console.log(`Starting for card=${cardId} in deck=${deckId}`)
 
     const existingProgress = await this.progressRepository.findByCardAndDeck(

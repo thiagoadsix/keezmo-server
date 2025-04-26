@@ -17,6 +17,7 @@ import {
 } from '../../../@support/fixtures/deck.fixtures'
 import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
 import { mockDeckRepository } from '../../../@support/mocks/deck-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
 
 describe('DeleteDeckUseCase', () => {
   let useCase: DeleteDeckUseCase
@@ -25,7 +26,11 @@ describe('DeleteDeckUseCase', () => {
   const userId = 'user-123'
 
   beforeEach(() => {
-    useCase = new DeleteDeckUseCase(mockDeckRepository, mockCardRepository)
+    useCase = new DeleteDeckUseCase(
+      mockDeckRepository,
+      mockCardRepository,
+      mockProgressRepository,
+    )
     vi.useFakeTimers()
     generateIdMock.mockReturnValue(mockId)
 
@@ -35,7 +40,7 @@ describe('DeleteDeckUseCase', () => {
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck)
     mockDeckRepository.delete.mockResolvedValue(undefined)
     mockCardRepository.deleteByIds.mockResolvedValue(undefined)
-
+    mockProgressRepository.deleteByDeckId.mockResolvedValue(undefined)
     vi.clearAllMocks()
   })
 
@@ -58,7 +63,7 @@ describe('DeleteDeckUseCase', () => {
       expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId)
     })
 
-    it('should delete a deck with its cards', async () => {
+    it('should delete a deck with its cards and progress', async () => {
       const request = { deckId: mockId, userId }
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeckWithCards)
 
@@ -72,6 +77,7 @@ describe('DeleteDeckUseCase', () => {
       )
       expect(mockCardRepository.deleteByIds).toHaveBeenCalledWith(cardIds)
       expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId)
+      expect(mockProgressRepository.deleteByDeckId).toHaveBeenCalledWith(mockId)
     })
 
     it('should throw DeckNotFoundError when deck is not found', async () => {
