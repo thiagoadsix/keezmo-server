@@ -1,5 +1,4 @@
 /* eslint-disable import/order */
-import { mockStudySessionRepository } from '../../../@support/mocks/study-session-repository.mock'
 import {
   mockId,
   generateIdMock,
@@ -10,7 +9,9 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { StudySession } from '@/domain/entities/study-session'
 import { FindStudySessionsByUserUseCase } from '@/domain/use-cases/study-session/find-study-sessions-by-user.usecase'
-import { Difficulty, StudyModeEnum } from '@/domain/value-objects'
+import { StudyModeEnum } from '@/domain/value-objects'
+
+import { mockStudySessionRepository } from '../../../@support/mocks/study-session-repository.mock'
 
 describe('FindStudySessionsByUserUseCase', () => {
   let useCase: FindStudySessionsByUserUseCase
@@ -22,22 +23,18 @@ describe('FindStudySessionsByUserUseCase', () => {
     vi.useFakeTimers()
     generateIdMock.mockReturnValue(mockId)
 
-    // Create mock study sessions
     mockStudySessions = [
       new StudySession({
         deckId: 'deck-1',
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
-        hits: 5,
-        misses: 2,
       }),
       new StudySession({
         deckId: 'deck-2',
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyMode: StudyModeEnum.FLASHCARD,
-        ratings: [{ questionId: 'q1', difficulty: new Difficulty('normal') }],
       }),
     ]
 
@@ -101,15 +98,12 @@ describe('FindStudySessionsByUserUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given a user ID, When execute is called, Then fetch study sessions from repository', async () => {
-      // Given
       const request = {
         userId,
       }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
         userId,
       )
@@ -118,22 +112,18 @@ describe('FindStudySessionsByUserUseCase', () => {
     })
 
     it('Given a user with no study sessions, When execute is called, Then return empty array', async () => {
-      // Given
       mockStudySessionRepository.findByUserId.mockResolvedValueOnce([])
       const request = {
         userId,
       }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(result).toEqual([])
       expect(result).toHaveLength(0)
     })
 
     it('Given a repository error, When execute is called, Then propagate the error', async () => {
-      // Given
       const repositoryError = new Error('Database error')
       mockStudySessionRepository.findByUserId.mockRejectedValueOnce(
         repositoryError,
@@ -142,7 +132,6 @@ describe('FindStudySessionsByUserUseCase', () => {
         userId,
       }
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow()
       expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
         userId,

@@ -14,7 +14,6 @@ import {
   validFlashcardSessionProps,
   invalidSessionPropsWithoutDeckId,
   invalidSessionPropsWithoutStartTime,
-  // invalidSessionPropsWithoutEndTime,
   invalidSessionPropsWithInvalidStudyType,
 } from '../../@support/fixtures/study-session.fixtures'
 

@@ -47,17 +47,14 @@ describe('CreateCardsBatchUseCase', () => {
   })
 
   it('should create multiple cards and their progresses successfully', async () => {
-    // Arrange
     const request = {
       deckId,
       userId,
       cards: validCardBatch,
     }
 
-    // Act
     await sut.execute(request)
 
-    // Assert
     expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
       deckId,
       userId,
@@ -69,7 +66,6 @@ describe('CreateCardsBatchUseCase', () => {
       expect.arrayContaining([expect.any(Progress)]),
     )
 
-    // Verify the correct number of cards and progresses are passed
     const savedCards = mockCardRepository.saveBatch.mock.calls[0][0] as Card[]
     const savedProgresses = mockProgressRepository.saveBatch.mock
       .calls[0][0] as Progress[]
@@ -77,7 +73,6 @@ describe('CreateCardsBatchUseCase', () => {
     expect(savedCards).toHaveLength(validCardBatch.length)
     expect(savedProgresses).toHaveLength(validCardBatch.length)
 
-    // Check card and progress relationship
     savedCards.forEach((card, index) => {
       expect(card.question).toBe(validCardBatch[index].question)
       expect(card.answer).toBe(validCardBatch[index].answer)
@@ -91,7 +86,6 @@ describe('CreateCardsBatchUseCase', () => {
   })
 
   it('should throw DeckNotFoundError when deck does not exist', async () => {
-    // Arrange
     mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null)
 
     const request = {
@@ -100,24 +94,20 @@ describe('CreateCardsBatchUseCase', () => {
       cards: validCardBatch,
     }
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow(DeckNotFoundError)
     expect(mockCardRepository.saveBatch).not.toHaveBeenCalled()
     expect(mockProgressRepository.saveBatch).not.toHaveBeenCalled()
   })
 
   it('should do nothing when cards array is empty', async () => {
-    // Arrange
     const request = {
       deckId,
       userId,
       cards: [],
     }
 
-    // Act
     await sut.execute(request)
 
-    // Assert
     expect(mockCardRepository.saveBatch).not.toHaveBeenCalled()
     expect(mockProgressRepository.saveBatch).not.toHaveBeenCalled()
   })

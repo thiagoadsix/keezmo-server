@@ -100,13 +100,10 @@ describe('FindDeckByIdAndUserUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given valid deckId and userId, When execute is called, Then the deck is returned', async () => {
-      // Given
       const request = { deckId: mockId, userId }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
         request.deckId,
         request.userId,
@@ -115,11 +112,9 @@ describe('FindDeckByIdAndUserUseCase', () => {
     })
 
     it('Given non-existent deck, When execute is called, Then DeckNotFoundError is thrown', async () => {
-      // Given
       const request = { deckId: 'non-existent-id', userId }
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
       expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
         request.deckId,
@@ -128,27 +123,22 @@ describe('FindDeckByIdAndUserUseCase', () => {
     })
 
     it('Given non-existent deck, When execute is called, Then error message is specific', async () => {
-      // Given
       const request = { deckId: 'non-existent-id', userId }
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(
         `Deck with ID ${request.deckId} not found for user ${userId}`,
       )
     })
 
     it('Given a deck with cards, When execute is called, Then the deck with cards is returned', async () => {
-      // Given
       const request = { deckId: mockId, userId }
       mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(
         mockDeckWithCards,
       )
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(result).not.toBeNull()
       expect(result.cards).toHaveLength(2)
       expect(result.cards[0].question).toBe('What is the capital of France?')

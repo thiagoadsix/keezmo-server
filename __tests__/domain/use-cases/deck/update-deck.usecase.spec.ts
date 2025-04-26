@@ -171,21 +171,17 @@ describe('UpdateDeckUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given valid deckId and userId with new title, When execute is called, Then deck title is updated', async () => {
-      // Given
       const newTitle = 'Advanced Math'
       const request = { deckId: mockId, userId, data: { title: newTitle } }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockDeck.updateTitle).toHaveBeenCalledWith(newTitle)
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck)
       expect(result).toBe(mockDeck)
     })
 
     it('Given valid deckId and userId with no changes, When execute is called, Then no updates are applied', async () => {
-      // Given
       const request = {
         deckId: mockId,
         userId,
@@ -196,10 +192,8 @@ describe('UpdateDeckUseCase', () => {
         },
       }
 
-      // When
       await useCase.execute(request)
 
-      // Then
       expect(mockDeck.updateTitle).not.toHaveBeenCalled()
       expect(mockDeck.updateDescription).not.toHaveBeenCalled()
       expect(mockDeck.updateStudyMode).not.toHaveBeenCalled()
@@ -207,7 +201,6 @@ describe('UpdateDeckUseCase', () => {
     })
 
     it('Given valid deckId and userId with multiple changes, When execute is called, Then all provided fields are updated', async () => {
-      // Given
       const request = {
         deckId: mockId,
         userId,
@@ -218,10 +211,8 @@ describe('UpdateDeckUseCase', () => {
         },
       }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockDeck.updateTitle).toHaveBeenCalledWith('New Title')
       expect(mockDeck.updateDescription).toHaveBeenCalledWith('New Description')
       expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
@@ -232,7 +223,6 @@ describe('UpdateDeckUseCase', () => {
     })
 
     it('Given non-existent deck, When execute is called, Then DeckNotFoundError is thrown', async () => {
-      // Given
       const request = {
         deckId: 'non-existent-id',
         userId,
@@ -240,16 +230,13 @@ describe('UpdateDeckUseCase', () => {
       }
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
     })
 
     it('Given a repository error, When execute is called, Then DeckUpdateError is thrown', async () => {
-      // Given
       const request = { deckId: mockId, userId, data: { title: 'New Title' } }
       mockDeckRepository.save.mockRejectedValueOnce(new Error('Database error'))
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckUpdateError)
     })
   })

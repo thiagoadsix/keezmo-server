@@ -173,12 +173,10 @@ describe('Deck', () => {
       expect(deck.cards[0]).toBe(card)
       expect(deck.updatedAt).toBe(expectedDateString)
     })
-    // WARNING: since we are mocking generateIdMock we should be careful to not generate the same ID for all entities. We should fix it ASAP.
+
     it('should remove a card from the deck', () => {
-      // Create a fresh deck without cards
       const deck = new Deck(validDeckProps)
 
-      // Create cards with manually assigned IDs instead of using generateId
       const card1 = new Card({
         deckId: deck.id,
         question: 'Question 1',
@@ -191,11 +189,9 @@ describe('Deck', () => {
         answer: 'Answer 2',
       })
 
-      // Manually set card IDs to ensure they're unique
       Object.defineProperty(card1, 'id', { value: 'card-id-1' })
       Object.defineProperty(card2, 'id', { value: 'card-id-2' })
 
-      // Add cards to the deck
       deck.addCard(card1)
       deck.addCard(card2)
 

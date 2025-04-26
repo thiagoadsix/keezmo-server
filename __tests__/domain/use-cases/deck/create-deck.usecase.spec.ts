@@ -103,7 +103,6 @@ describe('CreateDeckUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given valid deck data, When execute is called, Then repository save is invoked with correct deck', async () => {
-      // Given
       const request = {
         userId,
         title: 'Advanced Physics',
@@ -111,10 +110,8 @@ describe('CreateDeckUseCase', () => {
         studyMode: StudyModeEnum.FLASHCARD,
       }
 
-      // When
       await useCase.execute(request)
 
-      // Then
       expect(mockDeckRepository.save).toHaveBeenCalledTimes(1)
       const savedDeck = mockDeckRepository.save.mock.calls[0][0]
       expect(savedDeck.userId).toBe(userId)
@@ -124,7 +121,6 @@ describe('CreateDeckUseCase', () => {
     })
 
     it('Given deck data with 2 cards, When execute is called, Then deck contains exactly 2 cards with matching content', async () => {
-      // Given
       const request = {
         userId,
         title: 'Geography Quiz',
@@ -142,10 +138,8 @@ describe('CreateDeckUseCase', () => {
         ],
       }
 
-      // When
       await useCase.execute(request)
 
-      // Then
       const savedDeck = mockDeckRepository.save.mock.calls[0][0]
       expect(savedDeck.userId).toBe(userId)
       expect(savedDeck.cards).toHaveLength(2)
@@ -156,7 +150,6 @@ describe('CreateDeckUseCase', () => {
     })
 
     it('Given missing title, When execute is called, Then promise rejects with InvalidDeckTitleError', async () => {
-      // Given
       const request = {
         userId,
         title: '',
@@ -164,13 +157,11 @@ describe('CreateDeckUseCase', () => {
         studyMode: StudyModeEnum.FLASHCARD,
       }
 
-      // When/Then
       await expect(useCase.execute(request)).rejects.toThrow()
       expect(mockDeckRepository.save).not.toHaveBeenCalled()
     })
 
     it('Given invalid card data, When execute is called, Then promise rejects with error', async () => {
-      // Given
       const request = {
         userId,
         title: validDeckProps.title,
@@ -184,7 +175,6 @@ describe('CreateDeckUseCase', () => {
         ],
       }
 
-      // When/Then
       await expect(useCase.execute(request)).rejects.toThrow()
       expect(mockDeckRepository.save).not.toHaveBeenCalled()
     })

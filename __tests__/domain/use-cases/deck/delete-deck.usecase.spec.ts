@@ -97,26 +97,20 @@ describe('DeleteDeckUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given a deck without cards, When execute is called, Then only the deck is deleted', async () => {
-      // Given
       const request = { deckId: mockId, userId }
 
-      // When
       await useCase.execute(request)
 
-      // Then
       expect(mockCardRepository.deleteByIds).not.toHaveBeenCalled()
       expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId)
     })
 
     it('Given a deck with cards, When execute is called, Then both cards and deck are deleted', async () => {
-      // Given
       const request = { deckId: mockId, userId }
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeckWithCards)
 
-      // When
       await useCase.execute(request)
 
-      // Then
       expect(mockCardRepository.deleteByIds).toHaveBeenCalledWith(
         mockDeckWithCards.cards.map((card) => card.id),
       )
@@ -124,11 +118,9 @@ describe('DeleteDeckUseCase', () => {
     })
 
     it('Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown', async () => {
-      // Given
       const request = { deckId: 'non-existent-id', userId }
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
     })
   })

@@ -11,7 +11,6 @@ describe('StartStudySessionUseCase', () => {
   let sut: StartStudySessionUseCase
 
   beforeEach(() => {
-    // Create repository mock
     studySessionRepository = {
       findById: vi.fn(),
       findByUserId: vi.fn(),
@@ -19,13 +18,10 @@ describe('StartStudySessionUseCase', () => {
       deleteById: vi.fn(),
     }
 
-    // Create System Under Test
     sut = new StartStudySessionUseCase(studySessionRepository)
 
-    // Mock console.log to avoid cluttering test output
     vi.spyOn(console, 'log').mockImplementation(() => {})
 
-    // Mock Date.now for consistent timestamps
     const fixedDate = new Date('2023-05-15T10:00:00Z')
     vi.useFakeTimers()
     vi.setSystemTime(fixedDate)
@@ -36,16 +32,13 @@ describe('StartStudySessionUseCase', () => {
   })
 
   it('should create a flashcard study session with correct start time', async () => {
-    // Arrange
     const request = {
       deckId: 'deck-123',
       studyMode: StudyModeEnum.FLASHCARD,
     }
 
-    // Act
     const result = await sut.execute(request)
 
-    // Assert
     expect(studySessionRepository.save).toHaveBeenCalledTimes(1)
 
     const savedSession = vi.mocked(studySessionRepository.save).mock.calls[0][0]
@@ -58,16 +51,13 @@ describe('StartStudySessionUseCase', () => {
   })
 
   it('should create a multiple choice study session', async () => {
-    // Arrange
     const request = {
       deckId: 'deck-123',
       studyMode: StudyModeEnum.MULTIPLE_CHOICE,
     }
 
-    // Act
     const result = await sut.execute(request)
 
-    // Assert
     expect(studySessionRepository.save).toHaveBeenCalledTimes(1)
 
     const savedSession = vi.mocked(studySessionRepository.save).mock.calls[0][0]
@@ -79,7 +69,6 @@ describe('StartStudySessionUseCase', () => {
   })
 
   it('should throw an error if repository fails', async () => {
-    // Arrange
     const request = {
       deckId: 'deck-123',
       studyMode: StudyModeEnum.FLASHCARD,
@@ -88,18 +77,15 @@ describe('StartStudySessionUseCase', () => {
     const error = new Error('Repository error')
     vi.mocked(studySessionRepository.save).mockRejectedValueOnce(error)
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow('Repository error')
   })
 
   it('should throw StudySessionValidationError if deckId is empty', async () => {
-    // Arrange
     const request = {
       deckId: '',
       studyMode: StudyModeEnum.FLASHCARD,
     }
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow(
       StudySessionValidationError,
     )

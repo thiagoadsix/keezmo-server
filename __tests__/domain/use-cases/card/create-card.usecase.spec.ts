@@ -37,17 +37,14 @@ describe('CreateCardUseCase', () => {
   })
 
   it('should create a card and its initial progress successfully', async () => {
-    // Arrange
     const request = {
       deckId,
       userId,
       data: validCardData,
     }
 
-    // Act
     const result = await sut.execute(request)
 
-    // Assert
     expect(result).toHaveProperty('card')
     expect(result).toHaveProperty('progress')
     expect(result.card).toBeInstanceOf(Card)
@@ -70,7 +67,6 @@ describe('CreateCardUseCase', () => {
   })
 
   it('should throw DeckNotFoundError when deck does not exist', async () => {
-    // Arrange
     mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null)
 
     const request = {
@@ -79,7 +75,6 @@ describe('CreateCardUseCase', () => {
       data: validCardData,
     }
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow(DeckNotFoundError)
     expect(mockCardRepository.save).not.toHaveBeenCalled()
     expect(mockProgressRepository.save).not.toHaveBeenCalled()

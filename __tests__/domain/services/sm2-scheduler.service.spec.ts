@@ -47,7 +47,7 @@ describe('SM2SchedulerService', () => {
         expect(result.updated.easeFactor).toBeLessThan(
           matureCardProgress.easeFactor,
         )
-        expect(result.updated.easeFactor).toBeGreaterThanOrEqual(1.3) // Minimum ease factor
+        expect(result.updated.easeFactor).toBeGreaterThanOrEqual(1.3)
       })
     })
 
@@ -63,7 +63,7 @@ describe('SM2SchedulerService', () => {
 
       it('should set interval to 1 day for first repetition (rep=1)', () => {
         const result = SM2SchedulerService.execute({
-          progress: newCardProgress, // rep = 0 -> becomes 1
+          progress: newCardProgress,
           difficulty: DifficultyEnum.NORMAL,
         })
 
@@ -73,7 +73,7 @@ describe('SM2SchedulerService', () => {
 
       it('should set interval to 6 days for second repetition (rep=2)', () => {
         const result = SM2SchedulerService.execute({
-          progress: firstReviewProgress, // rep = 1 -> becomes 2
+          progress: firstReviewProgress,
           difficulty: DifficultyEnum.NORMAL,
         })
 
@@ -83,11 +83,10 @@ describe('SM2SchedulerService', () => {
 
       it('should calculate interval based on formula for mature cards (rep>2)', () => {
         const result = SM2SchedulerService.execute({
-          progress: secondReviewProgress, // rep = 2 -> becomes 3
+          progress: secondReviewProgress,
           difficulty: DifficultyEnum.NORMAL,
         })
 
-        // For rep > 2, interval = interval * easeFactor
         const expectedInterval = Math.round(
           secondReviewProgress.interval * secondReviewProgress.easeFactor,
         )
@@ -139,7 +138,6 @@ describe('SM2SchedulerService', () => {
       })
 
       it('should maintain ease factor minimum of 1.3', () => {
-        // Create a progress with lowest possible ease factor
         const lowEFProgress = { ...firstReviewProgress, easeFactor: 1.3 }
 
         const result = SM2SchedulerService.execute({
@@ -162,7 +160,6 @@ describe('SM2SchedulerService', () => {
           difficulty: DifficultyEnum.NORMAL,
         })
 
-        // Calculate expected next review date (current date + interval days)
         const expectedDate = new Date(fixedDate)
         expectedDate.setUTCDate(
           expectedDate.getUTCDate() + result.updated.interval,
@@ -196,7 +193,6 @@ describe('SM2SchedulerService', () => {
         expect(result.updated.repetitions).toBe(1)
         expect(result.updated.interval).toBe(1)
 
-        // Next review should be one day later
         const expectedDate = new Date()
         expectedDate.setUTCDate(expectedDate.getUTCDate() + 1)
         expect(new Date(result.updated.nextReview).getUTCDate()).toBe(

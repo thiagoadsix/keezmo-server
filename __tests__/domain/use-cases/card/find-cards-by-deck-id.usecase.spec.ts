@@ -79,13 +79,10 @@ describe('FindCardsByDeckIdUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given an existing deck, When execute is called, Then fetch cards from repository', async () => {
-      // Given
       const request = { deckId: mockId }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockDeckRepository.findById).toHaveBeenCalledWith(request.deckId)
       expect(mockCardRepository.findByDeckId).toHaveBeenCalledWith(
         request.deckId,
@@ -94,21 +91,17 @@ describe('FindCardsByDeckIdUseCase', () => {
     })
 
     it('Given a non-existent deck, When execute is called, Then throw DeckNotFoundError', async () => {
-      // Given
       const request = { deckId: 'non-existent-id' }
       mockDeckRepository.findById.mockResolvedValue(null)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
     })
 
     it('Given a repository error, When execute is called, Then propagate the error', async () => {
-      // Given
       const request = { deckId: mockId }
       const error = new Error('Database connection failed')
       mockCardRepository.findByDeckId.mockRejectedValueOnce(error)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(error)
     })
   })

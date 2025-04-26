@@ -4,13 +4,13 @@ import { Card } from '@/domain/entities/card'
 import { Progress } from '@/domain/entities/progress'
 import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
 import { ProgressNotFoundError } from '@/domain/errors/progress/progress-not-found-error'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
 import { SM2SchedulerService } from '@/domain/services/sm2-scheduler.service'
 import { ReviewCardUseCase } from '@/domain/use-cases/progress/review-card.usecase'
 import { DifficultyEnum } from '@/domain/value-objects'
 
-// Mock SM2SchedulerService
+import { mockCardRepository } from '../../../@support/mocks/card-repository.mock'
+import { mockProgressRepository } from '../../../@support/mocks/progress-repository.mock'
+
 vi.mock('@/domain/services/sm2-scheduler.service', () => ({
   SM2SchedulerService: {
     execute: vi.fn(),
@@ -18,8 +18,6 @@ vi.mock('@/domain/services/sm2-scheduler.service', () => ({
 }))
 
 describe('ReviewCardUseCase', () => {
-  let progressRepository: ProgressRepository
-  let cardRepository: CardRepository
   let sut: ReviewCardUseCase
 
   const mockCardId = 'card-123'
@@ -31,7 +29,6 @@ describe('ReviewCardUseCase', () => {
     answer: 'Test answer',
   })
 
-  // Setup mockId property on card to match the expected cardId
   Object.defineProperty(mockCard, 'id', { value: mockCardId })
 
   const mockProgress = new Progress({
@@ -55,30 +52,13 @@ describe('ReviewCardUseCase', () => {
   })
 
   beforeEach(() => {
-    // Mock repositories
-    progressRepository = {
-      findByCardAndDeck: vi.fn(),
-      findDueCards: vi.fn(),
-      save: vi.fn(),
-      update: vi.fn(),
-      deleteById: vi.fn(),
-    }
+    mockCardRepository.findById.mockResolvedValue(mockCard)
+    mockProgressRepository.findByCardAndDeck.mockResolvedValue(mockProgress)
 
-    cardRepository = {
-      findById: vi.fn(),
-      findByDeckId: vi.fn(),
-      save: vi.fn(),
-      deleteById: vi.fn(),
-      deleteByIds: vi.fn(),
-    }
+    sut = new ReviewCardUseCase(mockProgressRepository, mockCardRepository)
 
-    // Create SUT (System Under Test)
-    sut = new ReviewCardUseCase(progressRepository, cardRepository)
-
-    // Spy on console.log
     vi.spyOn(console, 'log').mockImplementation(() => {})
 
-    // Setup SM2SchedulerService mock
     vi.mocked(SM2SchedulerService.execute).mockReturnValue({
       updated: mockUpdatedProgress,
     })
@@ -89,22 +69,19 @@ describe('ReviewCardUseCase', () => {
   })
 
   it('should update progress using SM2 scheduler when reviewing a card', async () => {
-    // Arrange
-    vi.mocked(cardRepository.findById).mockResolvedValueOnce(mockCard)
-    vi.mocked(progressRepository.findByCardAndDeck).mockResolvedValueOnce(
+    vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(mockCard)
+    vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(
       mockProgress,
     )
 
-    // Act
     const result = await sut.execute({
       cardId: mockCardId,
       deckId: mockDeckId,
       difficulty: DifficultyEnum.NORMAL,
     })
 
-    // Assert
-    expect(cardRepository.findById).toHaveBeenCalledWith(mockCardId)
-    expect(progressRepository.findByCardAndDeck).toHaveBeenCalledWith(
+    expect(mockCardRepository.findById).toHaveBeenCalledWith(mockCardId)
+    expect(mockProgressRepository.findByCardAndDeck).toHaveBeenCalledWith(
       mockCardId,
       mockDeckId,
     )
@@ -112,7 +89,9 @@ describe('ReviewCardUseCase', () => {
       progress: mockProgress,
       difficulty: DifficultyEnum.NORMAL,
     })
-    expect(progressRepository.update).toHaveBeenCalledWith(mockUpdatedProgress)
+    expect(mockProgressRepository.update).toHaveBeenCalledWith(
+      mockUpdatedProgress,
+    )
 
     expect(result.progress).toBe(mockUpdatedProgress)
     expect(result.nextReview).toBeInstanceOf(Date)
@@ -120,10 +99,8 @@ describe('ReviewCardUseCase', () => {
   })
 
   it('should throw CardNotFoundError when card does not exist', async () => {
-    // Arrange
-    vi.mocked(cardRepository.findById).mockResolvedValueOnce(null)
+    vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(null)
 
-    // Act & Assert
     await expect(
       sut.execute({
         cardId: mockCardId,
@@ -132,17 +109,17 @@ describe('ReviewCardUseCase', () => {
       }),
     ).rejects.toThrow(CardNotFoundError)
 
-    expect(progressRepository.findByCardAndDeck).not.toHaveBeenCalled()
+    expect(mockProgressRepository.findByCardAndDeck).not.toHaveBeenCalled()
     expect(SM2SchedulerService.execute).not.toHaveBeenCalled()
-    expect(progressRepository.update).not.toHaveBeenCalled()
+    expect(mockProgressRepository.update).not.toHaveBeenCalled()
   })
 
   it('should throw ProgressNotFoundError when progress does not exist', async () => {
-    // Arrange
-    vi.mocked(cardRepository.findById).mockResolvedValueOnce(mockCard)
-    vi.mocked(progressRepository.findByCardAndDeck).mockResolvedValueOnce(null)
+    vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(mockCard)
+    vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(
+      null,
+    )
 
-    // Act & Assert
     await expect(
       sut.execute({
         cardId: mockCardId,
@@ -152,6 +129,6 @@ describe('ReviewCardUseCase', () => {
     ).rejects.toThrow(ProgressNotFoundError)
 
     expect(SM2SchedulerService.execute).not.toHaveBeenCalled()
-    expect(progressRepository.update).not.toHaveBeenCalled()
+    expect(mockProgressRepository.update).not.toHaveBeenCalled()
   })
 })

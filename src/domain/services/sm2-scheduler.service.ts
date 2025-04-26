@@ -1,4 +1,3 @@
-// src/domain/services/sm2-scheduler.ts
 import { Progress } from '@/domain/entities/progress'
 
 import { InvalidDifficultyError } from '../errors/invalid-difficulty-error'
@@ -36,11 +35,9 @@ export class SM2SchedulerService {
       .adjustEaseFactor(quality)
       .getResult()
 
-    // Próxima data
     const nextReview = new Date()
     nextReview.setUTCDate(nextReview.getUTCDate() + interval)
 
-    // Cria novo objeto (imutável)
     const updated = new Progress({
       ...progress,
       repetitions,

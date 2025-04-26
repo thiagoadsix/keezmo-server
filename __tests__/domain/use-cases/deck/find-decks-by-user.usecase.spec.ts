@@ -62,13 +62,10 @@ describe('FindDecksByUserUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given a user ID, When execute is called, Then all decks for that user are returned', async () => {
-      // Given
       const request = { userId: 'user-123' }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockDeckRepository.findAllByUser).toHaveBeenCalledWith(
         request.userId,
       )
@@ -76,12 +73,10 @@ describe('FindDecksByUserUseCase', () => {
     })
 
     it('Given a repository error, When execute is called, Then the error is propagated', async () => {
-      // Given
       const request = { userId: 'user-123' }
       const repoError = new Error('Database connection failed')
       mockDeckRepository.findAllByUser.mockRejectedValueOnce(repoError)
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(repoError)
     })
   })

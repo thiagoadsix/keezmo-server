@@ -49,17 +49,14 @@ describe('DeleteCardUseCase', () => {
   })
 
   it('should delete card and its progress successfully', async () => {
-    // Arrange
     const request = {
       cardId,
       deckId,
       userId,
     }
 
-    // Act
     await sut.execute(request)
 
-    // Assert
     expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
       deckId,
       userId,
@@ -70,7 +67,6 @@ describe('DeleteCardUseCase', () => {
   })
 
   it('should throw DeckNotFoundError when deck does not exist', async () => {
-    // Arrange
     mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null)
 
     const request = {
@@ -79,7 +75,6 @@ describe('DeleteCardUseCase', () => {
       userId,
     }
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow(DeckNotFoundError)
     expect(mockCardRepository.findById).not.toHaveBeenCalled()
     expect(mockProgressRepository.deleteById).not.toHaveBeenCalled()
@@ -87,7 +82,6 @@ describe('DeleteCardUseCase', () => {
   })
 
   it('should throw CardNotFoundError when card does not exist', async () => {
-    // Arrange
     mockCardRepository.findById.mockResolvedValueOnce(null)
 
     const request = {
@@ -96,14 +90,12 @@ describe('DeleteCardUseCase', () => {
       userId,
     }
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow(CardNotFoundError)
     expect(mockProgressRepository.deleteById).not.toHaveBeenCalled()
     expect(mockCardRepository.deleteById).not.toHaveBeenCalled()
   })
 
   it('should throw CardNotFoundError when card belongs to a different deck', async () => {
-    // Arrange
     const differentDeckCard = new Card({
       deckId: 'different-deck',
       question: 'Test question',
@@ -119,14 +111,12 @@ describe('DeleteCardUseCase', () => {
       userId,
     }
 
-    // Act & Assert
     await expect(sut.execute(request)).rejects.toThrow(CardNotFoundError)
     expect(mockProgressRepository.deleteById).not.toHaveBeenCalled()
     expect(mockCardRepository.deleteById).not.toHaveBeenCalled()
   })
 
   it('should continue deleting card even if progress deletion fails', async () => {
-    // Arrange
     mockProgressRepository.deleteById.mockRejectedValueOnce(
       new Error('Progress deletion failed'),
     )
@@ -137,10 +127,8 @@ describe('DeleteCardUseCase', () => {
       userId,
     }
 
-    // Act
     await sut.execute(request)
 
-    // Assert
     expect(mockProgressRepository.deleteById).toHaveBeenCalledWith(cardId)
     expect(mockCardRepository.deleteById).toHaveBeenCalledWith(cardId)
   })

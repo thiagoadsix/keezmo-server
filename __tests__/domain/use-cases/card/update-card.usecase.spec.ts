@@ -183,7 +183,6 @@ describe('UpdateCardUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given a valid card in a deck, When execute is called with card updates, Then the card is updated', async () => {
-      // Given
       const request = {
         deckId,
         cardId,
@@ -193,10 +192,8 @@ describe('UpdateCardUseCase', () => {
         },
       }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(mockCard.updateQuestion).toHaveBeenCalledWith('New question')
       expect(mockCard.updateAnswer).toHaveBeenCalledWith('New answer')
       expect(mockCardRepository.save).toHaveBeenCalledWith(mockCard)
@@ -204,7 +201,6 @@ describe('UpdateCardUseCase', () => {
     })
 
     it('Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown', async () => {
-      // Given
       mockDeckRepository.findById.mockResolvedValueOnce(null)
 
       const request = {
@@ -215,12 +211,10 @@ describe('UpdateCardUseCase', () => {
         },
       }
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
     })
 
     it('Given a non-existent card, When execute is called, Then CardNotFoundError is thrown', async () => {
-      // Given
       mockCardRepository.findById.mockResolvedValueOnce(null)
 
       const request = {
@@ -231,12 +225,10 @@ describe('UpdateCardUseCase', () => {
         },
       }
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(CardNotFoundError)
     })
 
     it('Given a card from different deck, When execute is called, Then CardNotFoundError is thrown with deck mismatch', async () => {
-      // Given
       const differentDeckCard = Object.assign(
         new Card({
           deckId: 'different-deck-id',
@@ -256,7 +248,6 @@ describe('UpdateCardUseCase', () => {
         },
       }
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(CardNotFoundError)
     })
   })

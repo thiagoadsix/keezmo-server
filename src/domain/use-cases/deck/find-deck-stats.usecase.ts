@@ -127,7 +127,7 @@ export class FindDeckStatsUseCase {
       performance: {
         successRate,
         averageEaseFactor,
-        currentStreak: 0, // This would be calculated from actual review history
+        currentStreak: 0,
       },
       forecast,
     }

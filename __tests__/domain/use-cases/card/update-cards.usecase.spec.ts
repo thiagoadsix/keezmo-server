@@ -94,12 +94,10 @@ describe('UpdateCardsUseCase', () => {
       expect(mockDeckRepository.findById).toHaveBeenCalledWith(deckId)
       expect(mockCardRepository.findByDeckId).toHaveBeenCalledWith(deckId)
 
-      // Check card 1 updates
       expect(card1.updateQuestion).toHaveBeenCalledWith('Updated question 1')
       expect(card1.updateAnswer).toHaveBeenCalledWith('Updated answer 1')
       expect(mockCardRepository.save).toHaveBeenCalledWith(card1)
 
-      // Check card 2 updates
       expect(card2.updateQuestion).toHaveBeenCalledWith('Updated question 2')
       expect(card2.updateAnswer).not.toHaveBeenCalled()
       expect(mockCardRepository.save).toHaveBeenCalledWith(card2)
@@ -148,7 +146,6 @@ describe('UpdateCardsUseCase', () => {
 
   describe('BDD Scenarios', () => {
     it('Given existing cards in a deck, When execute is called with updates, Then the cards are updated', async () => {
-      // Given
       const card1 = mockCards[0]
       const card2 = mockCards[1]
 
@@ -167,10 +164,8 @@ describe('UpdateCardsUseCase', () => {
         ],
       }
 
-      // When
       const result = await useCase.execute(request)
 
-      // Then
       expect(card1.updateQuestion).toHaveBeenCalledWith('New question 1')
       expect(card1.updateAnswer).toHaveBeenCalledWith('New answer 1')
       expect(card2.updateQuestion).not.toHaveBeenCalled()
@@ -180,7 +175,6 @@ describe('UpdateCardsUseCase', () => {
     })
 
     it('Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown', async () => {
-      // Given
       mockDeckRepository.findById.mockResolvedValueOnce(null)
 
       const request = {
@@ -188,18 +182,15 @@ describe('UpdateCardsUseCase', () => {
         cards: [{ id: mockCards[0].id, question: 'Updated' }],
       }
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
     })
 
     it('Given a non-existent card, When execute is called, Then CardNotFoundError is thrown', async () => {
-      // Given
       const request = {
         deckId,
         cards: [{ id: 'non-existent-card-id', question: 'Updated' }],
       }
 
-      // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(CardNotFoundError)
     })
   })

@@ -58,25 +58,19 @@ describe('FindDueCardsUseCase', () => {
     vi.resetAllMocks()
 
     sut = new FindDueCardsUseCase(mockProgressRepository, mockCardRepository)
-
-    vi.spyOn(console, 'log').mockImplementation(() => {})
   })
 
   it('should return due cards ordered by interval (highest first)', async () => {
-    // Arrange
     mockProgressRepository.findDueCards.mockResolvedValue([
       mockProgress1,
       mockProgress2,
     ])
 
-    // Setup the card repository to return the right cards for each ID
     mockCardRepository.findById.mockResolvedValueOnce(mockCard1)
     mockCardRepository.findById.mockResolvedValueOnce(mockCard2)
 
-    // Act
     const result = await sut.execute({ date: today })
 
-    // Assert
     expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
       undefined,
@@ -84,23 +78,19 @@ describe('FindDueCardsUseCase', () => {
     expect(mockCardRepository.findById).toHaveBeenCalledTimes(2)
     expect(result).toHaveLength(2)
 
-    // Check if properly ordered by interval (highest first)
-    expect(result[0].progress.interval).toBe(10) // First should be mockProgress1 (interval 10)
-    expect(result[1].progress.interval).toBe(5) // Second should be mockProgress2 (interval 5)
+    expect(result[0].progress.interval).toBe(10)
+    expect(result[1].progress.interval).toBe(5)
     expect(result[0].card.question).toBe('Question 1')
     expect(result[1].card.question).toBe('Question 2')
   })
 
   it('should filter by deckId when provided', async () => {
-    // Arrange
     const specificDeckId = 'specific-deck'
     mockProgressRepository.findDueCards.mockResolvedValue([mockProgress1])
     mockCardRepository.findById.mockResolvedValue(mockCard1)
 
-    // Act
     await sut.execute({ date: today, deckId: specificDeckId })
 
-    // Assert
     expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
       specificDeckId,
@@ -108,45 +98,35 @@ describe('FindDueCardsUseCase', () => {
   })
 
   it('should return empty array when no due cards found', async () => {
-    // Arrange
     mockProgressRepository.findDueCards.mockResolvedValue([])
 
-    // Act
     const result = await sut.execute()
 
-    // Assert
     expect(result).toEqual([])
-    // Verify we don't do unnecessary card fetching
+
     expect(mockCardRepository.findById).not.toHaveBeenCalled()
   })
 
   it('should exclude cards that could not be found', async () => {
-    // Arrange
     mockProgressRepository.findDueCards.mockResolvedValue([
       mockProgress1,
       mockProgress2,
     ])
 
-    // Only mockCard1 exists, mockCard2 is "deleted"
     mockCardRepository.findById.mockResolvedValueOnce(mockCard1)
     mockCardRepository.findById.mockResolvedValueOnce(null)
 
-    // Act
     const result = await sut.execute()
 
-    // Assert
     expect(result).toHaveLength(1)
     expect(result[0].card.id).toBe('card-1')
   })
 
   it('should use current date when no date provided', async () => {
-    // Arrange
     mockProgressRepository.findDueCards.mockResolvedValue([])
 
-    // Act
-    await sut.execute() // No date provided
+    await sut.execute()
 
-    // Assert
     expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
       undefined,
