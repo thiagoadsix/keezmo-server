@@ -8,7 +8,6 @@ import {
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { Deck } from '@/domain/entities/deck'
-import { DeckDeletionError } from '@/domain/errors/deck/deck-deletion-error'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { DeleteDeckUseCase } from '@/domain/use-cases/deck/delete-deck.usecase'
 
@@ -88,30 +87,6 @@ describe('DeleteDeckUseCase', () => {
       expect(mockCardRepository.deleteByIds).not.toHaveBeenCalled()
       expect(mockDeckRepository.delete).not.toHaveBeenCalled()
     })
-
-    it('should throw DeckDeletionError when card deletion fails', async () => {
-      const request = { deckId: mockId, userId }
-      mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeckWithCards)
-
-      const cardError = new Error('Failed to delete cards')
-      mockCardRepository.deleteByIds.mockRejectedValueOnce(cardError)
-
-      const promise = useCase.execute(request)
-
-      await expect(promise).rejects.toThrow(DeckDeletionError)
-      expect(mockDeckRepository.delete).not.toHaveBeenCalled()
-    })
-
-    it('should throw DeckDeletionError when deck deletion fails', async () => {
-      const request = { deckId: mockId, userId }
-
-      const deckError = new Error('Failed to delete deck')
-      mockDeckRepository.delete.mockRejectedValueOnce(deckError)
-
-      const promise = useCase.execute(request)
-
-      await expect(promise).rejects.toThrow(DeckDeletionError)
-    })
   })
 
   describe('BDD Scenarios', () => {
@@ -149,18 +124,6 @@ describe('DeleteDeckUseCase', () => {
 
       // When / Then
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
-    })
-
-    it('Given an error during card deletion, When execute is called, Then DeckDeletionError is thrown', async () => {
-      // Given
-      const request = { deckId: mockId, userId }
-      mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeckWithCards)
-      mockCardRepository.deleteByIds.mockRejectedValueOnce(
-        new Error('Database error'),
-      )
-
-      // When / Then
-      await expect(useCase.execute(request)).rejects.toThrow(DeckDeletionError)
     })
   })
 })

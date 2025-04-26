@@ -109,6 +109,14 @@ describe('StudySession', () => {
 
         expect(session.startTime).toBe(newStartTime)
       })
+
+      it('should throw when start time is empty', () => {
+        const session = new StudySession(validMultipleChoiceSessionProps)
+
+        expect(() => session.setStartTime('')).toThrow(
+          StudySessionValidationError,
+        )
+      })
     })
   })
 })

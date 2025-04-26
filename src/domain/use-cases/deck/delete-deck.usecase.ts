@@ -1,4 +1,3 @@
-import { DeckDeletionError } from '@/domain/errors/deck/deck-deletion-error'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { CardRepository } from '@/domain/interfaces/card-repository'
 import { DeckRepository } from '@/domain/interfaces/deck-repository'
@@ -33,28 +32,17 @@ export class DeleteDeckUseCase {
       throw new DeckNotFoundError(request.deckId, request.userId)
     }
 
-    try {
-      if (deck.cards.length > 0) {
-        const cardIds = deck.cards.map((card) => card.id)
-        console.log(
-          `Deleting ${cardIds.length} cards from deck ${request.deckId}`,
-        )
-        await this.cardRepository.deleteByIds(cardIds)
-      }
-
-      console.log(`Deleting deck ${request.deckId}`)
-      await this.deckRepository.delete(request.deckId)
-
-      console.log(`Successfully deleted deck ${request.deckId} and its cards`)
-    } catch (error) {
-      console.error(
-        `Error deleting deck ${request.deckId}: ${(error as Error).message}`,
+    if (deck.cards.length > 0) {
+      const cardIds = deck.cards.map((card) => card.id)
+      console.log(
+        `Deleting ${cardIds.length} cards from deck ${request.deckId}`,
       )
-      throw new DeckDeletionError(
-        request.deckId,
-        request.userId,
-        error as Error,
-      )
+      await this.cardRepository.deleteByIds(cardIds)
     }
+
+    console.log(`Deleting deck ${request.deckId}`)
+    await this.deckRepository.delete(request.deckId)
+
+    console.log(`Successfully deleted deck ${request.deckId} and its cards`)
   }
 }
