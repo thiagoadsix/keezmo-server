@@ -53,3 +53,5 @@ Reusable, cross‑layer helpers.
 ### 🤝 Contributing
 Feel free to open issues or pull requests. Let’s make learning effortless together!✨
 
+### Poop
+For a detailed view of the architecture structure, visit the following URL: [Architecture Structure](https://chatgpt.com/g/g-p-675f2f8fca4c8191a7b326ba8431fb77-keezmo/c/67fb5d4a-0134-8003-b31d-2fb1fc96bac3)
