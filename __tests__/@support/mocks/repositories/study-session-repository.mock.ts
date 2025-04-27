@@ -19,5 +19,4 @@ export const mockStudySessionRepository: MockedRepository<StudySessionRepository
   findById: vi.fn(),
   findByUserId: vi.fn(),
   save: vi.fn(),
-  deleteById: vi.fn(),
 }
