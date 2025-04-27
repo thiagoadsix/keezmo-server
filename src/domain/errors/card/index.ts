@@ -1,5 +1,3 @@
 export * from './card-not-found-error'
-export * from './card-update-error'
-export * from './cards-update-error'
 export * from './invalid-card-answer-error'
 export * from './invalid-card-question-error'

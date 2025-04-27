@@ -10,7 +10,6 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
 import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
-import { CardsUpdateError } from '@/domain/errors/card/cards-update-error'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { UpdateCardsUseCase } from '@/domain/use-cases/card/update-cards.usecase'
 
@@ -128,19 +127,6 @@ describe('UpdateCardsUseCase', () => {
 
       await expect(useCase.execute(request)).rejects.toThrow(CardNotFoundError)
       expect(mockCardRepository.save).not.toHaveBeenCalled()
-    })
-
-    it('should throw CardsUpdateError when card repository throws an error', async () => {
-      const card = mockCards[0]
-      const request = {
-        deckId,
-        cards: [{ id: card.id, question: 'Updated' }],
-      }
-
-      const saveError = new Error('Database error')
-      mockCardRepository.save.mockRejectedValueOnce(saveError)
-
-      await expect(useCase.execute(request)).rejects.toThrow(CardsUpdateError)
     })
   })
 

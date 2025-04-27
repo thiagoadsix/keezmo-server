@@ -9,7 +9,6 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { Deck } from '@/domain/entities/deck'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { DeckUpdateError } from '@/domain/errors/deck/deck-update-error'
 import { UpdateDeckUseCase } from '@/domain/use-cases/deck/update-deck.usecase'
 import { StudyMode } from '@/domain/value-objects'
 
@@ -156,17 +155,6 @@ describe('UpdateDeckUseCase', () => {
       await expect(promise).rejects.toThrow(DeckNotFoundError)
       expect(mockDeckRepository.save).not.toHaveBeenCalled()
     })
-
-    it('should throw DeckUpdateError when save fails', async () => {
-      const request = { deckId: mockId, userId, data: { title: 'New Title' } }
-      const saveError = new Error('Save failed')
-      mockDeckRepository.save.mockRejectedValueOnce(saveError)
-
-      const promise = useCase.execute(request)
-
-      await expect(promise).rejects.toThrow(DeckUpdateError)
-      expect(mockDeck.updateTitle).toHaveBeenCalled()
-    })
   })
 
   describe('BDD Scenarios', () => {
@@ -231,13 +219,6 @@ describe('UpdateDeckUseCase', () => {
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null)
 
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError)
-    })
-
-    it('Given a repository error, When execute is called, Then DeckUpdateError is thrown', async () => {
-      const request = { deckId: mockId, userId, data: { title: 'New Title' } }
-      mockDeckRepository.save.mockRejectedValueOnce(new Error('Database error'))
-
-      await expect(useCase.execute(request)).rejects.toThrow(DeckUpdateError)
     })
   })
 })

@@ -1,6 +1,5 @@
 import { Card } from '@/domain/entities/card'
 import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
-import { CardsUpdateError } from '@/domain/errors/card/cards-update-error'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import {
   CardRepository,
@@ -31,59 +30,43 @@ export class UpdateCardsUseCase {
       `Starting UpdateCardsUseCase for deckId: ${request.deckId} with ${request.cards.length} cards`,
     )
 
-    try {
-      const deck = await this.deckRepository.findById(request.deckId)
+    const deck = await this.deckRepository.findById(request.deckId)
 
-      if (!deck) {
-        console.log(`Deck with ID ${request.deckId} not found`)
-        throw new DeckNotFoundError(request.deckId, 'unknown')
-      }
-
-      const existingCards = await this.cardRepository.findByDeckId(
-        request.deckId,
-      )
-      console.log(
-        `Found ${existingCards.length} existing cards in deck ${request.deckId}`,
-      )
-
-      const cardsById = new Map<string, Card>()
-      existingCards.forEach((card) => cardsById.set(card.id, card))
-
-      const updatedCards: Card[] = []
-
-      for (const cardToUpdate of request.cards) {
-        const existingCard = cardsById.get(cardToUpdate.id)
-
-        if (!existingCard) {
-          console.log(
-            `Card with ID ${cardToUpdate.id} not found in deck ${request.deckId}`,
-          )
-          throw new CardNotFoundError(cardToUpdate.id, request.deckId)
-        }
-
-        this.updateCardFields(existingCard, cardToUpdate)
-
-        await this.cardRepository.save(existingCard)
-        updatedCards.push(existingCard)
-      }
-
-      console.log(
-        `Successfully updated ${updatedCards.length} cards in deck ${request.deckId}`,
-      )
-      return updatedCards
-    } catch (error) {
-      if (
-        error instanceof DeckNotFoundError ||
-        error instanceof CardNotFoundError
-      ) {
-        throw error
-      }
-
-      console.error(
-        `Error updating cards in deck ${request.deckId}: ${(error as Error).message}`,
-      )
-      throw new CardsUpdateError(request.deckId, error as Error)
+    if (!deck) {
+      console.log(`Deck with ID ${request.deckId} not found`)
+      throw new DeckNotFoundError(request.deckId, 'unknown')
     }
+
+    const existingCards = await this.cardRepository.findByDeckId(request.deckId)
+    console.log(
+      `Found ${existingCards.length} existing cards in deck ${request.deckId}`,
+    )
+
+    const cardsById = new Map<string, Card>()
+    existingCards.forEach((card) => cardsById.set(card.id, card))
+
+    const updatedCards: Card[] = []
+
+    for (const cardToUpdate of request.cards) {
+      const existingCard = cardsById.get(cardToUpdate.id)
+
+      if (!existingCard) {
+        console.log(
+          `Card with ID ${cardToUpdate.id} not found in deck ${request.deckId}`,
+        )
+        throw new CardNotFoundError(cardToUpdate.id, request.deckId)
+      }
+
+      this.updateCardFields(existingCard, cardToUpdate)
+
+      await this.cardRepository.save(existingCard)
+      updatedCards.push(existingCard)
+    }
+
+    console.log(
+      `Successfully updated ${updatedCards.length} cards in deck ${request.deckId}`,
+    )
+    return updatedCards
   }
 
   private updateCardFields(card: Card, updateData: CardToUpdate): void {

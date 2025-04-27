@@ -1,6 +1,5 @@
 import { Deck } from '@/domain/entities/deck'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { DeckUpdateError } from '@/domain/errors/deck/deck-update-error'
 import { DeckRepository } from '@/domain/interfaces/repositories'
 import { StudyMode } from '@/domain/value-objects'
 
@@ -26,37 +25,26 @@ export class UpdateDeckUseCase {
       `Starting UpdateDeckUseCase for deckId: ${request.deckId}, userId: ${request.userId}`,
     )
 
-    try {
-      const deck = await this.deckRepository.findByIdAndUserId(
-        request.deckId,
-        request.userId,
+    const deck = await this.deckRepository.findByIdAndUserId(
+      request.deckId,
+      request.userId,
+    )
+
+    if (!deck) {
+      console.log(
+        `Deck with ID ${request.deckId} not found for user ${request.userId}`,
       )
-
-      if (!deck) {
-        console.log(
-          `Deck with ID ${request.deckId} not found for user ${request.userId}`,
-        )
-        throw new DeckNotFoundError(request.deckId, request.userId)
-      }
-
-      console.log(`Found deck: ${deck.title}, applying updates`)
-
-      this.applyUpdates(deck, request.data)
-
-      await this.deckRepository.save(deck)
-
-      console.log(`Successfully updated deck ${request.deckId}`)
-      return deck
-    } catch (error) {
-      if (error instanceof DeckNotFoundError) {
-        throw error
-      }
-
-      console.error(
-        `Error updating deck ${request.deckId}: ${(error as Error).message}`,
-      )
-      throw new DeckUpdateError(request.deckId, request.userId, error as Error)
+      throw new DeckNotFoundError(request.deckId, request.userId)
     }
+
+    console.log(`Found deck: ${deck.title}, applying updates`)
+
+    this.applyUpdates(deck, request.data)
+
+    await this.deckRepository.save(deck)
+
+    console.log(`Successfully updated deck ${request.deckId}`)
+    return deck
   }
 
   private applyUpdates(
