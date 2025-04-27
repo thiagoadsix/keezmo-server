@@ -1,5 +1,5 @@
 import { StudySession } from '@/domain/entities/study-session'
-import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
+import { StudySessionRepository } from '@/domain/interfaces/repositories'
 
 interface FindStudySessionsByUserRequest {
   userId: string

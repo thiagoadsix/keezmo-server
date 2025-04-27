@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run --config vitest.config.mts --silent",
+    "typecheck": "tsc --noEmit",
     "test:watch": "vitest",
     "test:types": "vitest run --typecheck",
     "test:coverage": "vitest run --coverage",

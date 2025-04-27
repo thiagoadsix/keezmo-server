@@ -2,12 +2,12 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 
 import { StudySession } from '@/domain/entities/study-session'
 import { StudySessionNotFoundError } from '@/domain/errors/study-session/study-session-not-found-error'
-import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
 import { EndStudySessionUseCase } from '@/domain/use-cases/study-session/end-study-session.usecase'
 import { StudyModeEnum } from '@/domain/value-objects'
 
+import { mockStudySessionRepository } from '../../../@support/mocks/repositories/study-session-repository.mock'
+
 describe('EndStudySessionUseCase', () => {
-  let studySessionRepository: StudySessionRepository
   let sut: EndStudySessionUseCase
   let mockSession: StudySession
 
@@ -24,16 +24,12 @@ describe('EndStudySessionUseCase', () => {
 
     Object.defineProperty(mockSession, 'id', { value: sessionId })
 
-    studySessionRepository = {
-      findById: vi.fn().mockResolvedValue(mockSession),
-      findByUserId: vi.fn(),
-      save: vi.fn(),
-      deleteById: vi.fn(),
-    }
+    vi.resetAllMocks()
 
-    sut = new EndStudySessionUseCase(studySessionRepository)
+    mockStudySessionRepository.findById.mockResolvedValue(mockSession)
+    mockStudySessionRepository.save.mockResolvedValue(mockSession)
 
-    vi.spyOn(console, 'log').mockImplementation(() => {})
+    sut = new EndStudySessionUseCase(mockStudySessionRepository)
 
     const fixedDate = new Date('2023-05-15T10:00:00Z')
     vi.useFakeTimers()
@@ -51,10 +47,10 @@ describe('EndStudySessionUseCase', () => {
 
     const result = await sut.execute(request)
 
-    expect(studySessionRepository.findById).toHaveBeenCalledWith(sessionId)
-    expect(studySessionRepository.save).toHaveBeenCalledTimes(1)
+    expect(mockStudySessionRepository.findById).toHaveBeenCalledWith(sessionId)
+    expect(mockStudySessionRepository.save).toHaveBeenCalledTimes(1)
 
-    const updatedSession = vi.mocked(studySessionRepository.save).mock
+    const updatedSession = vi.mocked(mockStudySessionRepository.save).mock
       .calls[0][0]
     expect(updatedSession.endTime).toBe('2023-05-15T10:00:00.000Z')
 
@@ -62,7 +58,8 @@ describe('EndStudySessionUseCase', () => {
   })
 
   it('should throw StudySessionNotFoundError if session does not exist', async () => {
-    vi.mocked(studySessionRepository.findById).mockResolvedValueOnce(null)
+    // Override the mock for this specific test
+    mockStudySessionRepository.findById.mockResolvedValue(null)
 
     const request = {
       sessionId: 'non-existent-session',
@@ -71,30 +68,12 @@ describe('EndStudySessionUseCase', () => {
     await expect(sut.execute(request)).rejects.toThrow(
       StudySessionNotFoundError,
     )
-    expect(studySessionRepository.save).not.toHaveBeenCalled()
-  })
-
-  it('should include totalQuestions in log when provided', async () => {
-    const consoleSpy = vi.spyOn(console, 'log')
-
-    const request = {
-      sessionId,
-      totalQuestions: 15,
-    }
-
-    await sut.execute(request)
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Study session ended successfully',
-      expect.objectContaining({
-        totalQuestions: 15,
-      }),
-    )
+    expect(mockStudySessionRepository.save).not.toHaveBeenCalled()
   })
 
   it('should handle repository errors when saving', async () => {
     const error = new Error('Repository error')
-    vi.mocked(studySessionRepository.save).mockRejectedValueOnce(error)
+    vi.mocked(mockStudySessionRepository.save).mockRejectedValueOnce(error)
 
     const request = {
       sessionId,

@@ -1,7 +1,9 @@
 import { Card } from '@/domain/entities/card'
 import { Progress } from '@/domain/entities/progress'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
+import {
+  CardRepository,
+  ProgressRepository,
+} from '@/domain/interfaces/repositories'
 
 export interface DueCard {
   card: Card

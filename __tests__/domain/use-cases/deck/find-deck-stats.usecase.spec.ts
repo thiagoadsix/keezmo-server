@@ -4,9 +4,11 @@ import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
 import { Progress } from '@/domain/entities/progress'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
+import {
+  CardRepository,
+  DeckRepository,
+  ProgressRepository,
+} from '@/domain/interfaces/repositories'
 import { FindDeckStatsUseCase } from '@/domain/use-cases/deck/find-deck-stats.usecase'
 import { StudyMode } from '@/domain/value-objects'
 
@@ -124,7 +126,7 @@ describe('FindDeckStatsUseCase', () => {
     vi.mocked(deckRepository.findByIdAndUserId).mockResolvedValue(mockDeck)
     vi.mocked(cardRepository.findByDeckId).mockResolvedValue(mockCards)
     vi.mocked(progressRepository.findByCardAndDeck).mockImplementation(
-      (cardId) => {
+      (cardId: string) => {
         const index = Number(cardId.split('-')[1]) - 1
         return Promise.resolve(mockProgressRecords[index])
       },

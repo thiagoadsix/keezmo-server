@@ -1,8 +1,10 @@
 import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
+import {
+  CardRepository,
+  DeckRepository,
+  ProgressRepository,
+} from '@/domain/interfaces/repositories'
 
 interface DeleteCardRequest {
   cardId: string

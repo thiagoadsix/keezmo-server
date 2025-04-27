@@ -57,8 +57,6 @@ describe('ReviewCardUseCase', () => {
 
     sut = new ReviewCardUseCase(mockProgressRepository, mockCardRepository)
 
-    vi.spyOn(console, 'log').mockImplementation(() => {})
-
     vi.mocked(SM2SchedulerService.execute).mockReturnValue({
       updated: mockUpdatedProgress,
     })

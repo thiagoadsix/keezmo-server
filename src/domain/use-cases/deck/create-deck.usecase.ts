@@ -1,6 +1,6 @@
 import { Card } from '@/domain/entities/card'
 import { Deck } from '@/domain/entities/deck'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import { DeckRepository } from '@/domain/interfaces/repositories'
 import { StudyMode, StudyModeEnum } from '@/domain/value-objects'
 
 interface CreateDeckRequest {

@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
+import { StudySessionRepository } from '@/domain/interfaces/repositories'
 
 type MockedFunction<T> = T & {
   mock: { calls: any[][] }

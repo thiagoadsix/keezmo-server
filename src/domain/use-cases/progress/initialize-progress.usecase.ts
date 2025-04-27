@@ -1,5 +1,5 @@
 import { Progress } from '@/domain/entities/progress'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
+import { ProgressRepository } from '@/domain/interfaces/repositories'
 
 type InitializeProgressRequest = {
   cardId: string

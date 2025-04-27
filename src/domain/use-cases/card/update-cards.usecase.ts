@@ -2,8 +2,10 @@ import { Card } from '@/domain/entities/card'
 import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
 import { CardsUpdateError } from '@/domain/errors/card/cards-update-error'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import {
+  CardRepository,
+  DeckRepository,
+} from '@/domain/interfaces/repositories'
 
 interface CardToUpdate {
   id: string

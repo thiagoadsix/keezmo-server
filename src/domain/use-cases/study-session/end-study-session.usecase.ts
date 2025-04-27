@@ -1,5 +1,5 @@
 import { StudySessionNotFoundError } from '@/domain/errors/study-session/study-session-not-found-error'
-import { StudySessionRepository } from '@/domain/interfaces/study-session-repository'
+import { StudySessionRepository } from '@/domain/interfaces/repositories'
 
 interface EndStudySessionRequest {
   sessionId: string

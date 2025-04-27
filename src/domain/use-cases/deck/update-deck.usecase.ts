@@ -1,7 +1,7 @@
 import { Deck } from '@/domain/entities/deck'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
 import { DeckUpdateError } from '@/domain/errors/deck/deck-update-error'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import { DeckRepository } from '@/domain/interfaces/repositories'
 import { StudyMode } from '@/domain/value-objects'
 
 interface DeckUpdateData {

@@ -1,6 +1,6 @@
 import { Deck } from '@/domain/entities/deck'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import { DeckRepository } from '@/domain/interfaces/repositories'
 
 interface FindDeckByIdAndUserRequest {
   deckId: string

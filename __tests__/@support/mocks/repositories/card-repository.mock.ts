@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { CardRepository } from '@/domain/interfaces/card-repository'
+import { CardRepository } from '@/domain/interfaces/repositories'
 
 type MockedFunction<T> = T & {
   mock: { calls: any[][] }

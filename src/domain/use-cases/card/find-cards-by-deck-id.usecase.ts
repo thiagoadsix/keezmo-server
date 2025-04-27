@@ -1,7 +1,9 @@
 import { Card } from '@/domain/entities/card'
 import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import {
+  CardRepository,
+  DeckRepository,
+} from '@/domain/interfaces/repositories'
 
 interface FindCardsByDeckIdRequest {
   deckId: string

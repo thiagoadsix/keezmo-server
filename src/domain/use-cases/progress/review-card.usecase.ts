@@ -1,8 +1,10 @@
 import { Progress } from '@/domain/entities/progress'
 import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error'
 import { ProgressNotFoundError } from '@/domain/errors/progress/progress-not-found-error'
-import { CardRepository } from '@/domain/interfaces/card-repository'
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
+import {
+  CardRepository,
+  ProgressRepository,
+} from '@/domain/interfaces/repositories'
 import { SM2SchedulerService } from '@/domain/services/sm2-scheduler.service'
 import { DifficultyEnum } from '@/domain/value-objects'
 

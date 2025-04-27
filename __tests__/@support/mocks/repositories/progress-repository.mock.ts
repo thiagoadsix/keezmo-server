@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { ProgressRepository } from '@/domain/interfaces/progress-repository'
+import { ProgressRepository } from '@/domain/interfaces/repositories'
 
 type MockedFunction<T> = T & {
   mock: { calls: any[][] }

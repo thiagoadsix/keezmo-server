@@ -1,5 +1,5 @@
 import { Deck } from '@/domain/entities/deck'
-import { DeckRepository } from '@/domain/interfaces/deck-repository'
+import { DeckRepository } from '@/domain/interfaces/repositories'
 
 interface FindDecksByUserRequest {
   userId: string

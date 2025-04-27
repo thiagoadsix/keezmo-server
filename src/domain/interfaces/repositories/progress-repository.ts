@@ -1,4 +1,4 @@
-import { Progress } from '../entities/progress'
+import { Progress } from '@/domain/entities/progress'
 
 export interface ProgressRepository {
   findByCardAndDeck(cardId: string, deckId: string): Promise<Progress | null>
