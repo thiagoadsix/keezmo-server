@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.1.0...v2.2.0) (2025-04-27)
+
+
+### Features
+
+* **config:** remove default code profile configuration file ([fa727ca](https://github.com/thiagoadsix/keezmo-server/commit/fa727ca85988855e4a3ce507b84d82f398a0c107))
+
 # [2.1.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.0.0...v2.1.0) (2025-04-27)
 
 
