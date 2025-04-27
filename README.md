@@ -1,48 +1,55 @@
 # 🧱 Keezmo
 
-### 📚 Documentação Técnica da Estrutura de Diretórios
+> **Quick Links**
+>
+> 🇧🇷 **Versão em Português** → [README.pt-br.md](README.pt-br.md)
 
-A estrutura do Keezmo segue a metodologia Clean Architecture, proporcionando clareza na separação das responsabilidades, testabilidade eficiente e independência dos frameworks utilizados. A seguir, detalhamos cada parte da estrutura técnica com definições, propósitos e exemplos.
+---
 
+## 🚀 Tech Stack
+
+🐢 **Node.js** • 🟦 **TypeScript** • ☁️ **AWS** • 🛠️ **Serverless Framework** • 📦 **AWS CDK**
+
+---
+
+## 📚 Technical Documentation of Directory Structure
+
+Keezmo’s structure follows the **Clean Architecture** methodology, providing clarity in the separation of responsibilities, efficient testability, and independence from the frameworks used.
 
 ```txt
 src/
 ├── domain/
 │   ├── entities/
+│   ├── errors/
 │   ├── value-objects/
 │   ├── interfaces/
 │   ├── services/
 │   └── use-cases/
 ├── shared/
-    ├── utils/
-    └── constants/
+│   ├── utils/
+│   └── constants/
 
 __tests__/
-├── unit/
-├── integration/
-└── e2e/
 ```
 
-## 🔹 domain/
-Contém as regras de negócio puras e isoladas.
+### 🔹 domain/
+Contains pure and isolated business rules.
 
-- entities/: Entidades com identidade e comportamentos próprios.
-- errors/: Erros para representar exceções a nível de domínio.
-- value-objects/: Objetos imutáveis com validações.
-- interfaces/: Contratos como UserRepository, Hasher, etc.
-- services/: Lógica de negócio que não pertence a uma entidade específica.
-- use-cases/: Casos de uso da aplicação orquestrando regras de negócio.
+- **entities/** – Entities with their own identity and behaviors.
+- **errors/** – Exceptions that live purely in the domain layer.
+- **value‑objects/** – Immutable objects with built‑in validation.
+- **interfaces/** – Contracts such as `UserRepository`, `Hasher`, etc.
+- **services/** – Domain logic that doesn’t belong to a specific entity.
+- **use‑cases/** – Application use cases that orchestrate domain rules.
 
-## 🔹 shared/
-Código utilitário reutilizável entre camadas.
+### 🔹 shared/
+Reusable, cross‑layer helpers.
 
-- utils/: Helpers genéricos.
-- constants/: Valores fixos globais como limites, enums, etc.
+- **utils/** – Generic helper functions.
+- **constants/** – Global fixed values such as limits, enums, etc.
 
-## Stack
+---
 
-- Node.js
-- TypeScript
-- AWS
-- Serverless
-- CDK
+### 🤝 Contributing
+Feel free to open issues or pull requests. Let’s make learning effortless together!✨
+
