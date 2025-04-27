@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.0.0...v2.1.0) (2025-04-27)
+
+
+### Features
+
+* **custom:** update semantic release configuration to include npm plugin and improve formatting ([51aef35](https://github.com/thiagoadsix/keezmo-server/commit/51aef359a3a947d97e15c89ca237684786231adf))
+
 # [2.0.0](https://github.com/thiagoadsix/keezmo-server/compare/v1.0.0...v2.0.0) (2025-04-27)
 
 
