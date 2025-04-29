@@ -25,6 +25,14 @@ src/
 │   ├── interfaces/
 │   ├── services/
 │   └── use-cases/
+├── infrastructure/
+│   ├── database/
+│   │   └── dynamodb/
+│   ├── storage/
+│   │   └── s3/
+│   ├── authentication/
+│   │   └── clerk/
+│   └── services/
 ├── shared/
 │   ├── utils/
 │   └── constants/

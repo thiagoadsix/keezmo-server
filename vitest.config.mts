@@ -28,6 +28,7 @@ export default defineConfig({
       './*.mjs',
       './*.mts',
       './scripts/**',
+      './**/*.d.ts'
     ],
     coverage: {
       provider: 'v8',
@@ -42,6 +43,7 @@ export default defineConfig({
         './*.mjs',
         './*.mts',
         './scripts/**',
+        './**/*.d.ts'
       ],
     },
     root: './',
