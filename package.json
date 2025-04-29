@@ -32,7 +32,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.788.0",
-    "@aws-sdk/lib-dynamodb": "^3.788.0",
+    "@aws-sdk/lib-dynamodb": "^3.789.0",
     "@middy/core": "^6.1.6",
     "aws-cdk-lib": "^2.189.0",
     "constructs": "^10.4.2"

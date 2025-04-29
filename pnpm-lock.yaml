@@ -12,7 +12,7 @@ importers:
         specifier: ^3.788.0
         version: 3.788.0
       '@aws-sdk/lib-dynamodb':
-        specifier: ^3.788.0
+        specifier: ^3.789.0
         version: 3.789.0(@aws-sdk/client-dynamodb@3.788.0)
       '@middy/core':
         specifier: ^6.1.6
