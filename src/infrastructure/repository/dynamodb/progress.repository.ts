@@ -1,4 +1,4 @@
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 
 import { Progress } from "@/domain/entities/progress";
 import { ProgressRepository } from "@/domain/interfaces/repositories";
@@ -9,7 +9,21 @@ export class ProgressDynamoRepository implements ProgressRepository {
   constructor(private readonly dynamoDbClient: DynamoDBClient) {}
 
   async findByCardAndDeck(cardId: string, deckId: string): Promise<Progress | null> {
-    throw new Error("Method not implemented.");
+    const command = new GetItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: {
+        PK: { S: ProgressDynamoSchema.buildPK(deckId) },
+        SK: { S: ProgressDynamoSchema.buildSK(cardId) },
+      },
+    })
+
+    const result = await this.dynamoDbClient.send(command)
+
+    if (result.Item) {
+      return ProgressDynamoSchema.fromDynamoItem(result.Item)
+    }
+
+    return null
   }
 
   async findDueCards(date: Date, deckId?: string): Promise<Progress[]> {

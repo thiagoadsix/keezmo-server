@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { ProgressDynamoRepository } from "@/infrastructure/repository/dynamodb/progress.repository";
 import { Progress } from "@/domain/entities/progress";
 import { validProgressProps } from "__tests__/@support/fixtures/progress.fixtures";
+import { marshall } from "@aws-sdk/util-dynamodb";
 
 const dynamoMock = mockClient(new DynamoDBClient({}));
 
@@ -22,5 +23,33 @@ describe("ProgressDynamoRepository", () => {
     await repository.save(progress)
 
     expect(dynamoMock.calls()).toHaveLength(1)
+  })
+
+  describe('findByCardAndDeck', () => {
+    it('should be able to find a progress by card and deck', async () => {
+      const progress = new Progress(validProgressProps)
+
+      dynamoMock.on(GetItemCommand).resolves({
+        Item: marshall(progress, {
+          convertClassInstanceToMap: true,
+          removeUndefinedValues: true,
+        }),
+      });
+
+      await repository.save(progress)
+
+      const result = await repository.findByCardAndDeck(progress.cardId, progress.deckId)
+
+      expect(result).toBeDefined()
+      expect(result?.id).toBe(progress.id)
+    })
+
+    it('should return null if the progress is not found', async () => {
+      dynamoMock.on(GetItemCommand).resolves({})
+
+      const result = await repository.findByCardAndDeck(validProgressProps.cardId, validProgressProps.deckId)
+
+      expect(result).toBeNull()
+    })
   })
 })

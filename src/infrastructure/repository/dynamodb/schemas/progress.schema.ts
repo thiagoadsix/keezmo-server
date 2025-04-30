@@ -42,7 +42,7 @@ export class ProgressDynamoSchema implements ProgressDynamoItem {
   }
 
   static buildPK(deckId: string,) {
-    return `DECK#$#${deckId}`
+    return `DECK#${deckId}`
   }
 
   static buildSK(cardId: string) {
