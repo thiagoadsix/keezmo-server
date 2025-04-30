@@ -31,4 +31,28 @@ describe("CardDynamoRepository", () => {
 
     expect(dynamoMock).toHaveReceivedCommandTimes(PutItemCommand, 1)
   })
+
+  describe("findById", () => {
+    it("should be able to find a card by id", async () => {
+      dynamoMock.on(GetItemCommand).resolves({
+        Item: marshall(validCardProps, {
+          convertClassInstanceToMap: true,
+          removeUndefinedValues: true,
+        }),
+      })
+
+      const card = await repository.findById(validCardProps.id)
+
+      expect(card).toBeDefined()
+      expect(card?.id).toBe(validCardProps.id)
+    })
+
+    it("should return null if the card is not found", async () => {
+      dynamoMock.on(GetItemCommand).resolves({})
+
+      const card = await repository.findById(validCardProps.id)
+
+      expect(card).toBeNull()
+    })
+  })
 })
