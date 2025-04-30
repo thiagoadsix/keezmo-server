@@ -1,4 +1,4 @@
-import { BatchWriteItemCommand, DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { BatchWriteItemCommand, DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { Progress } from "@/domain/entities/progress";
 import { ProgressRepository } from "@/domain/interfaces/repositories";
@@ -53,7 +53,25 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async update(progress: Progress): Promise<void> {
-    throw new Error("Method not implemented.");
+    const progressDynamoSchema = new ProgressDynamoSchema(progress)
+
+    await this.dynamoDbClient.send(new UpdateItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: {
+        PK: { S: ProgressDynamoSchema.buildPK(progress.deckId) },
+        SK: { S: ProgressDynamoSchema.buildSK(progress.cardId) },
+      },
+      UpdateExpression: 'set #nextReview = :nextReview, #interval = :interval, #repetitions = :repetitions, #easeFactor = :easeFactor, #lastReviewed = :lastReviewed, #updatedAt = :updatedAt',
+      ExpressionAttributeValues: progressDynamoSchema.toMarshall(),
+      ExpressionAttributeNames: {
+        '#nextReview': 'nextReview',
+        '#interval': 'interval',
+        '#repetitions': 'repetitions',
+        '#easeFactor': 'easeFactor',
+        '#lastReviewed': 'lastReviewed',
+        '#updatedAt': 'updatedAt',
+      },
+    }))
   }
 
   async deleteById(id: string): Promise<void> {

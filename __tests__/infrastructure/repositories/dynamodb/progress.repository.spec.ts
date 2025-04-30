@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBClient, GetItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, QueryCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { ProgressDynamoRepository } from "@/infrastructure/repository/dynamodb/progress.repository";
 import { Progress } from "@/domain/entities/progress";
@@ -76,6 +76,29 @@ describe("ProgressDynamoRepository", () => {
     const result = await repository.findDueCards(new Date())
 
     expect(result).toHaveLength(2)
+  })
+
+  it('should be able to update a progress', async () => {
+    const progress = new Progress(validProgressProps)
+
+    await repository.save(progress)
+
+    const updated = new Progress({
+      ...progress,
+      interval: 2,
+      repetitions: 2,
+      easeFactor: 2.6,
+      lastReviewed: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+      nextReview: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
+    })
+
+    dynamoMock.on(UpdateItemCommand).resolves({})
+
+    await repository.update(updated)
+
+    expect(dynamoMock.calls()).toHaveLength(2)
+    expect(progress.id).toBe(updated.id)
+    expect(progress.nextReview).not.toBe(updated.nextReview)
   })
 
   describe('findByCardAndDeck', () => {
