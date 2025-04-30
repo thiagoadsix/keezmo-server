@@ -3,7 +3,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { Progress } from "@/domain/entities/progress";
 import { ProgressRepository } from "@/domain/interfaces/repositories";
 
-import { ProgressRepositorySchema } from "@/infrastructure/repository/dynamodb/schemas/progress.repository.schema"
+import { ProgressDynamoSchema } from "@/infrastructure/repository/dynamodb/schemas/progress.schema"
 
 export class ProgressDynamoRepository implements ProgressRepository {
   constructor(private readonly dynamoDbClient: DynamoDBClient) {}

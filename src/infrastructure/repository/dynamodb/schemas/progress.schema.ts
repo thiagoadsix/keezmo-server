@@ -3,7 +3,7 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
 import { Progress } from "@/domain/entities/progress"
 
-interface ProgressRepositoryItem {
+interface ProgressDynamoItem {
   id: string
   cardId: string
   deckId: string
@@ -16,7 +16,7 @@ interface ProgressRepositoryItem {
   updatedAt: string
 }
 
-export class ProgressRepositorySchema implements ProgressRepositoryItem {
+export class ProgressDynamoSchema implements ProgressDynamoItem {
   id: string
   cardId: string
   deckId: string
