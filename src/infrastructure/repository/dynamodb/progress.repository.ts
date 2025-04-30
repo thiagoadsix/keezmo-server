@@ -1,4 +1,4 @@
-import { DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { BatchWriteItemCommand, DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 
 import { Progress } from "@/domain/entities/progress";
 import { ProgressRepository } from "@/domain/interfaces/repositories";
@@ -51,7 +51,21 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async saveBatch(progresses: Progress[]): Promise<void> {
-    throw new Error("Method not implemented.");
+    const schema = progresses.map(progress => new ProgressDynamoSchema(progress))
+
+    const chunk = 25
+
+    for (let i = 0; i < schema.length; i += chunk) {
+      const batch = schema.slice(i, i + chunk)
+
+      const command = new BatchWriteItemCommand({
+        RequestItems: {
+          [process.env.DECK_TABLE_NAME]: batch.map(schema => schema.toMarshall()),
+        },
+      })
+
+      await this.dynamoDbClient.send(command)
+    }
   }
 
   async deleteByDeckId(deckId: string): Promise<void> {

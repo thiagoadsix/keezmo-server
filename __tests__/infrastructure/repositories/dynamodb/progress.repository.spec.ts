@@ -41,6 +41,17 @@ describe("ProgressDynamoRepository", () => {
     await repository.deleteByDeckId(progress.deckId)
   })
 
+  it('should be able to save a batch of progresses', async () => {
+    const progresses = [
+      new Progress(validProgressProps),
+      new Progress(validProgressProps),
+    ]
+
+    await repository.saveBatch(progresses)
+
+    expect(dynamoMock.calls()).toHaveLength(1)
+  })
+
   describe('findByCardAndDeck', () => {
     it('should be able to find a progress by card and deck', async () => {
       const progress = new Progress(validProgressProps)
