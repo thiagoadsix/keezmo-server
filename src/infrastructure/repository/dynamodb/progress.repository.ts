@@ -27,7 +27,20 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async findDueCards(date: Date, deckId?: string): Promise<Progress[]> {
-    throw new Error("Method not implemented.");
+    const command = new QueryCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      KeyConditionExpression: 'PK = :pk and begins_with(SK, :sk)',
+      FilterExpression: 'nextReview <= :date',
+      ExpressionAttributeValues: {
+        ':pk': { S: deckId ? `DECK#${deckId}` : 'DECK' },
+        ':sk': { S: 'CARD#' },
+        ':date': { S: date.toISOString() },
+      },
+    })
+
+    const result = await this.dynamoDbClient.send(command)
+
+    return result.Items?.map(item => ProgressDynamoSchema.fromDynamoItem(item)) ?? []
   }
 
   async save(progress: Progress): Promise<void> {
