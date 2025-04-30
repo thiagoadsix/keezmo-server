@@ -1,6 +1,7 @@
 import { mockId } from '../mocks/shared/utils/generate-id.mock'
 
 export const validCardProps = {
+  id: mockId,
   deckId: mockId,
   question: 'What is the capital of France?',
   answer: 'Paris',

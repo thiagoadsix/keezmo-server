@@ -15,10 +15,8 @@ interface DeckDynamoItem {
 }
 
 export class DeckDynamoSchema implements DeckDynamoItem {
-  private readonly tableName: string;
-
-  private PK: string;
-  private SK: string;
+  readonly PK: string;
+  readonly SK: string;
 
   id: string;
   userId: string;
@@ -29,8 +27,6 @@ export class DeckDynamoSchema implements DeckDynamoItem {
   updatedAt: string;
 
   constructor(deck: Deck) {
-    this.tableName = process.env.DECK_TABLE_NAME
-
     this.id = deck.id
     this.userId = deck.userId
     this.title = deck.title
