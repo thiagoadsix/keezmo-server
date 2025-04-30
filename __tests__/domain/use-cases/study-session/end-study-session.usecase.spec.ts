@@ -12,7 +12,7 @@ describe('EndStudySessionUseCase', () => {
   let mockSession: StudySession
 
   const sessionId = 'session-123'
-
+  const userId = 'user-123'
   beforeEach(() => {
     const startTime = new Date('2023-05-15T09:50:00Z').toISOString()
     mockSession = new StudySession({
@@ -20,6 +20,7 @@ describe('EndStudySessionUseCase', () => {
       studyMode: StudyModeEnum.FLASHCARD,
       startTime,
       endTime: startTime,
+      userId,
     })
 
     Object.defineProperty(mockSession, 'id', { value: sessionId })
