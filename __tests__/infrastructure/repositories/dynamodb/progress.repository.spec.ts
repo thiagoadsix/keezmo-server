@@ -25,6 +25,14 @@ describe("ProgressDynamoRepository", () => {
     expect(dynamoMock.calls()).toHaveLength(1)
   })
 
+  it('should be able to delete a progress', async () => {
+    const progress = new Progress(validProgressProps)
+
+    await repository.save(progress)
+
+    await repository.deleteById(progress.id)
+  })
+
   describe('findByCardAndDeck', () => {
     it('should be able to find a progress by card and deck', async () => {
       const progress = new Progress(validProgressProps)

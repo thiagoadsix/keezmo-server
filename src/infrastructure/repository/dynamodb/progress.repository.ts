@@ -1,4 +1,4 @@
-import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 
 import { Progress } from "@/domain/entities/progress";
 import { ProgressRepository } from "@/domain/interfaces/repositories";
@@ -44,7 +44,10 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async deleteById(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    await this.dynamoDbClient.send(new DeleteItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: { id: { S: id } },
+    }))
   }
 
   async saveBatch(progresses: Progress[]): Promise<void> {
