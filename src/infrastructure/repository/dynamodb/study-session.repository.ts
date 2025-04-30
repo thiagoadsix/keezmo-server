@@ -1,4 +1,4 @@
-import { DynamoDBClient, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 
 import { StudySessionRepository } from "@/domain/interfaces/repositories";
 import { StudySession } from "@/domain/entities/study-session";
@@ -23,8 +23,23 @@ export class StudySessionDynamoRepository implements StudySessionRepository {
     return null
   }
 
-  findByUserId(userId: string): Promise<StudySession[]> {
-    throw new Error("Method not implemented.");
+  async findByUserId(userId: string): Promise<StudySession[]> {
+    const command = new QueryCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      ExpressionAttributeValues: {
+        ":gsi1pk": { S: StudySessionDynamoSchema.buildGSI1PK(userId) },
+      },
+    })
+
+    const result = await this.client.send(command)
+
+    if (result.Items) {
+      return result.Items.map(item => StudySessionDynamoSchema.fromDynamoItem(item))
+    }
+
+    return []
   }
 
   async save(studySession: StudySession): Promise<void> {

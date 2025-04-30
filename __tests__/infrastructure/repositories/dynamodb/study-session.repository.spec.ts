@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mockClient } from 'aws-sdk-client-mock';
-import { DeleteItemCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { GetItemCommand, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { GetItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 
 import { StudySessionDynamoRepository } from '@/infrastructure/repository/dynamodb/study-session.repository';
@@ -49,6 +49,31 @@ describe('StudySessionDynamoRepository', () => {
       const result = await repository.findById(validFlashcardSessionProps.id);
 
       expect(result).toBeNull();
+    })
+  })
+
+  describe('findByUserId', () => {
+    it('should be able to find a study session by user id', async () => {
+      dynamoMock.on(QueryCommand).resolves({
+        Items: [marshall(validFlashcardSessionProps, {
+          convertClassInstanceToMap: true,
+          removeUndefinedValues: true,
+        }),
+      ],
+    });
+
+    const result = await repository.findByUserId(validFlashcardSessionProps.userId);
+
+      expect(result).toBeDefined();
+      expect(result?.length).toBe(1);
+    })
+
+    it('should return an empty array if no study sessions are found', async () => {
+      dynamoMock.on(QueryCommand).resolves({});
+
+      const result = await repository.findByUserId(validFlashcardSessionProps.userId);
+
+      expect(result).toEqual([]);
     })
   })
 })

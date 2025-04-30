@@ -19,6 +19,9 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
   readonly PK: string
   readonly SK: string
 
+  readonly GSI1PK: string
+  readonly GSI1SK: string
+
   id: string
   deckId: string
   userId: string
@@ -40,6 +43,9 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
 
     this.PK = StudySessionDynamoSchema.buildPK(this.deckId)
     this.SK = StudySessionDynamoSchema.buildSK(this.id)
+
+    this.GSI1PK = StudySessionDynamoSchema.buildGSI1PK(this.userId)
+    this.GSI1SK = StudySessionDynamoSchema.buildGSI1SK(this.studyMode)
   }
 
   static buildPK(deckId: string) {
@@ -48,6 +54,14 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
 
   static buildSK(id: string) {
     return `STUDY_SESSION#${id}`
+  }
+
+  static buildGSI1PK(userId: string) {
+    return `USER#${userId}`
+  }
+
+  static buildGSI1SK(studyMode: StudyModeEnum) {
+    return `STUDY_MODE#${studyMode}`
   }
 
   toMarshall() {
