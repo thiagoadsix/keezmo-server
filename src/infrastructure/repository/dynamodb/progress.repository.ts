@@ -1,4 +1,4 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { Progress } from "@/domain/entities/progress";
 import { ProgressRepository } from "@/domain/interfaces/repositories";
@@ -17,7 +17,12 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async save(progress: Progress): Promise<void> {
-    throw new Error("Method not implemented.");
+    const progressDynamoSchema = new ProgressDynamoSchema(progress)
+
+    await this.dynamoDbClient.send(new PutItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Item: progressDynamoSchema.toMarshall(),
+    }))
   }
 
   async update(progress: Progress): Promise<void> {
