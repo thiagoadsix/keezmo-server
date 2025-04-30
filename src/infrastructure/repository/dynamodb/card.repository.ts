@@ -1,4 +1,4 @@
-import { DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DeleteItemCommand, BatchWriteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 
 import { CardRepository } from "@/domain/interfaces/repositories";
 import { Card } from "@/domain/entities/card";
@@ -60,8 +60,22 @@ export class CardDynamoRepository implements CardRepository {
     await this.client.send(command)
   }
 
-  deleteByIds(ids: string[]): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteByIds(ids: string[]): Promise<void> {
+    const toDelete = ids.map(id => ({
+      DeleteRequest: {
+        Key: { id: { S: id } },
+      },
+    }))
+
+    const params = {
+      [process.env.DECK_TABLE_NAME]: toDelete,
+    }
+
+    const command = new BatchWriteItemCommand({
+      RequestItems: params
+    })
+
+    await this.client.send(command)
   }
 
   saveBatch(cards: Card[]): Promise<void> {

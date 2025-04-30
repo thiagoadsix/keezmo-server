@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, DeleteItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand, DeleteItemCommand, BatchWriteItemCommand } from "@aws-sdk/client-dynamodb";
 import { marshall } from "@aws-sdk/util-dynamodb";
 
 import { validCardProps } from "__tests__/@support/fixtures/card.fixtures";
@@ -38,6 +38,14 @@ describe("CardDynamoRepository", () => {
     await repository.deleteById(validCardProps.id)
 
     expect(dynamoMock).toHaveReceivedCommandTimes(DeleteItemCommand, 1)
+  })
+
+  it("should be able to delete multiple cards", async () => {
+    dynamoMock.on(BatchWriteItemCommand).resolves({})
+
+    await repository.deleteByIds([validCardProps.id])
+
+    expect(dynamoMock).toHaveReceivedCommandTimes(BatchWriteItemCommand, 1)
   })
 
   describe("findById", () => {
