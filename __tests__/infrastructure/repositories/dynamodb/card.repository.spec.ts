@@ -48,6 +48,14 @@ describe("CardDynamoRepository", () => {
     expect(dynamoMock).toHaveReceivedCommandTimes(BatchWriteItemCommand, 1)
   })
 
+  it("should be able to save multiple cards", async () => {
+    dynamoMock.on(BatchWriteItemCommand).resolves({})
+
+    await repository.saveBatch([new Card(validCardProps)])
+
+    expect(dynamoMock).toHaveReceivedCommandTimes(BatchWriteItemCommand, 1)
+  })
+
   describe("findById", () => {
     it("should be able to find a card by id", async () => {
       dynamoMock.on(GetItemCommand).resolves({

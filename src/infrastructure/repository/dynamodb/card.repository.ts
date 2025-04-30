@@ -78,7 +78,21 @@ export class CardDynamoRepository implements CardRepository {
     await this.client.send(command)
   }
 
-  saveBatch(cards: Card[]): Promise<void> {
-    throw new Error("Method not implemented.");
+  async saveBatch(cards: Card[]): Promise<void> {
+    const schema = cards.map(card => new CardDynamoSchema(card))
+
+    const chunk = 25
+
+    for (let i = 0; i < schema.length; i += chunk) {
+      const batch = schema.slice(i, i + chunk)
+
+      const command = new BatchWriteItemCommand({
+        RequestItems: {
+          [process.env.DECK_TABLE_NAME]: batch.map(schema => schema.toMarshall()),
+        },
+      })
+
+      await this.client.send(command)
+    }
   }
 }
