@@ -55,6 +55,9 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async deleteByDeckId(deckId: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    await this.dynamoDbClient.send(new DeleteItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: { PK: { S: ProgressDynamoSchema.buildPK(deckId) } },
+    }))
   }
 }

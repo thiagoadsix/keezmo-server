@@ -33,6 +33,14 @@ describe("ProgressDynamoRepository", () => {
     await repository.deleteById(progress.id)
   })
 
+  it('should be able to delete a progress by deck id', async () => {
+    const progress = new Progress(validProgressProps)
+
+    await repository.save(progress)
+
+    await repository.deleteByDeckId(progress.deckId)
+  })
+
   describe('findByCardAndDeck', () => {
     it('should be able to find a progress by card and deck', async () => {
       const progress = new Progress(validProgressProps)
