@@ -51,8 +51,13 @@ export class CardDynamoRepository implements CardRepository {
     await this.client.send(command)
   }
 
-  deleteById(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteById(id: string): Promise<void> {
+    const command = new DeleteItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: { id: { S: id } },
+    })
+
+    await this.client.send(command)
   }
 
   deleteByIds(ids: string[]): Promise<void> {
