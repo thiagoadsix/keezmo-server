@@ -1,4 +1,4 @@
-import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 import { StudySessionRepository } from "@/domain/interfaces/repositories";
 import { StudySession } from "@/domain/entities/study-session";
@@ -27,7 +27,13 @@ export class StudySessionDynamoRepository implements StudySessionRepository {
     throw new Error("Method not implemented.");
   }
 
-  save(studySession: StudySession): Promise<void> {
-    throw new Error("Method not implemented.");
+  async save(studySession: StudySession): Promise<void> {
+    const schema = new StudySessionDynamoSchema(studySession)
+    const command = new PutItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Item: schema.toMarshall(),
+    })
+
+    await this.client.send(command)
   }
 }

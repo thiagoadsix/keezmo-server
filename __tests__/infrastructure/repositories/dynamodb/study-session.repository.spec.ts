@@ -7,6 +7,7 @@ import { marshall } from '@aws-sdk/util-dynamodb';
 import { StudySessionDynamoRepository } from '@/infrastructure/repository/dynamodb/study-session.repository';
 
 import { validFlashcardSessionProps } from '__tests__/@support/fixtures/study-session.fixtures';
+import { StudySession } from '@/domain/entities/study-session';
 
 const dynamoMock = mockClient(new DynamoDBClient({}));
 
@@ -17,6 +18,14 @@ describe('StudySessionDynamoRepository', () => {
     dynamoMock.reset();
     repository = new StudySessionDynamoRepository(dynamoMock as any);
   });
+
+  it('should be able to save a study session', async () => {
+    const studySession = new StudySession(validFlashcardSessionProps);
+
+    await repository.save(studySession);
+
+    expect(dynamoMock.calls()).toHaveLength(1);
+  })
 
   describe('findById', () => {
     it('should be able to find a study session by id', async () => {
