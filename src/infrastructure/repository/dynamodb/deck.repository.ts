@@ -4,7 +4,6 @@ import { DeckRepository } from "@/domain/interfaces/repositories";
 import { Deck } from "@/domain/entities/deck";
 
 import { DeckDynamoSchema } from "./schemas/deck.schema";
-import { Card } from "@/domain/entities/card";
 
 export class DeckDynamoRepository implements DeckRepository {
   constructor(private readonly client: DynamoDBClient) {}
