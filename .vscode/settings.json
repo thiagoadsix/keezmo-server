@@ -2,5 +2,7 @@
   "cSpell.words": [
     "keezmo",
     "rocketseat"
-  ]
+  ],
+  "eslint.nodeEnv": "development",
+  "eslint.nodePath": "${workspaceFolder}/node_modules/.pnpm/node_modules"
 }

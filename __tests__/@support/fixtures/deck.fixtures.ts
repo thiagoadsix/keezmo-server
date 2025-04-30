@@ -4,6 +4,7 @@ import { StudyMode } from '@/domain/value-objects'
 import { mockId } from '../mocks/shared/utils/generate-id.mock'
 
 export const validDeckProps = {
+  id: mockId,
   userId: 'user-123',
   title: 'Math Concepts',
   description: 'Basic math concepts for beginners',

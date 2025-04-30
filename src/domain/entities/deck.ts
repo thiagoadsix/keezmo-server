@@ -6,6 +6,7 @@ import { StudyMode } from '@/domain/value-objects'
 import { generateId } from '@/shared/utils/generate-id'
 
 interface DeckProps {
+  id?: string | null
   userId: string
   title: string
   description: string
@@ -34,7 +35,7 @@ export class Deck {
       throw new InvalidDeckDescriptionError(props.description)
     }
 
-    this.id = generateId()
+    this.id = props.id || generateId()
     this.userId = props.userId
     this.title = props.title
     this.description = props.description

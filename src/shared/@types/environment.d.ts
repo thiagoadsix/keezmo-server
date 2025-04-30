@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       AWS_REGION: string;
       ENVIRONMENT: 'development' | 'production' | 'local';
+      DECK_TABLE_NAME: string;
     }
   }
 }

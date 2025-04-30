@@ -1,30 +1,79 @@
+import { DeleteItemCommand, DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
+
 import { DeckRepository } from "@/domain/interfaces/repositories";
-import { DynamoClient } from "./client";
 import { Deck } from "@/domain/entities/deck";
 
+import { DeckDynamoSchema } from "./schemas/deck.schema";
+import { Card } from "@/domain/entities/card";
+
 export class DeckDynamoRepository implements DeckRepository {
-  constructor(private readonly dynamoClient: DynamoClient) {
-    this.dynamoClient = new DynamoClient();
+  constructor(private readonly client: DynamoDBClient) {}
+
+  async findById(id: string): Promise<Deck | null> {
+    const command = new GetItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: { id: { S: id } },
+    })
+
+    const result = await this.client.send(command)
+
+    if (result.Item) {
+      return DeckDynamoSchema.fromDynamoItem(result.Item)
+    }
+
+    return null
   }
 
-  findById(id: string): Promise<Deck | null> {
-    throw new Error("Method not implemented.");
+  async findByIdAndUserId(id: string, userId: string): Promise<Deck | null> {
+    const command = new GetItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: { id: { S: id }, userId: { S: userId } },
+    })
+
+    const result = await this.client.send(command)
+
+    if (result.Item) {
+      return DeckDynamoSchema.fromDynamoItem(result.Item)
+    }
+
+    return null
   }
 
-  findByIdAndUserId(id: string, userId: string): Promise<Deck | null> {
-    throw new Error("Method not implemented.");
+  async findAllByUser(userId: string): Promise<Deck[]> {
+    const command = new QueryCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      KeyConditionExpression: "PK = :pk",
+      ExpressionAttributeValues: {
+        ":pk": { S: DeckDynamoSchema.buildPK(userId) },
+      },
+    })
+
+    const result = await this.client.send(command)
+
+    if (result.Items && result.Items.length > 0) {
+      return result.Items.map(item => DeckDynamoSchema.fromDynamoItem(item))
+    }
+
+    return []
   }
 
-  findAllByUser(userId: string): Promise<Deck[]> {
-    throw new Error("Method not implemented.");
+  async save(deck: Deck): Promise<void> {
+    const schema = new DeckDynamoSchema(deck)
+    const command = new PutItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Item: schema.toMarshall(),
+    })
+
+    await this.client.send(command)
   }
 
-  save(deck: Deck): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
+  async delete(id: string): Promise<void> {
+    const command = new DeleteItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Key: { id: { S: id } },
+    })
 
-  delete(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    await this.client.send(command)
   }
 }
 
