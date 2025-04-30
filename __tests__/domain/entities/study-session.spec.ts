@@ -13,7 +13,6 @@ import { StudySessionValidationError } from '@/domain/errors/study-session/study
 import { StudyModeEnum } from '@/domain/value-objects'
 
 import {
-  validMultipleChoiceSessionProps,
   validFlashcardSessionProps,
   invalidSessionPropsWithoutDeckId,
   invalidSessionPropsWithoutStartTime,
@@ -32,22 +31,6 @@ describe('StudySession', () => {
   })
 
   describe('constructor', () => {
-    it('should create a valid StudySession with multiple choice type', () => {
-      const fixedDate = new Date('2023-01-01T12:00:00Z')
-      vi.setSystemTime(fixedDate)
-      const expectedDateString = fixedDate.toISOString()
-
-      const session = new StudySession(validMultipleChoiceSessionProps)
-
-      expect(session).toBeInstanceOf(StudySession)
-      expect(session.id).toBe(mockId)
-      expect(session.deckId).toBe(validMultipleChoiceSessionProps.deckId)
-      expect(session.startTime).toBe(validMultipleChoiceSessionProps.startTime)
-      expect(session.endTime).toBe(validMultipleChoiceSessionProps.endTime)
-      expect(session.studyMode).toBe(StudyModeEnum.MULTIPLE_CHOICE)
-      expect(session.createdAt).toBe(expectedDateString)
-      expect(session.updatedAt).toBe(expectedDateString)
-    })
 
     it('should create a valid StudySession with flashcard type', () => {
       const session = new StudySession({
@@ -79,7 +62,7 @@ describe('StudySession', () => {
   describe('update methods', () => {
     describe('setEndTime', () => {
       it('should update the end time', () => {
-        const session = new StudySession(validMultipleChoiceSessionProps)
+        const session = new StudySession(validFlashcardSessionProps)
         const fixedDate = new Date('2023-01-02T12:00:00Z')
         vi.setSystemTime(fixedDate)
 
@@ -91,7 +74,7 @@ describe('StudySession', () => {
       })
 
       it('should throw when end time is empty', () => {
-        const session = new StudySession(validMultipleChoiceSessionProps)
+        const session = new StudySession(validFlashcardSessionProps)
 
         expect(() => session.setEndTime('')).toThrow(
           StudySessionValidationError,
@@ -101,7 +84,7 @@ describe('StudySession', () => {
 
     describe('setStartTime', () => {
       it('should update the start time', () => {
-        const session = new StudySession(validMultipleChoiceSessionProps)
+        const session = new StudySession(validFlashcardSessionProps)
         const fixedDate = new Date('2023-01-02T12:00:00Z')
         vi.setSystemTime(fixedDate)
 
@@ -113,7 +96,7 @@ describe('StudySession', () => {
       })
 
       it('should throw when start time is empty', () => {
-        const session = new StudySession(validMultipleChoiceSessionProps)
+        const session = new StudySession(validFlashcardSessionProps)
 
         expect(() => session.setStartTime('')).toThrow(
           StudySessionValidationError,
