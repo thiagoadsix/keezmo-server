@@ -23,8 +23,22 @@ export class CardDynamoRepository implements CardRepository {
     return null
   }
 
-  findByDeckId(deckId: string): Promise<Card[]> {
-    throw new Error("Method not implemented.");
+  async findByDeckId(deckId: string): Promise<Card[]> {
+    const command = new QueryCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      KeyConditionExpression: "PK = :pk",
+      ExpressionAttributeValues: {
+        ":pk": { S: CardDynamoSchema.buildPK(deckId) },
+      },
+    })
+
+    const result = await this.client.send(command)
+
+    if (result.Items) {
+      return result.Items.map(item => CardDynamoSchema.fromDynamoItem(item))
+    }
+
+    return []
   }
 
   async save(card: Card): Promise<void> {

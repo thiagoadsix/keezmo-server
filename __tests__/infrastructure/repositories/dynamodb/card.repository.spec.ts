@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { mockClient } from "aws-sdk-client-mock";
-import { DynamoDBClient, GetItemCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from "@aws-sdk/client-dynamodb";
 import { marshall } from "@aws-sdk/util-dynamodb";
 
 import { validCardProps } from "__tests__/@support/fixtures/card.fixtures";
@@ -53,6 +53,34 @@ describe("CardDynamoRepository", () => {
       const card = await repository.findById(validCardProps.id)
 
       expect(card).toBeNull()
+    })
+  })
+
+  describe("findByDeckId", () => {
+    it("should be able to find all cards by deck id", async () => {
+      dynamoMock.on(QueryCommand).resolves({
+        Items: [
+          marshall(validCardProps, {
+            convertClassInstanceToMap: true,
+            removeUndefinedValues: true,
+          }),
+        ],
+      })
+
+      const cards = await repository.findByDeckId(validCardProps.deckId)
+
+      expect(cards).toBeDefined()
+      expect(cards.length).toBe(1)
+      expect(cards[0].id).toBe(validCardProps.id)
+    })
+
+    it("should return an empty array if no cards are found", async () => {
+      dynamoMock.on(QueryCommand).resolves({})
+
+      const cards = await repository.findByDeckId(validCardProps.deckId)
+
+      expect(cards).toBeDefined()
+      expect(cards.length).toBe(0)
     })
   })
 })
