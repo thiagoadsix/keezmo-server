@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
-import { BaseValidator } from "@/presentation/validators/base.validator";
+import { BaseValidator } from "@/presentation/controllers/base.validator";
 import { ValidationError } from "@/presentation/errors/validation-error";
 
 class TestValidator extends BaseValidator<unknown> {

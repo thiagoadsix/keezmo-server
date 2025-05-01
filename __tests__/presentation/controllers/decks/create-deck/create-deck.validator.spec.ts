@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { StudyModeEnum } from "@/domain/value-objects";
 import { ValidationError } from "@/presentation/errors/validation-error";
 
-import { CreateDeckValidator } from "@/presentation/validators/decks/create-deck.validator";
+import { CreateDeckValidator } from "@/presentation/controllers/decks/create-deck";
 
 describe("CreateDeckValidator", () => {
   let validator: CreateDeckValidator;

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { StudyModeEnum } from "@/domain/value-objects";
 
-import { BaseValidator } from "../base.validator";
+import { BaseValidator } from "@/presentation/controllers/base.validator";
 
 const createDeckSchema = z.object({
   userId: z.string(),

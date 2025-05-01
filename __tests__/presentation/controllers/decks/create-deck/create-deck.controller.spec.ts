@@ -5,8 +5,8 @@ import { StudyModeEnum } from "@/domain/value-objects";
 import {
   CreateDeckController,
   CreateDeckRequest,
-} from "@/presentation/controllers/decks/create-deck.controller";
-import { CreateDeckValidator } from "@/presentation/validators/decks/create-deck.validator";
+  CreateDeckValidator,
+} from "@/presentation/controllers/decks/create-deck";
 
 describe("CreateDeckController", () => {
   it("should be a class", () => {
