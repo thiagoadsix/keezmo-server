@@ -1,50 +1,47 @@
-import { StudySession } from '@/domain/entities/study-session'
-import { StudySessionRepository } from '@/domain/interfaces/repositories'
-import { StudyModeEnum } from '@/domain/value-objects'
+import { StudyModeEnum } from '@/domain/value-objects';
+
+import { StudySession } from '@/domain/entities/study-session';
+import { StudySessionRepository } from '@/domain/interfaces/repositories';
 
 interface StartStudySessionRequest {
-  deckId: string
-  studyMode: StudyModeEnum
+  deckId: string;
+  studyMode: StudyModeEnum;
 }
 
 interface StartStudySessionResponse {
-  sessionId: string
+  sessionId: string;
 }
 
 export class StartStudySessionUseCase {
-  constructor(
-    private readonly studySessionRepository: StudySessionRepository,
-  ) {}
+  constructor(private readonly studySessionRepository: StudySessionRepository) {}
 
-  public async execute(
-    request: StartStudySessionRequest,
-  ): Promise<StartStudySessionResponse> {
+  public async execute(request: StartStudySessionRequest): Promise<StartStudySessionResponse> {
     console.log('Starting a new study session', {
       deckId: request.deckId,
       studyMode: request.studyMode,
-    })
+    });
 
-    const startTime = new Date().toISOString()
+    const startTime = new Date().toISOString();
 
     const studySessionProps = {
       deckId: request.deckId,
       startTime,
       studyMode: request.studyMode,
-    }
+    };
 
-    const studySession = new StudySession(studySessionProps)
+    const studySession = new StudySession(studySessionProps);
 
-    await this.studySessionRepository.save(studySession)
+    await this.studySessionRepository.save(studySession);
 
     console.log('Study session started successfully', {
       id: studySession.id,
       deckId: studySession.deckId,
       studyMode: studySession.studyMode,
       startTime: studySession.startTime,
-    })
+    });
 
     return {
       sessionId: studySession.id,
-    }
+    };
   }
 }

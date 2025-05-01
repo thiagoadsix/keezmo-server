@@ -1,7 +1,7 @@
-import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import { AttributeValue } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { AttributeValue } from '@aws-sdk/client-dynamodb';
 
-import { Card } from "@/domain/entities/card";
+import { Card } from '@/domain/entities/card';
 
 interface CardDynamoItem {
   id: string;
@@ -24,23 +24,23 @@ export class CardDynamoSchema implements CardDynamoItem {
   updatedAt: string;
 
   constructor(card: Card) {
-    this.id = card.id
-    this.deckId = card.deckId
-    this.question = card.question
-    this.answer = card.answer
-    this.createdAt = card.createdAt
-    this.updatedAt = card.updatedAt
+    this.id = card.id;
+    this.deckId = card.deckId;
+    this.question = card.question;
+    this.answer = card.answer;
+    this.createdAt = card.createdAt;
+    this.updatedAt = card.updatedAt;
 
-    this.PK = CardDynamoSchema.buildPK(this.deckId)
-    this.SK = CardDynamoSchema.buildSK(this.id)
+    this.PK = CardDynamoSchema.buildPK(this.deckId);
+    this.SK = CardDynamoSchema.buildSK(this.id);
   }
 
   static buildPK(deckId: string) {
-    return `DECK#${deckId}`
+    return `DECK#${deckId}`;
   }
 
   static buildSK(id: string) {
-    return `CARD#${id}`
+    return `CARD#${id}`;
   }
 
   toMarshall() {
@@ -48,11 +48,11 @@ export class CardDynamoSchema implements CardDynamoItem {
       convertClassInstanceToMap: true,
       convertEmptyValues: true,
       removeUndefinedValues: true,
-    })
+    });
   }
 
   static fromDynamoItem(item: Record<string, AttributeValue>): Card {
-    const card = unmarshall(item)
+    const card = unmarshall(item);
 
     return new Card({
       id: card.id,
@@ -61,6 +61,6 @@ export class CardDynamoSchema implements CardDynamoItem {
       answer: card.answer,
       createdAt: card.createdAt,
       updatedAt: card.updatedAt,
-    })
+    });
   }
 }

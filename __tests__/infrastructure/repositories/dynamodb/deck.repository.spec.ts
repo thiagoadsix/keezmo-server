@@ -1,13 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mockClient } from 'aws-sdk-client-mock';
-import { DeleteItemCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { GetItemCommand, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
+import {
+  DeleteItemCommand,
+  DynamoDBClient,
+  GetItemCommand,
+  PutItemCommand,
+  QueryCommand,
+} from '@aws-sdk/client-dynamodb';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { marshall } from '@aws-sdk/util-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
 
 import { validDeckProps } from '__tests__/@support/fixtures/deck.fixtures';
 
 import { Deck } from '@/domain/entities/deck';
-
 import { DeckDynamoRepository } from '@/infrastructure/repository/dynamodb/deck.repository';
 
 const dynamoMock = mockClient(new DynamoDBClient({}));
@@ -17,7 +21,7 @@ describe('DeckDynamoRepository', () => {
 
   beforeEach(() => {
     dynamoMock.reset();
-    repository = new DeckDynamoRepository(dynamoMock as any);
+    repository = new DeckDynamoRepository(dynamoMock as unknown as DynamoDBClient);
   });
 
   describe('findById', () => {

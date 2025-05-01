@@ -1,8 +1,8 @@
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { AttributeValue } from '@aws-sdk/client-dynamodb';
 
-import { Deck } from "@/domain/entities/deck";
 import { StudyMode, StudyModeEnum } from '@/domain/value-objects';
+import { Deck } from '@/domain/entities/deck';
 
 interface DeckDynamoItem {
   id: string;
@@ -27,24 +27,24 @@ export class DeckDynamoSchema implements DeckDynamoItem {
   updatedAt: string;
 
   constructor(deck: Deck) {
-    this.id = deck.id
-    this.userId = deck.userId
-    this.title = deck.title
-    this.description = deck.description
-    this.studyMode = deck.studyMode.getValue()
-    this.createdAt = deck.createdAt
-    this.updatedAt = deck.updatedAt
+    this.id = deck.id;
+    this.userId = deck.userId;
+    this.title = deck.title;
+    this.description = deck.description;
+    this.studyMode = deck.studyMode.getValue();
+    this.createdAt = deck.createdAt;
+    this.updatedAt = deck.updatedAt;
 
-    this.PK = DeckDynamoSchema.buildPK(this.userId)
-    this.SK = DeckDynamoSchema.buildSK(this.studyMode)
+    this.PK = DeckDynamoSchema.buildPK(this.userId);
+    this.SK = DeckDynamoSchema.buildSK(this.studyMode);
   }
 
   static buildPK(userId: string) {
-    return `USER#${userId}`
+    return `USER#${userId}`;
   }
 
   static buildSK(studyMode: StudyModeEnum) {
-    return `STUDY_MODE#${studyMode}`
+    return `STUDY_MODE#${studyMode}`;
   }
 
   toMarshall() {
@@ -52,11 +52,11 @@ export class DeckDynamoSchema implements DeckDynamoItem {
       convertClassInstanceToMap: true,
       convertEmptyValues: true,
       removeUndefinedValues: true,
-    })
+    });
   }
 
   static fromDynamoItem(item: Record<string, AttributeValue>): Deck {
-    const deck = unmarshall(item)
+    const deck = unmarshall(item);
 
     return new Deck({
       id: deck.id,
@@ -66,6 +66,6 @@ export class DeckDynamoSchema implements DeckDynamoItem {
       studyMode: new StudyMode(deck.studyMode),
       createdAt: deck.createdAt,
       updatedAt: deck.updatedAt,
-    })
+    });
   }
 }

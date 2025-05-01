@@ -1,6 +1,6 @@
-import { StudyModeEnum } from '@/domain/value-objects'
+import { StudyModeEnum } from '@/domain/value-objects';
 
-import { mockId } from '../mocks/shared/utils/generate-id.mock'
+import { mockId } from '../mocks/shared/utils/generate-id.mock';
 
 export const validFlashcardSessionProps = {
   id: mockId,
@@ -9,7 +9,7 @@ export const validFlashcardSessionProps = {
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
   studyMode: StudyModeEnum.FLASHCARD,
-}
+};
 
 export const invalidSessionPropsWithoutDeckId = {
   id: mockId,
@@ -18,7 +18,7 @@ export const invalidSessionPropsWithoutDeckId = {
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
   studyMode: StudyModeEnum.FLASHCARD,
-}
+};
 
 export const invalidSessionPropsWithoutStartTime = {
   id: mockId,
@@ -27,7 +27,7 @@ export const invalidSessionPropsWithoutStartTime = {
   startTime: '',
   endTime: '2023-05-15T10:30:00Z',
   studyMode: StudyModeEnum.FLASHCARD,
-}
+};
 
 export const invalidSessionPropsWithInvalidStudyType = {
   id: mockId,
@@ -36,4 +36,4 @@ export const invalidSessionPropsWithInvalidStudyType = {
   startTime: '2023-05-15T10:00:00Z',
   endTime: '2023-05-15T10:30:00Z',
   studyMode: 'invalid-type' as StudyModeEnum,
-}
+};

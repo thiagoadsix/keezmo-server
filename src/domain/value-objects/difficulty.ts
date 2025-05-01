@@ -1,4 +1,4 @@
-import { InvalidStudySessionDifficultyError } from '../errors/study-session'
+import { InvalidStudySessionDifficultyError } from '../errors/study-session';
 
 export enum DifficultyEnum {
   AGAIN = 'again',
@@ -8,20 +8,20 @@ export enum DifficultyEnum {
 }
 
 export class Difficulty {
-  private readonly value: DifficultyEnum
+  private readonly value: DifficultyEnum;
 
   constructor(difficulty: string) {
     if (!this.isValidDifficulty(difficulty)) {
-      throw new InvalidStudySessionDifficultyError(difficulty)
+      throw new InvalidStudySessionDifficultyError(difficulty);
     }
-    this.value = difficulty as DifficultyEnum
+    this.value = difficulty as DifficultyEnum;
   }
 
   private isValidDifficulty(difficulty: string) {
-    return Object.values(DifficultyEnum).includes(difficulty as DifficultyEnum)
+    return Object.values(DifficultyEnum).includes(difficulty as DifficultyEnum);
   }
 
   public getValue(): DifficultyEnum {
-    return this.value
+    return this.value;
   }
 }

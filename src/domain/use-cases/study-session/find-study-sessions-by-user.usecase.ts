@@ -1,31 +1,21 @@
-import { StudySession } from '@/domain/entities/study-session'
-import { StudySessionRepository } from '@/domain/interfaces/repositories'
+import { StudySession } from '@/domain/entities/study-session';
+import { StudySessionRepository } from '@/domain/interfaces/repositories';
 
 interface FindStudySessionsByUserRequest {
-  userId: string
+  userId: string;
 }
 
-type FindStudySessionsByUserResponse = StudySession[]
+type FindStudySessionsByUserResponse = StudySession[];
 
 export class FindStudySessionsByUserUseCase {
-  constructor(
-    private readonly studySessionRepository: StudySessionRepository,
-  ) {}
+  constructor(private readonly studySessionRepository: StudySessionRepository) {}
 
-  async execute(
-    request: FindStudySessionsByUserRequest,
-  ): Promise<FindStudySessionsByUserResponse> {
-    console.log(
-      `Starting FindStudySessionsByUserUseCase for userId: ${request.userId}`,
-    )
+  async execute(request: FindStudySessionsByUserRequest): Promise<FindStudySessionsByUserResponse> {
+    console.log(`Starting FindStudySessionsByUserUseCase for userId: ${request.userId}`);
 
-    const studySessions = await this.studySessionRepository.findByUserId(
-      request.userId,
-    )
+    const studySessions = await this.studySessionRepository.findByUserId(request.userId);
 
-    console.log(
-      `Found ${studySessions.length} study sessions for user ${request.userId}`,
-    )
-    return studySessions
+    console.log(`Found ${studySessions.length} study sessions for user ${request.userId}`);
+    return studySessions;
   }
 }
