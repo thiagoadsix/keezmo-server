@@ -33,6 +33,7 @@ __tests__/
 ```
 
 ### 🔹 domain/
+
 Contém as regras de negócio puras e isoladas.
 
 - **entities/** – Entidades com identidade e comportamentos próprios.
@@ -43,6 +44,7 @@ Contém as regras de negócio puras e isoladas.
 - **use-cases/** – Casos de uso que orquestram as regras de negócio.
 
 ### 🔹 shared/
+
 Código utilitário reutilizável entre camadas.
 
 - **utils/** – Funções auxiliares genéricas.
@@ -51,5 +53,5 @@ Código utilitário reutilizável entre camadas.
 ---
 
 ### 🤝 Contribuindo
-Sinta‑se à vontade para abrir issues ou pull requests. Vamos tornar o aprendizado mais fácil juntos! ✨
 
+Sinta‑se à vontade para abrir issues ou pull requests. Vamos tornar o aprendizado mais fácil juntos! ✨
