@@ -36,7 +36,11 @@ src/
 │   ├── storage (QUEUED)/
 │   │   └── s3/
 │   ├── authentication (QUEUED)/
-│       └── clerk/
+│   │   └── clerk/
+│   ├── presentation/
+│   │   ├── controllers/
+│   │   ├── protocols/
+│   │   └── dtos/   
 ├── shared/
 │   ├── utils/
 │   └── constants/
