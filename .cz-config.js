@@ -39,6 +39,8 @@ module.exports = {
     { name: 'config' },
     { name: 'tests' },
     { name: 'docs' },
+    { name: 'types' },
+    { name: 'lint' },
   ],
 
   allowCustomScopes: true,

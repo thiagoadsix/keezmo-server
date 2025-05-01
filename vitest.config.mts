@@ -16,6 +16,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    setupFiles: ['./vitest.setup.ts'],
     include: [
       '__tests__/**/*.test.+(ts|tsx|js)',
       '__tests__/**/*.spec.+(ts|tsx|js)',
@@ -28,6 +29,7 @@ export default defineConfig({
       './*.mjs',
       './*.mts',
       './scripts/**',
+      './**/*.d.ts'
     ],
     coverage: {
       provider: 'v8',
@@ -42,6 +44,7 @@ export default defineConfig({
         './*.mjs',
         './*.mts',
         './scripts/**',
+        './**/*.d.ts'
       ],
     },
     root: './',

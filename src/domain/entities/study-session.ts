@@ -5,15 +5,20 @@ import { StudyModeEnum } from '@/domain/value-objects'
 import { generateId } from '@/shared/utils/generate-id'
 
 interface StudySessionProps {
+  id?: string
   deckId: string
+  userId: string
   startTime: string
   endTime?: string | null
   studyMode: StudyModeEnum
+  createdAt?: string
+  updatedAt?: string
 }
 
 export class StudySession {
   public readonly id: string
   public deckId: string
+  public userId: string
   public startTime: string
   public endTime?: string | null
   public studyMode: StudyModeEnum
@@ -23,14 +28,15 @@ export class StudySession {
   constructor(props: StudySessionProps) {
     this.validateProps(props)
 
-    this.id = generateId()
+    this.id = props.id ?? generateId()
     this.deckId = props.deckId
+    this.userId = props.userId
     this.startTime = props.startTime
     this.endTime = props.endTime
     this.studyMode = props.studyMode
 
-    this.createdAt = new Date().toISOString()
-    this.updatedAt = this.createdAt
+    this.createdAt = props.createdAt ?? new Date().toISOString()
+    this.updatedAt = props.updatedAt ?? this.createdAt
   }
 
   private validateProps(props: StudySessionProps): void {

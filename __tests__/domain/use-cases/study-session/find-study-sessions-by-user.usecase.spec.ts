@@ -29,12 +29,14 @@ describe('FindStudySessionsByUserUseCase', () => {
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
+        userId,
       }),
       new StudySession({
         deckId: 'deck-2',
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyMode: StudyModeEnum.FLASHCARD,
+        userId,
       }),
     ]
 

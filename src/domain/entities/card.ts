@@ -4,6 +4,7 @@ import { InvalidCardQuestionError } from '@/domain/errors/card/invalid-card-ques
 import { generateId } from '@/shared/utils/generate-id'
 
 interface CardProps {
+  id?: string | null
   deckId: string
   question: string
   answer: string

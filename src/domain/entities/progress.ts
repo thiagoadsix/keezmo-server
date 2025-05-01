@@ -4,6 +4,7 @@ import { DEFAULT_EASE_FACTOR } from '@/shared/constants/srs'
 import { generateId } from '@/shared/utils/generate-id'
 
 export interface ProgressProps {
+  id?: string
   cardId: string
   deckId: string
   repetitions?: number
@@ -32,7 +33,7 @@ export class Progress {
       throw new MissingProgressIdsError()
     }
 
-    this.id = generateId()
+    this.id = props.id ?? generateId()
     this.cardId = props.cardId
     this.deckId = props.deckId
     this.repetitions = props.repetitions ?? 0

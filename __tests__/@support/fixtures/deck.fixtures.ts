@@ -4,6 +4,7 @@ import { StudyMode } from '@/domain/value-objects'
 import { mockId } from '../mocks/shared/utils/generate-id.mock'
 
 export const validDeckProps = {
+  id: mockId,
   userId: 'user-123',
   title: 'Math Concepts',
   description: 'Basic math concepts for beginners',
@@ -17,18 +18,11 @@ export const validFlashcardDeckProps = {
   studyMode: new StudyMode('flashcard'),
 }
 
-export const validMultipleChoiceDeckProps = {
-  userId: 'user-123',
-  title: 'History Quiz',
-  description: 'Test your knowledge of world history',
-  studyMode: new StudyMode('multiple_choice'),
-}
-
 export const validDeckWithCardsProps = {
   userId: 'user-123',
   title: 'Geography',
   description: 'Geography questions',
-  studyMode: new StudyMode('multiple_choice'),
+  studyMode: new StudyMode('flashcard'),
   cards: [
     new Card({
       deckId: mockId,
