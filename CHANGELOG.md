@@ -1,3 +1,27 @@
+# [2.3.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.2.0...v2.3.0) (2025-05-01)
+
+
+### Features
+
+* **core:** add deleteById method to CardDynamoRepository and corresponding unit test ([e640695](https://github.com/thiagoadsix/keezmo-server/commit/e6406952321b8701cd30c58e3d8f75a405b76b94))
+* **core:** add DynamoDB client and repository implementation with environment type definitions ([f555507](https://github.com/thiagoadsix/keezmo-server/commit/f555507e795a4efbde2f5c3089d1b5765f732de4))
+* **core:** add ProgressDynamoRepository and ProgressRepositorySchema with CRUD method stubs ([8a2844d](https://github.com/thiagoadsix/keezmo-server/commit/8a2844d8d925929d4491a36ad7f2fc900b1f51c3))
+* **core:** enhance DynamoDB repository with new methods and schema, update client initialization, and add tests ([c4a541f](https://github.com/thiagoadsix/keezmo-server/commit/c4a541f5d6fbf320df924b21a88478f714004434))
+* **core:** implement CardDynamoRepository and CardDynamoSchema with CRUD operations ([8dfc109](https://github.com/thiagoadsix/keezmo-server/commit/8dfc10983cf87882802115f0ee84f9cb3afce697))
+* **core:** implement deleteByDeckId method in ProgressDynamoRepository ([b1e57b3](https://github.com/thiagoadsix/keezmo-server/commit/b1e57b3553d1806c2c643d95c609c26c1115648c))
+* **core:** implement deleteById method in ProgressDynamoRepository and add unit test for deletion functionality ([3299858](https://github.com/thiagoadsix/keezmo-server/commit/3299858efad2fb43865e78a9adc709bcce5b337d))
+* **core:** implement deleteByIds method in CardDynamoRepository and add corresponding unit test ([066db78](https://github.com/thiagoadsix/keezmo-server/commit/066db786fda0b17dd251c767085fbe351bb631ae))
+* **core:** implement findByCardAndDeck method in ProgressDynamoRepository with unit tests ([109b377](https://github.com/thiagoadsix/keezmo-server/commit/109b37754499c9584e3ea2204ff18970b7569499))
+* **core:** implement findByDeckId method in CardDynamoRepository and add corresponding unit tests ([cedb164](https://github.com/thiagoadsix/keezmo-server/commit/cedb1644705cc11e8486a0ba86ce574e98ac30e1))
+* **core:** implement findByUserId method in StudySessionDynamoRepository and add corresponding unit tests ([5e7dd38](https://github.com/thiagoadsix/keezmo-server/commit/5e7dd3821ce2541c123708f6524a73377641cba2))
+* **core:** implement findDueCards method in ProgressDynamoRepository with unit test for due progress retrieval ([c717d77](https://github.com/thiagoadsix/keezmo-server/commit/c717d775f5ea8d694f61124bd111eafb89f3a8e7))
+* **core:** implement save method in ProgressDynamoRepository and add unit tests for repository functionality ([82224d0](https://github.com/thiagoadsix/keezmo-server/commit/82224d03b13db9af04fdd33efffd33eb9a9970b3))
+* **core:** implement save method in StudySessionDynamoRepository and add corresponding unit test ([d6e2caa](https://github.com/thiagoadsix/keezmo-server/commit/d6e2caa891cbc26d14291ec9cf9fb38ebe7aa45b))
+* **core:** implement saveBatch method in CardDynamoRepository and add corresponding unit test ([ab6a6f9](https://github.com/thiagoadsix/keezmo-server/commit/ab6a6f99fb10003da97f1b12e2aeba3e050f51f0))
+* **core:** implement saveBatch method in ProgressDynamoRepository with unit test for batch saving functionality ([4bceb56](https://github.com/thiagoadsix/keezmo-server/commit/4bceb56def795b71bcd1a00bff4aa5898bc9c101))
+* **core:** implement StudySessionDynamoRepository and StudySessionDynamoSchema with CRUD operations ([aab7018](https://github.com/thiagoadsix/keezmo-server/commit/aab7018998365657ddd1a2b3401eac9b741f63fa))
+* **core:** implement update method in ProgressDynamoRepository with unit test for progress updates ([e2312c7](https://github.com/thiagoadsix/keezmo-server/commit/e2312c774a03fd70ae6dc40da87264fd3252e2ee))
+
 # [2.2.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.1.0...v2.2.0) (2025-04-27)
 
 
