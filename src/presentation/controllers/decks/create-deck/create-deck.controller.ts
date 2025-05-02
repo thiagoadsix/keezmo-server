@@ -3,11 +3,12 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
+import { Controller } from "@/presentation/protocols/controller.protocol";
+
 import {
   CreateDeckValidator,
   CreateDeckValidatorRequest,
 } from "./create-deck.validator";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 
 export type CreateDeckRequest = CreateDeckValidatorRequest;
 

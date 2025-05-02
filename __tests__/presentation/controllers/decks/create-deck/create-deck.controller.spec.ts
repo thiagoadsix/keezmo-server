@@ -36,8 +36,8 @@ describe("CreateDeckController", () => {
 
     const response = await controller.handle(validRequest);
 
-    expect(validatorSpy).toHaveBeenCalledWith(validRequest.body);
-    expect(useCase.execute).toHaveBeenCalledWith(validRequest.body);
+    expect(validatorSpy).toHaveBeenCalledWith(validRequest);
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 200,
       body: {},

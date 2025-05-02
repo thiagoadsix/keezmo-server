@@ -19,14 +19,12 @@ export class BaseController<Request, Response>
     private readonly validator?: Validator<Request>
   ) {}
 
-  async handle(request: HttpRequest<Request>): Promise<HttpResponse<Response>> {
+  async handle(request: HttpRequest<unknown>): Promise<HttpResponse<Response>> {
     try {
-      let validatedData: Request;
+      let validatedData: Request = {} as Request;
 
       if (this.validator) {
-        validatedData = this.validator.validate(request.body);
-      } else {
-        validatedData = request.body as Request;
+        validatedData = this.validator.validate(request);
       }
 
       const result = await this.useCase.execute(validatedData);
