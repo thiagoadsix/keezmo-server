@@ -1,7 +1,10 @@
-import { HttpRequest, HttpResponse, ok } from "../protocols/http.protocol";
-import { Controller } from "../protocols/controller.protocol";
-
-import { ErrorMapper } from "../mappers/error.mapper";
+import {
+  HttpRequest,
+  HttpResponse,
+  ok,
+} from "@/presentation/protocols/http.protocol";
+import { Controller } from "@/presentation/protocols/controller.protocol";
+import { ErrorMapper } from "@/presentation/mappers/error.mapper";
 
 export interface UseCase<Request, Response> {
   execute(request: Request): Promise<Response>;

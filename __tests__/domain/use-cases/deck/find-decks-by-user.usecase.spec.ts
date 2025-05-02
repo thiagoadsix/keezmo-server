@@ -1,17 +1,23 @@
-import { generateIdMock, mockId } from '../../../@support/mocks/shared/utils/generate-id.mock';
+import {
+  generateIdMock,
+  mockId,
+} from "__tests__/@support/mocks/shared/utils/generate-id.mock";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Deck } from '@/domain/entities/deck';
-import { FindDecksByUserUseCase } from '@/domain/use-cases/deck/find-decks-by-user.usecase';
+import {
+  validDeckProps,
+  validDeckWithCardsProps,
+} from "__tests__/@support/fixtures/deck.fixtures";
+import { mockDeckRepository } from "__tests__/@support/mocks/repositories/deck-repository.mock";
 
-import { validDeckProps, validDeckWithCardsProps } from '../../../@support/fixtures/deck.fixtures';
-import { mockDeckRepository } from '../../../@support/mocks/repositories/deck-repository.mock';
+import { Deck } from "@/domain/entities/deck";
+import { FindDecksByUserUseCase } from "@/domain/use-cases/deck/find-decks-by-user.usecase";
 
-describe('FindDecksByUserUseCase', () => {
+describe("FindDecksByUserUseCase", () => {
   let useCase: FindDecksByUserUseCase;
   let mockDecks: Deck[];
-  const userId = 'user-123';
+  const userId = "user-123";
 
   beforeEach(() => {
     useCase = new FindDecksByUserUseCase(mockDeckRepository);
@@ -32,8 +38,8 @@ describe('FindDecksByUserUseCase', () => {
     vi.resetAllMocks();
   });
 
-  describe('Unit Tests', () => {
-    it('should return all decks for the given user ID', async () => {
+  describe("Unit Tests", () => {
+    it("should return all decks for the given user ID", async () => {
       const request = { userId };
 
       const result = await useCase.execute(request);
@@ -43,28 +49,30 @@ describe('FindDecksByUserUseCase', () => {
       expect(result).toEqual(mockDecks);
     });
 
-    it('should propagate repository errors', async () => {
+    it("should propagate repository errors", async () => {
       const request = { userId };
-      const repoError = new Error('Repository error');
+      const repoError = new Error("Repository error");
       mockDeckRepository.findAllByUser.mockRejectedValueOnce(repoError);
 
       await expect(useCase.execute(request)).rejects.toThrow(repoError);
     });
   });
 
-  describe('BDD Scenarios', () => {
-    it('Given a user ID, When execute is called, Then all decks for that user are returned', async () => {
-      const request = { userId: 'user-123' };
+  describe("BDD Scenarios", () => {
+    it("Given a user ID, When execute is called, Then all decks for that user are returned", async () => {
+      const request = { userId: "user-123" };
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findAllByUser).toHaveBeenCalledWith(request.userId);
+      expect(mockDeckRepository.findAllByUser).toHaveBeenCalledWith(
+        request.userId
+      );
       expect(result).toEqual(mockDecks);
     });
 
-    it('Given a repository error, When execute is called, Then the error is propagated', async () => {
-      const request = { userId: 'user-123' };
-      const repoError = new Error('Database connection failed');
+    it("Given a repository error, When execute is called, Then the error is propagated", async () => {
+      const request = { userId: "user-123" };
+      const repoError = new Error("Database connection failed");
       mockDeckRepository.findAllByUser.mockRejectedValueOnce(repoError);
 
       await expect(useCase.execute(request)).rejects.toThrow(repoError);

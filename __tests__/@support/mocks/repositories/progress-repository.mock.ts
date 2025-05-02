@@ -1,6 +1,6 @@
-import { type Mock, vi } from 'vitest';
+import { type Mock, vi } from "vitest";
 
-import { ProgressRepository } from '@/domain/interfaces/repositories';
+import { ProgressRepository } from "@/domain/interfaces/repositories";
 
 type MockProgressRepository = {
   [K in keyof ProgressRepository]: Mock;

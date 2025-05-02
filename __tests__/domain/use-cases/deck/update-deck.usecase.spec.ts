@@ -1,22 +1,25 @@
-import { generateIdMock, mockId } from '../../../@support/mocks/shared/utils/generate-id.mock';
+import {
+  generateIdMock,
+  mockId,
+} from "__tests__/@support/mocks/shared/utils/generate-id.mock";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Deck } from '@/domain/entities/deck';
-import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error';
-import { StudyMode } from '@/domain/value-objects';
-import { UpdateDeckUseCase } from '@/domain/use-cases/deck/update-deck.usecase';
+import { mockDeckRepository } from "__tests__/@support/mocks/repositories/deck-repository.mock";
+import { validDeckProps } from "__tests__/@support/fixtures/deck.fixtures";
 
-import { mockDeckRepository } from '../../../@support/mocks/repositories/deck-repository.mock';
-import { validDeckProps } from '../../../@support/fixtures/deck.fixtures';
+import { Deck } from "@/domain/entities/deck";
+import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
+import { StudyMode } from "@/domain/value-objects";
+import { UpdateDeckUseCase } from "@/domain/use-cases/deck/update-deck.usecase";
 
-describe('UpdateDeckUseCase', () => {
+describe("UpdateDeckUseCase", () => {
   let useCase: UpdateDeckUseCase;
   let mockDeck: Deck;
-  const userId = 'user-123';
-  const initialTitle = 'Math Concepts';
-  const initialDescription = 'Basic math concepts for beginners';
-  const initialStudyMode = 'flashcard';
+  const userId = "user-123";
+  const initialTitle = "Math Concepts";
+  const initialDescription = "Basic math concepts for beginners";
+  const initialStudyMode = "flashcard";
 
   beforeEach(() => {
     useCase = new UpdateDeckUseCase(mockDeckRepository);
@@ -24,9 +27,9 @@ describe('UpdateDeckUseCase', () => {
     generateIdMock.mockReturnValue(mockId);
 
     mockDeck = new Deck(validDeckProps);
-    vi.spyOn(mockDeck, 'updateTitle');
-    vi.spyOn(mockDeck, 'updateDescription');
-    vi.spyOn(mockDeck, 'updateStudyMode');
+    vi.spyOn(mockDeck, "updateTitle");
+    vi.spyOn(mockDeck, "updateDescription");
+    vi.spyOn(mockDeck, "updateStudyMode");
 
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
     mockDeckRepository.save.mockResolvedValue(undefined);
@@ -39,21 +42,24 @@ describe('UpdateDeckUseCase', () => {
     vi.resetAllMocks();
   });
 
-  describe('Unit Tests', () => {
-    it('should update deck title when it changes', async () => {
-      const newTitle = 'Advanced Math';
+  describe("Unit Tests", () => {
+    it("should update deck title when it changes", async () => {
+      const newTitle = "Advanced Math";
       const request = { deckId: mockId, userId, data: { title: newTitle } };
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(mockId, userId);
+      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+        mockId,
+        userId
+      );
       expect(mockDeck.updateTitle).toHaveBeenCalledWith(newTitle);
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
       expect(result).toBe(mockDeck);
     });
 
-    it('should update deck description when it changes', async () => {
-      const newDescription = 'Advanced topics in mathematics';
+    it("should update deck description when it changes", async () => {
+      const newDescription = "Advanced topics in mathematics";
       const request = {
         deckId: mockId,
         userId,
@@ -67,8 +73,8 @@ describe('UpdateDeckUseCase', () => {
       expect(result).toBe(mockDeck);
     });
 
-    it('should update deck study mode when it changes', async () => {
-      const newStudyMode = 'multiple_choice';
+    it("should update deck study mode when it changes", async () => {
+      const newStudyMode = "multiple_choice";
       const request = {
         deckId: mockId,
         userId,
@@ -77,12 +83,14 @@ describe('UpdateDeckUseCase', () => {
 
       const result = await useCase.execute(request);
 
-      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(expect.any(StudyMode));
+      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
+        expect.any(StudyMode)
+      );
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
       expect(result).toBe(mockDeck);
     });
 
-    it('should not update fields that are not provided', async () => {
+    it("should not update fields that are not provided", async () => {
       const request = { deckId: mockId, userId, data: {} };
 
       await useCase.execute(request);
@@ -93,7 +101,7 @@ describe('UpdateDeckUseCase', () => {
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
     });
 
-    it('should not update fields that are the same as current values', async () => {
+    it("should not update fields that are the same as current values", async () => {
       const request = {
         deckId: mockId,
         userId,
@@ -112,10 +120,10 @@ describe('UpdateDeckUseCase', () => {
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
     });
 
-    it('should update multiple fields when they all change', async () => {
-      const newTitle = 'Advanced Math';
-      const newDescription = 'Advanced topics in mathematics';
-      const newStudyMode = 'multiple_choice';
+    it("should update multiple fields when they all change", async () => {
+      const newTitle = "Advanced Math";
+      const newDescription = "Advanced topics in mathematics";
+      const newStudyMode = "multiple_choice";
       const request = {
         deckId: mockId,
         userId,
@@ -130,11 +138,13 @@ describe('UpdateDeckUseCase', () => {
 
       expect(mockDeck.updateTitle).toHaveBeenCalledWith(newTitle);
       expect(mockDeck.updateDescription).toHaveBeenCalledWith(newDescription);
-      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(expect.any(StudyMode));
+      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
+        expect.any(StudyMode)
+      );
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
     });
 
-    it('should throw DeckNotFoundError when deck is not found', async () => {
+    it("should throw DeckNotFoundError when deck is not found", async () => {
       const request = { deckId: mockId, userId, data: {} };
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
@@ -145,9 +155,9 @@ describe('UpdateDeckUseCase', () => {
     });
   });
 
-  describe('BDD Scenarios', () => {
-    it('Given valid deckId and userId with new title, When execute is called, Then deck title is updated', async () => {
-      const newTitle = 'Advanced Math';
+  describe("BDD Scenarios", () => {
+    it("Given valid deckId and userId with new title, When execute is called, Then deck title is updated", async () => {
+      const newTitle = "Advanced Math";
       const request = { deckId: mockId, userId, data: { title: newTitle } };
 
       const result = await useCase.execute(request);
@@ -157,7 +167,7 @@ describe('UpdateDeckUseCase', () => {
       expect(result).toBe(mockDeck);
     });
 
-    it('Given valid deckId and userId with no changes, When execute is called, Then no updates are applied', async () => {
+    it("Given valid deckId and userId with no changes, When execute is called, Then no updates are applied", async () => {
       const request = {
         deckId: mockId,
         userId,
@@ -176,31 +186,35 @@ describe('UpdateDeckUseCase', () => {
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
     });
 
-    it('Given valid deckId and userId with multiple changes, When execute is called, Then all provided fields are updated', async () => {
+    it("Given valid deckId and userId with multiple changes, When execute is called, Then all provided fields are updated", async () => {
       const request = {
         deckId: mockId,
         userId,
         data: {
-          title: 'New Title',
-          description: 'New Description',
-          studyMode: 'multiple_choice',
+          title: "New Title",
+          description: "New Description",
+          studyMode: "multiple_choice",
         },
       };
 
       const result = await useCase.execute(request);
 
-      expect(mockDeck.updateTitle).toHaveBeenCalledWith('New Title');
-      expect(mockDeck.updateDescription).toHaveBeenCalledWith('New Description');
-      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(expect.any(StudyMode));
+      expect(mockDeck.updateTitle).toHaveBeenCalledWith("New Title");
+      expect(mockDeck.updateDescription).toHaveBeenCalledWith(
+        "New Description"
+      );
+      expect(mockDeck.updateStudyMode).toHaveBeenCalledWith(
+        expect.any(StudyMode)
+      );
       expect(mockDeckRepository.save).toHaveBeenCalledWith(mockDeck);
       expect(result).toBe(mockDeck);
     });
 
-    it('Given non-existent deck, When execute is called, Then DeckNotFoundError is thrown', async () => {
+    it("Given non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
       const request = {
-        deckId: 'non-existent-id',
+        deckId: "non-existent-id",
         userId,
-        data: { title: 'New Title' },
+        data: { title: "New Title" },
       };
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 

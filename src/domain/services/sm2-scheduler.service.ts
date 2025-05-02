@@ -1,7 +1,7 @@
-import { Progress } from '@/domain/entities/progress';
+import { Progress } from "@/domain/entities/progress";
 
-import { DifficultyEnum } from '../value-objects';
-import { InvalidDifficultyError } from '../errors/invalid-difficulty-error';
+import { DifficultyEnum } from "@/domain/value-objects/difficulty";
+import { InvalidDifficultyError } from "@/domain/errors/invalid-difficulty-error";
 
 const DIFFICULTY_TO_QUALITY: Record<string, number> = {
   again: 1,
@@ -15,7 +15,13 @@ export class SM2SchedulerService {
   private interval: number = 0;
   private easeFactor: number = 2.5;
 
-  public static execute({ progress, difficulty }: { progress: Progress; difficulty: DifficultyEnum }): {
+  public static execute({
+    progress,
+    difficulty,
+  }: {
+    progress: Progress;
+    difficulty: DifficultyEnum;
+  }): {
     updated: Progress;
   } {
     const quality = DIFFICULTY_TO_QUALITY[difficulty];
@@ -73,7 +79,10 @@ export class SM2SchedulerService {
   }
 
   private adjustEaseFactor(quality: number): SM2SchedulerService {
-    this.easeFactor = Math.max(1.3, this.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+    this.easeFactor = Math.max(
+      1.3,
+      this.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+    );
     return this;
   }
 

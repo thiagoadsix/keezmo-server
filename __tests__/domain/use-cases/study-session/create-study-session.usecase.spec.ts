@@ -1,13 +1,13 @@
-import { mockStudySessionRepository } from '../../../@support/mocks/repositories/study-session-repository.mock';
+import { mockStudySessionRepository } from "__tests__/@support/mocks/repositories/study-session-repository.mock";
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { CreateStudySessionUseCase } from '@/domain/use-cases/study-session/create-study-session.usecase';
-import { StudyModeEnum } from '@/domain/value-objects';
-import { StudySession } from '@/domain/entities/study-session';
-import { StudySessionValidationError } from '@/domain/errors/study-session/study-session-validation-error';
+import { CreateStudySessionUseCase } from "@/domain/use-cases/study-session/create-study-session.usecase";
+import { StudyModeEnum } from "@/domain/value-objects";
+import { StudySession } from "@/domain/entities/study-session";
+import { StudySessionValidationError } from "@/domain/errors/study-session/study-session-validation-error";
 
-describe('CreateStudySessionUseCase', () => {
+describe("CreateStudySessionUseCase", () => {
   let useCase: CreateStudySessionUseCase;
 
   beforeEach(() => {
@@ -15,14 +15,14 @@ describe('CreateStudySessionUseCase', () => {
     useCase = new CreateStudySessionUseCase(mockStudySessionRepository);
   });
 
-  describe('Unit Tests', () => {
-    it('should create a flashcard study session', async () => {
+  describe("Unit Tests", () => {
+    it("should create a flashcard study session", async () => {
       const request = {
-        deckId: 'deck-123',
+        deckId: "deck-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
       await useCase.execute(request);
@@ -35,13 +35,13 @@ describe('CreateStudySessionUseCase', () => {
       expect(savedSession.studyMode).toBe(StudyModeEnum.FLASHCARD);
     });
 
-    it('should create a multiple choice study session', async () => {
+    it("should create a multiple choice study session", async () => {
       const request = {
-        deckId: 'deck-123',
+        deckId: "deck-123",
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
       await useCase.execute(request);
@@ -54,13 +54,13 @@ describe('CreateStudySessionUseCase', () => {
       expect(savedSession.studyMode).toBe(request.studyMode);
     });
 
-    it('should create a multiple choice study session with default hits and misses', async () => {
+    it("should create a multiple choice study session with default hits and misses", async () => {
       const request = {
-        deckId: 'deck-123',
+        deckId: "deck-123",
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
       await useCase.execute(request);
@@ -68,30 +68,32 @@ describe('CreateStudySessionUseCase', () => {
       expect(mockStudySessionRepository.save).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw an error if repository fails', async () => {
+    it("should throw an error if repository fails", async () => {
       const request = {
-        deckId: 'deck-123',
+        deckId: "deck-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
-      const error = new Error('Repository error');
+      const error = new Error("Repository error");
       mockStudySessionRepository.save.mockRejectedValueOnce(error);
 
-      await expect(useCase.execute(request)).rejects.toThrow('Repository error');
+      await expect(useCase.execute(request)).rejects.toThrow(
+        "Repository error"
+      );
     });
   });
 
-  describe('BDD Scenarios', () => {
-    it('Given valid flashcard study session data, When execute is called, Then repository save is invoked with correct data', async () => {
+  describe("BDD Scenarios", () => {
+    it("Given valid flashcard study session data, When execute is called, Then repository save is invoked with correct data", async () => {
       const request = {
-        deckId: 'deck-123',
+        deckId: "deck-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
       await useCase.execute(request);
@@ -102,13 +104,13 @@ describe('CreateStudySessionUseCase', () => {
       expect(savedSession.studyMode).toBe(StudyModeEnum.FLASHCARD);
     });
 
-    it('Given valid multiple choice study session data, When execute is called, Then repository save is invoked with correct data', async () => {
+    it("Given valid multiple choice study session data, When execute is called, Then repository save is invoked with correct data", async () => {
       const request = {
-        deckId: 'deck-123',
+        deckId: "deck-123",
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
       await useCase.execute(request);
@@ -119,16 +121,18 @@ describe('CreateStudySessionUseCase', () => {
       expect(savedSession.studyMode).toBe(StudyModeEnum.MULTIPLE_CHOICE);
     });
 
-    it('Given invalid study data with no deckId, When execute is called, Then it throws StudySessionValidationError', async () => {
+    it("Given invalid study data with no deckId, When execute is called, Then it throws StudySessionValidationError", async () => {
       const request = {
-        deckId: '',
+        deckId: "",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
-        startTime: '2023-01-01T10:00:00Z',
-        endTime: '2023-01-01T10:30:00Z',
+        startTime: "2023-01-01T10:00:00Z",
+        endTime: "2023-01-01T10:30:00Z",
       };
 
-      await expect(useCase.execute(request)).rejects.toThrow(StudySessionValidationError);
+      await expect(useCase.execute(request)).rejects.toThrow(
+        StudySessionValidationError
+      );
     });
   });
 });

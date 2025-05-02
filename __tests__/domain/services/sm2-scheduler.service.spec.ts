@@ -1,8 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { DifficultyEnum } from '@/domain/value-objects';
-import { InvalidDifficultyError } from '@/domain/errors/invalid-difficulty-error';
-import { SM2SchedulerService } from '@/domain/services/sm2-scheduler.service';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   firstReviewProgress,
@@ -10,12 +6,16 @@ import {
   matureCardProgress,
   newCardProgress,
   secondReviewProgress,
-} from '../../@support/fixtures/sm2-scheduler.fixtures';
+} from "__tests__/@support/fixtures/sm2-scheduler.fixtures";
 
-describe('SM2SchedulerService', () => {
+import { DifficultyEnum } from "@/domain/value-objects";
+import { InvalidDifficultyError } from "@/domain/errors/invalid-difficulty-error";
+import { SM2SchedulerService } from "@/domain/services/sm2-scheduler.service";
+
+describe("SM2SchedulerService", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    const fixedDate = new Date('2023-01-01T12:00:00Z');
+    const fixedDate = new Date("2023-01-01T12:00:00Z");
     vi.setSystemTime(fixedDate);
   });
 
@@ -24,8 +24,8 @@ describe('SM2SchedulerService', () => {
     vi.resetAllMocks();
   });
 
-  describe('execute', () => {
-    it('should throw InvalidDifficultyError when invalid difficulty is provided', () => {
+  describe("execute", () => {
+    it("should throw InvalidDifficultyError when invalid difficulty is provided", () => {
       expect(() =>
         SM2SchedulerService.execute({
           progress: newCardProgress,
@@ -36,7 +36,7 @@ describe('SM2SchedulerService', () => {
     });
 
     describe('when difficulty is "again" (quality < 3)', () => {
-      it('should reset repetitions and interval for a card regardless of its state', () => {
+      it("should reset repetitions and interval for a card regardless of its state", () => {
         const result = SM2SchedulerService.execute({
           progress: matureCardProgress,
           difficulty: DifficultyEnum.AGAIN,
@@ -44,22 +44,26 @@ describe('SM2SchedulerService', () => {
 
         expect(result.updated.repetitions).toBe(0);
         expect(result.updated.interval).toBe(1);
-        expect(result.updated.easeFactor).toBeLessThan(matureCardProgress.easeFactor);
+        expect(result.updated.easeFactor).toBeLessThan(
+          matureCardProgress.easeFactor
+        );
         expect(result.updated.easeFactor).toBeGreaterThanOrEqual(1.3);
       });
     });
 
     describe('when difficulty is "hard" or better (quality >= 3)', () => {
-      it('should increase repetitions by 1 for a card', () => {
+      it("should increase repetitions by 1 for a card", () => {
         const result = SM2SchedulerService.execute({
           progress: newCardProgress,
           difficulty: DifficultyEnum.HARD,
         });
 
-        expect(result.updated.repetitions).toBe(newCardProgress.repetitions + 1);
+        expect(result.updated.repetitions).toBe(
+          newCardProgress.repetitions + 1
+        );
       });
 
-      it('should set interval to 1 day for first repetition (rep=1)', () => {
+      it("should set interval to 1 day for first repetition (rep=1)", () => {
         const result = SM2SchedulerService.execute({
           progress: newCardProgress,
           difficulty: DifficultyEnum.NORMAL,
@@ -69,7 +73,7 @@ describe('SM2SchedulerService', () => {
         expect(result.updated.interval).toBe(1);
       });
 
-      it('should set interval to 6 days for second repetition (rep=2)', () => {
+      it("should set interval to 6 days for second repetition (rep=2)", () => {
         const result = SM2SchedulerService.execute({
           progress: firstReviewProgress,
           difficulty: DifficultyEnum.NORMAL,
@@ -79,26 +83,30 @@ describe('SM2SchedulerService', () => {
         expect(result.updated.interval).toBe(6);
       });
 
-      it('should calculate interval based on formula for mature cards (rep>2)', () => {
+      it("should calculate interval based on formula for mature cards (rep>2)", () => {
         const result = SM2SchedulerService.execute({
           progress: secondReviewProgress,
           difficulty: DifficultyEnum.NORMAL,
         });
 
-        const expectedInterval = Math.round(secondReviewProgress.interval * secondReviewProgress.easeFactor);
+        const expectedInterval = Math.round(
+          secondReviewProgress.interval * secondReviewProgress.easeFactor
+        );
         expect(result.updated.repetitions).toBe(3);
         expect(result.updated.interval).toBe(expectedInterval);
       });
     });
 
-    describe('ease factor adjustments', () => {
+    describe("ease factor adjustments", () => {
       it('should decrease ease factor for "again" response', () => {
         const result = SM2SchedulerService.execute({
           progress: firstReviewProgress,
           difficulty: DifficultyEnum.AGAIN,
         });
 
-        expect(result.updated.easeFactor).toBeLessThan(firstReviewProgress.easeFactor);
+        expect(result.updated.easeFactor).toBeLessThan(
+          firstReviewProgress.easeFactor
+        );
       });
 
       it('should decrease ease factor for "hard" response, but less than for "again"', () => {
@@ -112,8 +120,12 @@ describe('SM2SchedulerService', () => {
           difficulty: DifficultyEnum.HARD,
         });
 
-        expect(hardResult.updated.easeFactor).toBeLessThan(firstReviewProgress.easeFactor);
-        expect(hardResult.updated.easeFactor).toBeGreaterThan(againResult.updated.easeFactor);
+        expect(hardResult.updated.easeFactor).toBeLessThan(
+          firstReviewProgress.easeFactor
+        );
+        expect(hardResult.updated.easeFactor).toBeGreaterThan(
+          againResult.updated.easeFactor
+        );
       });
 
       it('should increase ease factor for "easy" response', () => {
@@ -122,10 +134,12 @@ describe('SM2SchedulerService', () => {
           difficulty: DifficultyEnum.EASY,
         });
 
-        expect(result.updated.easeFactor).toBeGreaterThan(firstReviewProgress.easeFactor);
+        expect(result.updated.easeFactor).toBeGreaterThan(
+          firstReviewProgress.easeFactor
+        );
       });
 
-      it('should maintain ease factor minimum of 1.3', () => {
+      it("should maintain ease factor minimum of 1.3", () => {
         const lowEFProgress = { ...firstReviewProgress, easeFactor: 1.3 };
 
         const result = SM2SchedulerService.execute({
@@ -138,9 +152,9 @@ describe('SM2SchedulerService', () => {
       });
     });
 
-    describe('dates and timestamps', () => {
-      it('should set nextReview based on the current date plus interval', () => {
-        const fixedDate = new Date('2023-01-01T12:00:00Z');
+    describe("dates and timestamps", () => {
+      it("should set nextReview based on the current date plus interval", () => {
+        const fixedDate = new Date("2023-01-01T12:00:00Z");
         vi.setSystemTime(fixedDate);
 
         const result = SM2SchedulerService.execute({
@@ -149,13 +163,15 @@ describe('SM2SchedulerService', () => {
         });
 
         const expectedDate = new Date(fixedDate);
-        expectedDate.setUTCDate(expectedDate.getUTCDate() + result.updated.interval);
+        expectedDate.setUTCDate(
+          expectedDate.getUTCDate() + result.updated.interval
+        );
 
         expect(result.updated.nextReview).toBe(expectedDate.toISOString());
       });
 
-      it('should update lastReviewed and updatedAt to current timestamp', () => {
-        const fixedDate = new Date('2023-01-01T12:00:00Z');
+      it("should update lastReviewed and updatedAt to current timestamp", () => {
+        const fixedDate = new Date("2023-01-01T12:00:00Z");
         vi.setSystemTime(fixedDate);
         const expectedDateString = fixedDate.toISOString();
 
@@ -169,7 +185,7 @@ describe('SM2SchedulerService', () => {
       });
     });
 
-    describe('BDD Scenarios', () => {
+    describe("BDD Scenarios", () => {
       it('Given a new card with no prior reviews, When reviewed as "normal", Then it should be scheduled for tomorrow', () => {
         const result = SM2SchedulerService.execute({
           progress: newCardProgress,
@@ -181,7 +197,9 @@ describe('SM2SchedulerService', () => {
 
         const expectedDate = new Date();
         expectedDate.setUTCDate(expectedDate.getUTCDate() + 1);
-        expect(new Date(result.updated.nextReview).getUTCDate()).toBe(expectedDate.getUTCDate());
+        expect(new Date(result.updated.nextReview).getUTCDate()).toBe(
+          expectedDate.getUTCDate()
+        );
       });
 
       it('Given a card reviewed once before, When reviewed as "easy", Then it should be scheduled with longer interval', () => {
@@ -192,7 +210,9 @@ describe('SM2SchedulerService', () => {
 
         expect(result.updated.repetitions).toBe(2);
         expect(result.updated.interval).toBe(6);
-        expect(result.updated.easeFactor).toBeGreaterThan(firstReviewProgress.easeFactor);
+        expect(result.updated.easeFactor).toBeGreaterThan(
+          firstReviewProgress.easeFactor
+        );
       });
 
       it('Given a mature card with multiple reviews, When reviewed as "again", Then it should be reset and scheduled for tomorrow', () => {
@@ -203,7 +223,9 @@ describe('SM2SchedulerService', () => {
 
         expect(result.updated.repetitions).toBe(0);
         expect(result.updated.interval).toBe(1);
-        expect(result.updated.easeFactor).toBeLessThan(matureCardProgress.easeFactor);
+        expect(result.updated.easeFactor).toBeLessThan(
+          matureCardProgress.easeFactor
+        );
       });
     });
   });

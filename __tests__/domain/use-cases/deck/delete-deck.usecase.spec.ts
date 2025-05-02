@@ -1,21 +1,21 @@
 import {
   generateIdMock,
   mockId,
-} from "../../../@support/mocks/shared/utils/generate-id.mock";
+} from "__tests__/@support/mocks/shared/utils/generate-id.mock";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-import { Deck } from "@/domain/entities/deck";
-import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
-import { DeleteDeckUseCase } from "@/domain/use-cases/deck/delete-deck.usecase";
 
 import {
   validDeckProps,
   validDeckWithCardsProps,
-} from "../../../@support/fixtures/deck.fixtures";
-import { mockCardRepository } from "../../../@support/mocks/repositories/card-repository.mock";
-import { mockDeckRepository } from "../../../@support/mocks/repositories/deck-repository.mock";
-import { mockProgressRepository } from "../../../@support/mocks/repositories/progress-repository.mock";
+} from "__tests__/@support/fixtures/deck.fixtures";
+import { mockCardRepository } from "__tests__/@support/mocks/repositories/card-repository.mock";
+import { mockDeckRepository } from "__tests__/@support/mocks/repositories/deck-repository.mock";
+import { mockProgressRepository } from "__tests__/@support/mocks/repositories/progress-repository.mock";
+
+import { Deck } from "@/domain/entities/deck";
+import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
+import { DeleteDeckUseCase } from "@/domain/use-cases/deck/delete-deck.usecase";
 
 describe("DeleteDeckUseCase", () => {
   let useCase: DeleteDeckUseCase;

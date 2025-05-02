@@ -1,12 +1,9 @@
-import { generateIdMock, mockId } from '../../@support/mocks/shared/utils/generate-id.mock';
+import {
+  generateIdMock,
+  mockId,
+} from "__tests__/@support/mocks/shared/utils/generate-id.mock";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { Card } from '@/domain/entities/card';
-import { Deck } from '@/domain/entities/deck';
-import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error';
-import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error';
-import { StudyMode } from '@/domain/value-objects';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   invalidDeckPropsWithEmptyTitle,
@@ -14,10 +11,16 @@ import {
   validDeckProps,
   validDeckWithCardsProps,
   validFlashcardDeckProps,
-} from '../../@support/fixtures/deck.fixtures';
-import { validCardProps } from '../../@support/fixtures/card.fixtures';
+} from "__tests__/@support/fixtures/deck.fixtures";
+import { validCardProps } from "__tests__/@support/fixtures/card.fixtures";
 
-describe('Deck', () => {
+import { Card } from "@/domain/entities/card";
+import { Deck } from "@/domain/entities/deck";
+import { InvalidDeckDescriptionError } from "@/domain/errors/deck/invalid-deck-description-error";
+import { InvalidDeckTitleError } from "@/domain/errors/deck/invalid-deck-title-error";
+import { StudyMode } from "@/domain/value-objects";
+
+describe("Deck", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
@@ -28,9 +31,9 @@ describe('Deck', () => {
     vi.resetAllMocks();
   });
 
-  describe('constructor', () => {
-    it('should create a valid Deck entity with provided properties', () => {
-      const fixedDate = new Date('2023-01-01T12:00:00Z');
+  describe("constructor", () => {
+    it("should create a valid Deck entity with provided properties", () => {
+      const fixedDate = new Date("2023-01-01T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
@@ -47,7 +50,7 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(expectedDateString);
     });
 
-    it('should create a Deck with cards when provided', () => {
+    it("should create a Deck with cards when provided", () => {
       const deck = new Deck(validDeckWithCardsProps);
 
       expect(deck.cards).toHaveLength(2);
@@ -56,9 +59,9 @@ describe('Deck', () => {
       expect(deck.cards[1].id).toBeDefined();
     });
 
-    it('should create a Deck with specified createdAt and updatedAt', () => {
-      const createdAt = '2023-01-01T10:00:00Z';
-      const updatedAt = '2023-01-02T10:00:00Z';
+    it("should create a Deck with specified createdAt and updatedAt", () => {
+      const createdAt = "2023-01-01T10:00:00Z";
+      const updatedAt = "2023-01-02T10:00:00Z";
 
       const deck = new Deck({
         ...validDeckProps,
@@ -70,8 +73,8 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(updatedAt);
     });
 
-    it('should use createdAt as updatedAt when only createdAt is provided', () => {
-      const createdAt = '2023-01-01T10:00:00Z';
+    it("should use createdAt as updatedAt when only createdAt is provided", () => {
+      const createdAt = "2023-01-01T10:00:00Z";
 
       const deck = new Deck({
         ...validDeckProps,
@@ -82,20 +85,24 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(createdAt);
     });
 
-    it('should throw InvalidDeckTitleError when title is empty', () => {
-      expect(() => new Deck(invalidDeckPropsWithEmptyTitle)).toThrow(InvalidDeckTitleError);
+    it("should throw InvalidDeckTitleError when title is empty", () => {
+      expect(() => new Deck(invalidDeckPropsWithEmptyTitle)).toThrow(
+        InvalidDeckTitleError
+      );
     });
 
-    it('should throw InvalidDeckDescriptionError when description is null', () => {
-      expect(() => new Deck(invalidDeckPropsWithNullDescription)).toThrow(InvalidDeckDescriptionError);
+    it("should throw InvalidDeckDescriptionError when description is null", () => {
+      expect(() => new Deck(invalidDeckPropsWithNullDescription)).toThrow(
+        InvalidDeckDescriptionError
+      );
     });
   });
 
-  describe('updateTitle', () => {
-    it('should update the title and updatedAt', () => {
+  describe("updateTitle", () => {
+    it("should update the title and updatedAt", () => {
       const deck = new Deck(validDeckProps);
-      const newTitle = 'Updated Title';
-      const fixedDate = new Date('2023-01-02T12:00:00Z');
+      const newTitle = "Updated Title";
+      const fixedDate = new Date("2023-01-02T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
@@ -105,18 +112,18 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(expectedDateString);
     });
 
-    it('should throw InvalidDeckTitleError when new title is empty', () => {
+    it("should throw InvalidDeckTitleError when new title is empty", () => {
       const deck = new Deck(validDeckProps);
 
-      expect(() => deck.updateTitle('')).toThrow(InvalidDeckTitleError);
+      expect(() => deck.updateTitle("")).toThrow(InvalidDeckTitleError);
     });
   });
 
-  describe('updateDescription', () => {
-    it('should update the description and updatedAt', () => {
+  describe("updateDescription", () => {
+    it("should update the description and updatedAt", () => {
       const deck = new Deck(validDeckProps);
-      const newDescription = 'Updated description';
-      const fixedDate = new Date('2023-01-02T12:00:00Z');
+      const newDescription = "Updated description";
+      const fixedDate = new Date("2023-01-02T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
@@ -126,18 +133,20 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(expectedDateString);
     });
 
-    it('should throw InvalidDeckDescriptionError when new description is null', () => {
+    it("should throw InvalidDeckDescriptionError when new description is null", () => {
       const deck = new Deck(validDeckProps);
 
-      expect(() => deck.updateDescription(null as unknown as string)).toThrow(InvalidDeckDescriptionError);
+      expect(() => deck.updateDescription(null as unknown as string)).toThrow(
+        InvalidDeckDescriptionError
+      );
     });
   });
 
-  describe('updateType', () => {
-    it('should update the type and updatedAt', () => {
+  describe("updateType", () => {
+    it("should update the type and updatedAt", () => {
       const deck = new Deck(validFlashcardDeckProps);
-      const newStudyMode = new StudyMode('multiple_choice');
-      const fixedDate = new Date('2023-01-02T12:00:00Z');
+      const newStudyMode = new StudyMode("multiple_choice");
+      const fixedDate = new Date("2023-01-02T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
@@ -148,14 +157,14 @@ describe('Deck', () => {
     });
   });
 
-  describe('card management methods', () => {
-    it('should add a card to the deck', () => {
+  describe("card management methods", () => {
+    it("should add a card to the deck", () => {
       const deck = new Deck(validDeckProps);
       const card = new Card({
         ...validCardProps,
         deckId: deck.id,
       });
-      const fixedDate = new Date('2023-01-02T12:00:00Z');
+      const fixedDate = new Date("2023-01-02T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
@@ -166,56 +175,56 @@ describe('Deck', () => {
       expect(deck.updatedAt).toBe(expectedDateString);
     });
 
-    it('should remove a card from the deck', () => {
+    it("should remove a card from the deck", () => {
       const deck = new Deck(validDeckProps);
 
       const card1 = new Card({
         deckId: deck.id,
-        question: 'Question 1',
-        answer: 'Answer 1',
+        question: "Question 1",
+        answer: "Answer 1",
       });
 
       const card2 = new Card({
         deckId: deck.id,
-        question: 'Question 2',
-        answer: 'Answer 2',
+        question: "Question 2",
+        answer: "Answer 2",
       });
 
-      Object.defineProperty(card1, 'id', { value: 'card-id-1' });
-      Object.defineProperty(card2, 'id', { value: 'card-id-2' });
+      Object.defineProperty(card1, "id", { value: "card-id-1" });
+      Object.defineProperty(card2, "id", { value: "card-id-2" });
 
       deck.addCard(card1);
       deck.addCard(card2);
 
-      const fixedDate = new Date('2023-01-02T12:00:00Z');
+      const fixedDate = new Date("2023-01-02T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
       expect(deck.cards).toHaveLength(2);
-      expect(deck.cards[0].id).toBe('card-id-1');
-      expect(deck.cards[1].id).toBe('card-id-2');
+      expect(deck.cards[0].id).toBe("card-id-1");
+      expect(deck.cards[1].id).toBe("card-id-2");
 
-      deck.removeCard('card-id-1');
+      deck.removeCard("card-id-1");
 
       expect(deck.cards).toHaveLength(1);
-      expect(deck.cards[0].id).toBe('card-id-2');
+      expect(deck.cards[0].id).toBe("card-id-2");
       expect(deck.updatedAt).toBe(expectedDateString);
     });
 
-    it('should find a card by id', () => {
+    it("should find a card by id", () => {
       const deck = new Deck(validDeckWithCardsProps);
 
       const foundCard = deck.getCardById(deck.cards[0].id);
 
       expect(foundCard).toBeDefined();
       expect(foundCard?.id).toBeDefined();
-      expect(foundCard?.question).toBe('What is the capital of France?');
+      expect(foundCard?.question).toBe("What is the capital of France?");
     });
 
-    it('should return undefined when card is not found', () => {
+    it("should return undefined when card is not found", () => {
       const deck = new Deck(validDeckWithCardsProps);
 
-      const foundCard = deck.getCardById('non-existent-id');
+      const foundCard = deck.getCardById("non-existent-id");
 
       expect(foundCard).toBeUndefined();
     });

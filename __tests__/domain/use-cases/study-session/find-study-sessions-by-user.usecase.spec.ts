@@ -1,17 +1,20 @@
-import { generateIdMock, mockId } from '../../../@support/mocks/shared/utils/generate-id.mock';
+import {
+  generateIdMock,
+  mockId,
+} from "__tests__/@support/mocks/shared/utils/generate-id.mock";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { FindStudySessionsByUserUseCase } from '@/domain/use-cases/study-session/find-study-sessions-by-user.usecase';
-import { StudyModeEnum } from '@/domain/value-objects';
-import { StudySession } from '@/domain/entities/study-session';
+import { mockStudySessionRepository } from "__tests__/@support/mocks/repositories/study-session-repository.mock";
 
-import { mockStudySessionRepository } from '../../../@support/mocks/repositories/study-session-repository.mock';
+import { FindStudySessionsByUserUseCase } from "@/domain/use-cases/study-session/find-study-sessions-by-user.usecase";
+import { StudyModeEnum } from "@/domain/value-objects";
+import { StudySession } from "@/domain/entities/study-session";
 
-describe('FindStudySessionsByUserUseCase', () => {
+describe("FindStudySessionsByUserUseCase", () => {
   let useCase: FindStudySessionsByUserUseCase;
   let mockStudySessions: StudySession[];
-  const userId = 'user-123';
+  const userId = "user-123";
 
   beforeEach(() => {
     useCase = new FindStudySessionsByUserUseCase(mockStudySessionRepository);
@@ -20,14 +23,14 @@ describe('FindStudySessionsByUserUseCase', () => {
 
     mockStudySessions = [
       new StudySession({
-        deckId: 'deck-1',
+        deckId: "deck-1",
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         userId,
       }),
       new StudySession({
-        deckId: 'deck-2',
+        deckId: "deck-2",
         startTime: new Date().toISOString(),
         endTime: new Date().toISOString(),
         studyMode: StudyModeEnum.FLASHCARD,
@@ -35,7 +38,9 @@ describe('FindStudySessionsByUserUseCase', () => {
       }),
     ];
 
-    mockStudySessionRepository.findByUserId.mockResolvedValue(mockStudySessions);
+    mockStudySessionRepository.findByUserId.mockResolvedValue(
+      mockStudySessions
+    );
 
     vi.clearAllMocks();
   });
@@ -45,20 +50,22 @@ describe('FindStudySessionsByUserUseCase', () => {
     vi.resetAllMocks();
   });
 
-  describe('Unit Tests', () => {
-    it('should fetch study sessions for the given user ID', async () => {
+  describe("Unit Tests", () => {
+    it("should fetch study sessions for the given user ID", async () => {
       const request = {
         userId,
       };
 
       const result = await useCase.execute(request);
 
-      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(userId);
+      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
+        userId
+      );
       expect(result).toEqual(mockStudySessions);
       expect(result).toHaveLength(2);
     });
 
-    it('should return an empty array when user has no study sessions', async () => {
+    it("should return an empty array when user has no study sessions", async () => {
       mockStudySessionRepository.findByUserId.mockResolvedValueOnce([]);
 
       const request = {
@@ -67,38 +74,46 @@ describe('FindStudySessionsByUserUseCase', () => {
 
       const result = await useCase.execute(request);
 
-      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(userId);
+      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
+        userId
+      );
       expect(result).toEqual([]);
       expect(result).toHaveLength(0);
     });
 
-    it('should propagate repository errors', async () => {
-      const repositoryError = new Error('Database error');
-      mockStudySessionRepository.findByUserId.mockRejectedValueOnce(repositoryError);
+    it("should propagate repository errors", async () => {
+      const repositoryError = new Error("Database error");
+      mockStudySessionRepository.findByUserId.mockRejectedValueOnce(
+        repositoryError
+      );
 
       const request = {
         userId,
       };
 
       await expect(useCase.execute(request)).rejects.toThrow();
-      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(userId);
+      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
+        userId
+      );
     });
   });
 
-  describe('BDD Scenarios', () => {
-    it('Given a user ID, When execute is called, Then fetch study sessions from repository', async () => {
+  describe("BDD Scenarios", () => {
+    it("Given a user ID, When execute is called, Then fetch study sessions from repository", async () => {
       const request = {
         userId,
       };
 
       const result = await useCase.execute(request);
 
-      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(userId);
+      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
+        userId
+      );
       expect(result).toEqual(mockStudySessions);
       expect(result).toHaveLength(2);
     });
 
-    it('Given a user with no study sessions, When execute is called, Then return empty array', async () => {
+    it("Given a user with no study sessions, When execute is called, Then return empty array", async () => {
       mockStudySessionRepository.findByUserId.mockResolvedValueOnce([]);
       const request = {
         userId,
@@ -110,15 +125,19 @@ describe('FindStudySessionsByUserUseCase', () => {
       expect(result).toHaveLength(0);
     });
 
-    it('Given a repository error, When execute is called, Then propagate the error', async () => {
-      const repositoryError = new Error('Database error');
-      mockStudySessionRepository.findByUserId.mockRejectedValueOnce(repositoryError);
+    it("Given a repository error, When execute is called, Then propagate the error", async () => {
+      const repositoryError = new Error("Database error");
+      mockStudySessionRepository.findByUserId.mockRejectedValueOnce(
+        repositoryError
+      );
       const request = {
         userId,
       };
 
       await expect(useCase.execute(request)).rejects.toThrow();
-      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(userId);
+      expect(mockStudySessionRepository.findByUserId).toHaveBeenCalledWith(
+        userId
+      );
     });
   });
 });

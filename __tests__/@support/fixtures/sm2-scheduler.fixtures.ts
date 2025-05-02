@@ -1,7 +1,7 @@
-import { DifficultyEnum } from '@/domain/value-objects';
-import { Progress } from '@/domain/entities/progress';
+import { DifficultyEnum } from "@/domain/value-objects";
+import { Progress } from "@/domain/entities/progress";
 
-import { validProgressProps } from './progress.fixtures';
+import { validProgressProps } from "./progress.fixtures";
 
 export const newCardProgress = new Progress({
   ...validProgressProps,
@@ -33,4 +33,4 @@ export const matureCardProgress = new Progress({
 
 export const validDifficulties = Object.values(DifficultyEnum);
 
-export const invalidDifficulty = 'invalid-difficulty';
+export const invalidDifficulty = "invalid-difficulty";

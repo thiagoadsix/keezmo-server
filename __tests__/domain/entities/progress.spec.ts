@@ -1,18 +1,21 @@
-import { generateIdMock, mockId } from '../../@support/mocks/shared/utils/generate-id.mock';
+import {
+  generateIdMock,
+  mockId,
+} from "__tests__/@support/mocks/shared/utils/generate-id.mock";
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { MissingProgressIdsError } from '@/domain/errors/progress/missing-ids-error';
-import { Progress } from '@/domain/entities/progress';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   invalidProgressPropsWithoutCardId,
   invalidProgressPropsWithoutDeckId,
   validProgressProps,
   validProgressPropsMinimal,
-} from '../../@support/fixtures/progress.fixtures';
+} from "__tests__/@support/fixtures/progress.fixtures";
 
-describe('Progress', () => {
+import { MissingProgressIdsError } from "@/domain/errors/progress/missing-ids-error";
+import { Progress } from "@/domain/entities/progress";
+
+describe("Progress", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
@@ -23,8 +26,8 @@ describe('Progress', () => {
     vi.resetAllMocks();
   });
 
-  describe('constructor', () => {
-    it('should create a valid Progress entity with full properties', () => {
+  describe("constructor", () => {
+    it("should create a valid Progress entity with full properties", () => {
       const progress = new Progress(validProgressProps);
 
       expect(progress).toBeInstanceOf(Progress);
@@ -39,8 +42,8 @@ describe('Progress', () => {
       expect(generateIdMock).toHaveBeenCalledTimes(1);
     });
 
-    it('should create a valid Progress entity with minimal properties and default values', () => {
-      const fixedDate = new Date('2023-01-01T12:00:00Z');
+    it("should create a valid Progress entity with minimal properties and default values", () => {
+      const fixedDate = new Date("2023-01-01T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
 
@@ -59,7 +62,7 @@ describe('Progress', () => {
       expect(progress.updatedAt).toBe(expectedDateString);
     });
 
-    it('should throw MissingProgressIdsError when cardId is missing', () => {
+    it("should throw MissingProgressIdsError when cardId is missing", () => {
       expect(
         () =>
           // @ts-expect-error Testing invalid input
@@ -67,7 +70,7 @@ describe('Progress', () => {
       ).toThrow(MissingProgressIdsError);
     });
 
-    it('should throw MissingProgressIdsError when deckId is missing', () => {
+    it("should throw MissingProgressIdsError when deckId is missing", () => {
       expect(
         () =>
           // @ts-expect-error Testing invalid input
@@ -76,19 +79,24 @@ describe('Progress', () => {
     });
   });
 
-  describe('applyScheduling', () => {
-    it('should update review metrics and timestamps', () => {
+  describe("applyScheduling", () => {
+    it("should update review metrics and timestamps", () => {
       const progress = new Progress(validProgressProps);
-      const fixedDate = new Date('2023-01-05T12:00:00Z');
+      const fixedDate = new Date("2023-01-05T12:00:00Z");
       vi.setSystemTime(fixedDate);
       const expectedDateString = fixedDate.toISOString();
-      const nextReviewDate = new Date('2023-01-10T12:00:00Z');
+      const nextReviewDate = new Date("2023-01-10T12:00:00Z");
 
       const newRepetitions = 2;
       const newInterval = 5;
       const newEaseFactor = 2.2;
 
-      progress.applyScheduling(newRepetitions, newInterval, newEaseFactor, nextReviewDate);
+      progress.applyScheduling(
+        newRepetitions,
+        newInterval,
+        newEaseFactor,
+        nextReviewDate
+      );
 
       expect(progress.repetitions).toBe(newRepetitions);
       expect(progress.interval).toBe(newInterval);

@@ -1,35 +1,35 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Card } from '@/domain/entities/card';
-import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error';
-import { DifficultyEnum } from '@/domain/value-objects';
-import { Progress } from '@/domain/entities/progress';
-import { ProgressNotFoundError } from '@/domain/errors/progress/progress-not-found-error';
-import { ReviewCardUseCase } from '@/domain/use-cases/progress/review-card.usecase';
-import { SM2SchedulerService } from '@/domain/services/sm2-scheduler.service';
+import { Card } from "@/domain/entities/card";
+import { CardNotFoundError } from "@/domain/errors/card/card-not-found-error";
+import { DifficultyEnum } from "@/domain/value-objects";
+import { Progress } from "@/domain/entities/progress";
+import { ProgressNotFoundError } from "@/domain/errors/progress/progress-not-found-error";
+import { ReviewCardUseCase } from "@/domain/use-cases/progress/review-card.usecase";
+import { SM2SchedulerService } from "@/domain/services/sm2-scheduler.service";
 
-import { mockCardRepository } from '../../../@support/mocks/repositories/card-repository.mock';
-import { mockProgressRepository } from '../../../@support/mocks/repositories/progress-repository.mock';
+import { mockCardRepository } from "__tests__/@support/mocks/repositories/card-repository.mock";
+import { mockProgressRepository } from "__tests__/@support/mocks/repositories/progress-repository.mock";
 
-vi.mock('@/domain/services/sm2-scheduler.service', () => ({
+vi.mock("@/domain/services/sm2-scheduler.service", () => ({
   SM2SchedulerService: {
     execute: vi.fn(),
   },
 }));
 
-describe('ReviewCardUseCase', () => {
+describe("ReviewCardUseCase", () => {
   let sut: ReviewCardUseCase;
 
-  const mockCardId = 'card-123';
-  const mockDeckId = 'deck-456';
+  const mockCardId = "card-123";
+  const mockDeckId = "deck-456";
 
   const mockCard = new Card({
     deckId: mockDeckId,
-    question: 'Test question',
-    answer: 'Test answer',
+    question: "Test question",
+    answer: "Test answer",
   });
 
-  Object.defineProperty(mockCard, 'id', { value: mockCardId });
+  Object.defineProperty(mockCard, "id", { value: mockCardId });
 
   const mockProgress = new Progress({
     cardId: mockCardId,
@@ -37,8 +37,8 @@ describe('ReviewCardUseCase', () => {
     repetitions: 1,
     interval: 1,
     easeFactor: 2.5,
-    nextReview: '2023-01-02T12:00:00Z',
-    lastReviewed: '2023-01-01T12:00:00Z',
+    nextReview: "2023-01-02T12:00:00Z",
+    lastReviewed: "2023-01-01T12:00:00Z",
   });
 
   const mockUpdatedProgress = new Progress({
@@ -47,8 +47,8 @@ describe('ReviewCardUseCase', () => {
     repetitions: 2,
     interval: 6,
     easeFactor: 2.6,
-    nextReview: '2023-01-08T12:00:00.000Z',
-    lastReviewed: '2023-01-02T12:00:00Z',
+    nextReview: "2023-01-08T12:00:00.000Z",
+    lastReviewed: "2023-01-02T12:00:00Z",
   });
 
   beforeEach(() => {
@@ -66,9 +66,11 @@ describe('ReviewCardUseCase', () => {
     vi.clearAllMocks();
   });
 
-  it('should update progress using SM2 scheduler when reviewing a card', async () => {
+  it("should update progress using SM2 scheduler when reviewing a card", async () => {
     vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(mockCard);
-    vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(mockProgress);
+    vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(
+      mockProgress
+    );
 
     const result = await sut.execute({
       cardId: mockCardId,
@@ -77,19 +79,26 @@ describe('ReviewCardUseCase', () => {
     });
 
     expect(mockCardRepository.findById).toHaveBeenCalledWith(mockCardId);
-    expect(mockProgressRepository.findByCardAndDeck).toHaveBeenCalledWith(mockCardId, mockDeckId);
+    expect(mockProgressRepository.findByCardAndDeck).toHaveBeenCalledWith(
+      mockCardId,
+      mockDeckId
+    );
     expect(SM2SchedulerService.execute).toHaveBeenCalledWith({
       progress: mockProgress,
       difficulty: DifficultyEnum.NORMAL,
     });
-    expect(mockProgressRepository.update).toHaveBeenCalledWith(mockUpdatedProgress);
+    expect(mockProgressRepository.update).toHaveBeenCalledWith(
+      mockUpdatedProgress
+    );
 
     expect(result.progress).toBe(mockUpdatedProgress);
     expect(result.nextReview).toBeInstanceOf(Date);
-    expect(result.nextReview.toISOString()).toBe(mockUpdatedProgress.nextReview);
+    expect(result.nextReview.toISOString()).toBe(
+      mockUpdatedProgress.nextReview
+    );
   });
 
-  it('should throw CardNotFoundError when card does not exist', async () => {
+  it("should throw CardNotFoundError when card does not exist", async () => {
     vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(null);
 
     await expect(
@@ -105,9 +114,11 @@ describe('ReviewCardUseCase', () => {
     expect(mockProgressRepository.update).not.toHaveBeenCalled();
   });
 
-  it('should throw ProgressNotFoundError when progress does not exist', async () => {
+  it("should throw ProgressNotFoundError when progress does not exist", async () => {
     vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(mockCard);
-    vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(null);
+    vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(
+      null
+    );
 
     await expect(
       sut.execute({

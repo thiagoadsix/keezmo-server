@@ -1,6 +1,6 @@
-import { type Mock, vi } from 'vitest';
+import { type Mock, vi } from "vitest";
 
-import { DeckRepository } from '@/domain/interfaces/repositories';
+import { DeckRepository } from "@/domain/interfaces/repositories";
 
 type MockDeckRepository = {
   [K in keyof DeckRepository]: Mock;

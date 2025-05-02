@@ -1,10 +1,10 @@
-import { InvalidStudySessionDifficultyError } from '../errors/study-session';
+import { InvalidStudySessionDifficultyError } from "@/domain/errors/study-session";
 
 export enum DifficultyEnum {
-  AGAIN = 'again',
-  EASY = 'easy',
-  NORMAL = 'normal',
-  HARD = 'hard',
+  AGAIN = "again",
+  EASY = "easy",
+  NORMAL = "normal",
+  HARD = "hard",
 }
 
 export class Difficulty {
