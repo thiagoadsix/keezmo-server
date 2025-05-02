@@ -28,9 +28,13 @@ export class BaseController<Request, Response>
       }
 
       const result = await this.useCase.execute(validatedData);
-      return ok<Response>(result);
+      return this.createSuccessResponse(result);
     } catch (error) {
       return ErrorMapper.toHttpResponse(error) as HttpResponse<Response>;
     }
+  }
+
+  protected createSuccessResponse(data: Response): HttpResponse<Response> {
+    return ok<Response>(data);
   }
 }

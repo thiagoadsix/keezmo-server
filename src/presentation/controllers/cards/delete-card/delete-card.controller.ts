@@ -4,7 +4,6 @@ import {
   Validator,
 } from "@/presentation/controllers/base.controller";
 import {
-  HttpRequest,
   HttpResponse,
   noContent,
 } from "@/presentation/protocols/http.protocol";
@@ -19,51 +18,25 @@ export type DeleteCardRequest = DeleteCardValidatorRequest;
 
 export type DeleteCardResponse = void;
 
-interface DeleteCardUseCaseRequest {
-  cardId: string;
-  deckId: string;
-  userId: string;
-}
-
 export class DeleteCardController extends BaseController<
-  DeleteCardUseCaseRequest,
+  DeleteCardRequest,
   DeleteCardResponse
 > {
-  private readonly deleteCardValidator: Validator<DeleteCardRequest>;
-  private readonly deleteCardUseCase: UseCase<
-    DeleteCardUseCaseRequest,
-    DeleteCardResponse
-  >;
-
   constructor(
-    useCase: UseCase<DeleteCardUseCaseRequest, DeleteCardResponse>,
+    useCase: UseCase<DeleteCardRequest, DeleteCardResponse>,
     validator: Validator<DeleteCardRequest> = new DeleteCardValidator()
   ) {
-    super(useCase);
-    this.deleteCardValidator = validator;
-    this.deleteCardUseCase = useCase;
+    super(useCase, validator);
   }
 
-  async handle(
-    httpRequest: HttpRequest<unknown>
-  ): Promise<HttpResponse<DeleteCardResponse>> {
-    const validatedRequest = this.deleteCardValidator.validate(httpRequest);
-
-    const useCaseRequest: DeleteCardUseCaseRequest = {
-      cardId: validatedRequest.params.id,
-      deckId: validatedRequest.params.deckId,
-      userId: validatedRequest.user.id,
-    };
-
-    await this.deleteCardUseCase.execute(useCaseRequest);
-
-    return noContent() as HttpResponse<void>;
+  protected override createSuccessResponse(): HttpResponse<DeleteCardResponse> {
+    return noContent() as HttpResponse<DeleteCardResponse>;
   }
 }
 
 // TODO: for now, but in future we will move to main layer where we will have the factory method implementations
 export const makeDeleteCardController = (
-  useCase: UseCase<DeleteCardUseCaseRequest, DeleteCardResponse>
+  useCase: UseCase<DeleteCardRequest, DeleteCardResponse>
 ): Controller<DeleteCardRequest, DeleteCardResponse> => {
   const validator = new DeleteCardValidator();
   return new DeleteCardController(useCase, validator);

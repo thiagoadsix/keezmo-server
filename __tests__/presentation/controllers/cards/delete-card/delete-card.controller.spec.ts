@@ -36,11 +36,7 @@ describe("DeleteCardController", () => {
     const response = await controller.handle(validRequest);
 
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
-    expect(useCase.execute).toHaveBeenCalledWith({
-      cardId: validRequest.params.id,
-      deckId: validRequest.params.deckId,
-      userId: validRequest.user.id,
-    });
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 204,
       body: undefined,

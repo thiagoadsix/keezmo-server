@@ -37,8 +37,8 @@ describe("DeleteDeckController", () => {
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
     expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
-      statusCode: 200,
-      body: {},
+      statusCode: 204,
+      body: undefined,
     });
   });
 });

@@ -3,6 +3,10 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
+import {
+  HttpResponse,
+  noContent,
+} from "@/presentation/protocols/http.protocol";
 import { Controller } from "@/presentation/protocols/controller.protocol";
 
 import {
@@ -23,6 +27,10 @@ export class DeleteDeckController extends BaseController<
     validator: Validator<DeleteDeckRequest> = new DeleteDeckValidator()
   ) {
     super(useCase, validator);
+  }
+
+  protected override createSuccessResponse(): HttpResponse<DeleteDeckResponse> {
+    return noContent() as HttpResponse<DeleteDeckResponse>;
   }
 }
 

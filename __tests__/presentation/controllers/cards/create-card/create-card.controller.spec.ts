@@ -65,14 +65,7 @@ describe("CreateCardController", () => {
     const response = await controller.handle(validRequest);
 
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
-    expect(useCase.execute).toHaveBeenCalledWith({
-      deckId: validRequest.params.deckId,
-      userId: validRequest.user.id,
-      data: {
-        question: validRequest.body.question,
-        answer: validRequest.body.answer,
-      },
-    });
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 200,
       body: mockResponse,

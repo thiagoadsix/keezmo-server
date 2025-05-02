@@ -47,11 +47,7 @@ describe("CreateCardsBatchController", () => {
     const response = await controller.handle(validRequest);
 
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
-    expect(useCase.execute).toHaveBeenCalledWith({
-      deckId: validRequest.params.deckId,
-      userId: validRequest.user.id,
-      cards: validRequest.body.cards,
-    });
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 201,
       body: undefined,
@@ -85,11 +81,7 @@ describe("CreateCardsBatchController", () => {
     const response = await controller.handle(validRequest);
 
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
-    expect(useCase.execute).toHaveBeenCalledWith({
-      deckId: validRequest.params.deckId,
-      userId: validRequest.user.id,
-      cards: validRequest.body.cards,
-    });
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 201,
       body: undefined,
