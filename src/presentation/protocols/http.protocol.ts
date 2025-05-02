@@ -54,7 +54,7 @@ export const created = <T>(data: T): HttpResponse<T> => ({
 
 export const noContent = (): HttpResponse => ({
   statusCode: HttpStatusCode.NO_CONTENT,
-  body: null,
+  body: undefined,
 });
 
 export const badRequest = (error: Error): HttpResponse<{ message: string }> => ({
