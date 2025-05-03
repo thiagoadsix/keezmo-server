@@ -31,13 +31,15 @@ src/
 │   ├── interfaces/
 │   ├── services/
 │   └── use-cases/
+|
 ├── infrastructure/
 │   ├── database/
 │   │   └── dynamodb/
 │   ├── storage (QUEUED)/
 │   │   └── s3/
-│   ├── authentication (QUEUED)/
+│   └── authentication (QUEUED)/
 │       └── clerk/
+|
 ├── presentation/
 │   ├── controllers/
 │   ├── protocols/
@@ -51,6 +53,7 @@ src/
 │   │   ├── use-cases/
 │   │   └── controllers/
 │   └── config/
+|
 ├── shared/
 │   ├── utils/
 │   └── constants/
