@@ -22,12 +22,8 @@ describe("FindDueCardsValidator", () => {
 
     const result = validator.validate(validRequest);
     expect(result).toEqual({
-      params: {
-        deckId: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
-      },
-      query: {
-        date: "2021-01-01T00:00:00Z",
-      },
+      deckId: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
+      date: new Date("2021-01-01"),
     });
   });
 
