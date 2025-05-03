@@ -41,7 +41,7 @@ describe("FindDeckByIdAndUserUseCase", () => {
 
   describe("Unit Tests", () => {
     it("should return the deck when deckId and userId match", async () => {
-      const request = { deckId: mockId, userId };
+      const request = { id: mockId, userId };
 
       const result = await useCase.execute(request);
 
@@ -53,7 +53,7 @@ describe("FindDeckByIdAndUserUseCase", () => {
     });
 
     it("should throw DeckNotFoundError when deck is not found", async () => {
-      const request = { deckId: mockId, userId };
+      const request = { id: mockId, userId };
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
       const promise = useCase.execute(request);
@@ -72,7 +72,7 @@ describe("FindDeckByIdAndUserUseCase", () => {
     });
 
     it("should propagate repository errors", async () => {
-      const request = { deckId: mockId, userId };
+      const request = { id: mockId, userId };
       const repoError = new Error("Repository error");
       mockDeckRepository.findByIdAndUserId.mockRejectedValueOnce(repoError);
 
@@ -80,7 +80,7 @@ describe("FindDeckByIdAndUserUseCase", () => {
     });
 
     it("should return deck with cards when cards are present", async () => {
-      const request = { deckId: mockId, userId };
+      const request = { id: mockId, userId };
       mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(
         mockDeckWithCards
       );
@@ -98,39 +98,39 @@ describe("FindDeckByIdAndUserUseCase", () => {
 
   describe("BDD Scenarios", () => {
     it("Given valid deckId and userId, When execute is called, Then the deck is returned", async () => {
-      const request = { deckId: mockId, userId };
+      const request = { id: mockId, userId };
 
       const result = await useCase.execute(request);
 
       expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
-        request.deckId,
+        request.id,
         request.userId
       );
       expect(result).toEqual(mockDeck);
     });
 
     it("Given non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
-      const request = { deckId: "non-existent-id", userId };
+      const request = { id: "non-existent-id", userId };
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError);
       expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
-        request.deckId,
+        request.id,
         request.userId
       );
     });
 
     it("Given non-existent deck, When execute is called, Then error message is specific", async () => {
-      const request = { deckId: "non-existent-id", userId };
+      const request = { id: "non-existent-id", userId };
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
       await expect(useCase.execute(request)).rejects.toThrow(
-        `Deck with ID ${request.deckId} not found for user ${userId}`
+        `Deck with ID ${request.id} not found for user ${userId}`
       );
     });
 
     it("Given a deck with cards, When execute is called, Then the deck with cards is returned", async () => {
-      const request = { deckId: mockId, userId };
+      const request = { id: mockId, userId };
       mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(
         mockDeckWithCards
       );
