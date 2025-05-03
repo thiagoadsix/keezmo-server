@@ -80,6 +80,22 @@ Implements interfaces defined in the domain layer.
 - **storage/s3/** – AWS S3 storage adapters (queued).
 - **authentication/clerk/** – Clerk.dev authentication services (queued).
 
+### 🔹 presentation/
+
+Contains the presentation layer, including controllers, validators and protocols.
+
+- **controllers/** – Controllers that handle requests and responses.
+- **validators/** – Validators for request and response payloads.
+- **protocols/** – Communication protocols (REST, GraphQL, etc.).
+
+### 🔹 main/
+
+Contains the main layer, including adapters, factories and config.
+
+- **adapters/** – Adapters for different frameworks.
+- **factories/** – Factories for creating objects.
+- **config/** – Configuration for the application.
+
 ### 🔹 shared/
 
 Reusable, cross‑layer helpers.
