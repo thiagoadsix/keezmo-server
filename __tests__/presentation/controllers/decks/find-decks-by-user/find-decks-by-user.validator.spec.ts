@@ -18,7 +18,9 @@ describe("FindDecksByUserValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      userId: validRequest.user.id,
+    });
   });
 
   it("should throw ValidationError if userId is not a valid string", () => {
