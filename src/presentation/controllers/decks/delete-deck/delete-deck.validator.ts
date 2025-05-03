@@ -2,14 +2,19 @@ import { z } from "zod";
 
 import { BaseValidator } from "@/presentation/controllers/base.validator";
 
-const deleteDeckSchema = z.object({
-  params: z.object({
-    id: z.string().uuid(),
-  }),
-  user: z.object({
-    id: z.string(),
-  }),
-});
+const deleteDeckSchema = z
+  .object({
+    params: z.object({
+      id: z.string().uuid(),
+    }),
+    user: z.object({
+      id: z.string().uuid(),
+    }),
+  })
+  .transform(({ params, user }) => ({
+    id: params.id,
+    userId: user.id,
+  }));
 
 export type DeleteDeckValidatorRequest = z.infer<typeof deleteDeckSchema>;
 
