@@ -37,11 +37,20 @@ src/
 │   ├── storage (QUEUED)/
 │   │   └── s3/
 │   ├── authentication (QUEUED)/
-│   │   └── clerk/
+│       └── clerk/
 ├── presentation/
 │   ├── controllers/
 │   ├── protocols/
 │   └── dtos/
+|
+├── main/
+│   ├── adapters/
+│   │   └── aws/
+│   │       └── adapt-lambda.ts
+│   ├── factories/
+│   │   ├── use-cases/
+│   │   └── controllers/
+│   └── config/
 ├── shared/
 │   ├── utils/
 │   └── constants/
