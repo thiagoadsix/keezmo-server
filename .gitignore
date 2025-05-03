@@ -5,3 +5,7 @@ dist
 coverage
 
 .env
+
+.esbuild/
+
+.serverless/

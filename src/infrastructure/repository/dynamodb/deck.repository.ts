@@ -4,11 +4,11 @@ import {
   GetItemCommand,
   PutItemCommand,
   QueryCommand,
-} from '@aws-sdk/client-dynamodb';
+} from "@aws-sdk/client-dynamodb";
 
-import { Deck } from '@/domain/entities/deck';
-import { DeckDynamoSchema } from './schemas/deck.schema';
-import { DeckRepository } from '@/domain/interfaces/repositories';
+import { Deck } from "@/domain/entities/deck";
+import { DeckDynamoSchema } from "./schemas/deck.schema";
+import { DeckRepository } from "@/domain/interfaces/repositories";
 
 export class DeckDynamoRepository implements DeckRepository {
   constructor(private readonly client: DynamoDBClient) {}
@@ -46,16 +46,16 @@ export class DeckDynamoRepository implements DeckRepository {
   async findAllByUser(userId: string): Promise<Deck[]> {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk',
+      KeyConditionExpression: "PK = :pk",
       ExpressionAttributeValues: {
-        ':pk': { S: DeckDynamoSchema.buildPK(userId) },
+        ":pk": { S: DeckDynamoSchema.buildPK(userId) },
       },
     });
 
     const result = await this.client.send(command);
 
     if (result.Items && result.Items.length > 0) {
-      return result.Items.map(item => DeckDynamoSchema.fromDynamoItem(item));
+      return result.Items.map((item) => DeckDynamoSchema.fromDynamoItem(item));
     }
 
     return [];

@@ -7,9 +7,7 @@ export class DynamoClient {
     this.init = new DynamoDBClient({
       region: process.env.AWS_REGION || "us-east-1",
       endpoint:
-        process.env.ENVIRONMENT === "local"
-          ? "http://localhost:8000"
-          : undefined,
+        process.env.IS_OFFLINE === "true" ? "http://localhost:4566" : undefined,
     });
   }
 
@@ -17,9 +15,7 @@ export class DynamoClient {
     this.init = new DynamoDBClient({
       region: process.env.AWS_REGION || "us-east-1",
       endpoint:
-        process.env.ENVIRONMENT === "local"
-          ? "http://localhost:8000"
-          : undefined,
+        process.env.IS_OFFLINE === "true" ? "http://localhost:4566" : undefined,
     });
 
     return this.init;

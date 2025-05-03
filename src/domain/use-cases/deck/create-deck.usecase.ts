@@ -1,7 +1,7 @@
-import { StudyMode, StudyModeEnum } from '@/domain/value-objects';
-import { Card } from '@/domain/entities/card';
-import { Deck } from '@/domain/entities/deck';
-import { DeckRepository } from '@/domain/interfaces/repositories';
+import { StudyMode, StudyModeEnum } from "@/domain/value-objects";
+import { Card } from "@/domain/entities/card";
+import { Deck } from "@/domain/entities/deck";
+import { DeckRepository } from "@/domain/interfaces/repositories";
 
 interface CreateDeckRequest {
   userId: string;
@@ -34,7 +34,7 @@ export class CreateDeckUseCase {
     if (request.cards && request.cards.length > 0) {
       console.log(`Creating ${request.cards.length} cards for deck ${deck.id}`);
 
-      request.cards.forEach(cardData => {
+      request.cards.forEach((cardData) => {
         const card = new Card({
           deckId: deck.id,
           question: cardData.question,

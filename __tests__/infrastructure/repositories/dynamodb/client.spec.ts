@@ -19,11 +19,11 @@ describe("DynamoClient", () => {
     expect(client.config.endpoint).toBe(undefined);
   });
 
-  it("should be able to create a new DynamoClient with endpoint as http://localhost:8000", async () => {
-    process.env.ENVIRONMENT = "local";
+  it("should be able to create a new DynamoClient with endpoint as http://localhost:4566", async () => {
+    process.env.IS_OFFLINE = "true";
     const dynamoClient = new DynamoClient();
     const client = await dynamoClient.client();
     const endpoint = await client.config.endpoint!();
-    expect(endpoint.port).toBe(8000);
+    expect(endpoint.port).toBe(4566);
   });
 });

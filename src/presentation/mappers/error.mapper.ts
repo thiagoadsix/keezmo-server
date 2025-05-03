@@ -13,7 +13,7 @@ export class ErrorMapper {
     if (error instanceof ValidationError) {
       return badRequest({
         message: error.message,
-        errors: error.errors || [],
+        errors: error.errors,
       } as unknown as Error);
     }
 
