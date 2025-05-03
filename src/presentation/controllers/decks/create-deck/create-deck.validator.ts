@@ -14,7 +14,7 @@ const createDeckSchema = z
         .string()
         .min(1, "Title is required")
         .max(100, "Title is too long"),
-      description: z.string().max(500, "Description is too long").optional(),
+      description: z.string().max(500, "Description is too long"),
       studyMode: z.nativeEnum(StudyModeEnum),
       cards: z
         .array(
