@@ -31,17 +31,29 @@ src/
 │   ├── interfaces/
 │   ├── services/
 │   └── use-cases/
+|
 ├── infrastructure/
 │   ├── database/
 │   │   └── dynamodb/
 │   ├── storage (QUEUED)/
 │   │   └── s3/
-│   ├── authentication (QUEUED)/
-│   │   └── clerk/
+│   └── authentication (QUEUED)/
+│       └── clerk/
+|
 ├── presentation/
 │   ├── controllers/
 │   ├── protocols/
 │   └── dtos/
+|
+├── main/
+│   ├── adapters/
+│   │   └── aws/
+│   │       └── adapt-lambda.ts
+│   ├── factories/
+│   │   ├── use-cases/
+│   │   └── controllers/
+│   └── config/
+|
 ├── shared/
 │   ├── utils/
 │   └── constants/
@@ -67,6 +79,22 @@ Implements interfaces defined in the domain layer.
 - **database/dynamodb/** – AWS DynamoDB implementations of repository interfaces.
 - **storage/s3/** – AWS S3 storage adapters (queued).
 - **authentication/clerk/** – Clerk.dev authentication services (queued).
+
+### 🔹 presentation/
+
+Contains the presentation layer, including controllers, validators and protocols.
+
+- **controllers/** – Controllers that handle requests and responses.
+- **validators/** – Validators for request and response payloads.
+- **protocols/** – Communication protocols (REST, GraphQL, etc.).
+
+### 🔹 main/
+
+Contains the main layer, including adapters, factories and config.
+
+- **adapters/** – Adapters for different frameworks.
+- **factories/** – Factories for creating objects.
+- **config/** – Configuration for the application.
 
 ### 🔹 shared/
 
