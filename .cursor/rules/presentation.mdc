@@ -1,0 +1,157 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+## Creating a New Controller & Validator
+
+Building a new controller in our codebase boils down to five repeatable steps: pick the right name, drop the file in the right place, scaffold the controller class, scaffold the matching validator, and expose a tiny factory for dependency-injected wiring
+
+---
+
+### 1 — Folder & Naming Conventions
+
+* **Filename**: `<feature>.controller.ts` and `<feature>.validator.ts` (lower-kebab-case)
+
+  * Ensures predictable grep, tab completion, and import paths.
+* **Class Name**: PascalCase matching the file stem (e.g., `FindDueCardsController`, `FindDueCardsValidator`).
+* **Location**:  Drop both files in `src/presentation/controllers/<feature>/`
+
+  * Create the folder if it doesn’t exist.
+  * Keeps presentation logic in its own module, reinforcing the "outer ring" of Clean Architecture.
+
+---
+
+### 2 — Controller Template
+
+* **Extend** `BaseController<Request, Response>` to inherit common `handle`, success/error helpers, and HTTP plumbing.
+* **Inject Dependencies**:
+
+  * Pass the use case through the constructor to follow dependency inversion (presentation ➜ application).
+  * Supply a validator instance to the base class so validation stays collocated and swappable.
+* **Factory Function**: `make<Feature>Controller`
+
+  * Decouples composition from definition and integrates easily with IoC containers.
+
+```ts
+// find-due-cards.controller.ts
+import { BaseController, UseCase, Validator } from '@/presentation/controllers/base.controller';
+import { Controller } from '@/presentation/protocols/controller.protocol';
+import { FindDueCardsValidator, FindDueCardsValidatorRequest } from './find-due-cards.validator';
+import { Card } from '@/domain/entities/card';
+import { Progress } from '@/domain/entities/progress';
+
+export type FindDueCardsRequest = FindDueCardsValidatorRequest;
+export interface FindDueCardsResponse { card: Card; progress: Progress; }
+
+export class FindDueCardsController extends BaseController<
+  FindDueCardsRequest,
+  FindDueCardsResponse[]
+> {
+  constructor(
+    useCase: UseCase<FindDueCardsRequest, FindDueCardsResponse[]>,
+    validator: Validator<FindDueCardsRequest> = new FindDueCardsValidator()
+  ) {
+    super(useCase, validator);
+  }
+}
+
+export const makeFindDueCardsController = (
+  useCase: UseCase<FindDueCardsRequest, FindDueCardsResponse[]>
+): Controller<FindDueCardsRequest, FindDueCardsResponse[]> =>
+  new FindDueCardsController(useCase, new FindDueCardsValidator());
+```
+
+---
+
+### 3 — Validator Template
+
+* **Live Next to Controller** and extend `BaseValidator<T>` to share a common `.validate()` contract.
+* **Use Zod** for schema definition, generating static TypeScript types and runtime validation without duplication.
+
+```ts
+// find-due-cards.validator.ts
+import { z } from 'zod';
+import { BaseValidator } from '@/presentation/controllers/base.validator';
+
+const findDueCardsSchema = z.object({
+  params: z.object({ deckId: z.string().uuid().optional() }),
+  query:  z.object({ date: z.string().datetime().optional() }),
+});
+
+export type FindDueCardsValidatorRequest = z.infer<typeof findDueCardsSchema>;
+
+export class FindDueCardsValidator extends BaseValidator<FindDueCardsValidatorRequest> {
+  constructor() { super(findDueCardsSchema); }
+}
+```
+
+---
+
+### 4 — Wiring in Main
+
+* The main layer or IoC container owns object creation.
+* **Import** the `make<Feature>Controller` factory.
+* **Provide** the concrete use case.
+* **Expose** the controller’s `handle` method in your router.
+* Keeps wiring separate, avoiding circular dependencies and honoring Clean Architecture’s flow.
+
+---
+
+### 5 — Testing Templates
+
+#### Validator Tests
+
+Follow this pattern for validator tests:
+
+1. **Valid Request**: should return parsed request with normalized fields (e.g., ISO date string).
+2. **Invalid UUID**: should throw `ValidationError` when `deckId` is not a valid UUID.
+3. **Invalid Date**: should throw `ValidationError` when `date` is not a valid date string.
+4. **Optional Fields**: tests for missing `params` or `query` to ensure defaults or absence are handled correctly.
+
+Example structure with Vitest:
+
+```ts
+import { beforeEach, describe, expect, it } from 'vitest';
+import { FindDueCardsValidator } from './<feature>.validator';
+import { ValidationError } from '@/presentation/errors/validation-error';
+
+describe('<Feature>Validator', () => {
+  let validator: FindDueCardsValidator;
+
+  beforeEach(() => { validator = new FindDueCardsValidator(); });
+
+  it('validates a correct request', () => { /* ... */ });
+  it('throws on invalid UUID', () => { /* ... */ });
+  it('throws on invalid date', () => { /* ... */ });
+  it('handles missing optional fields', () => { /* ... */ });
+});
+```
+
+#### Controller Tests
+
+Follow this pattern for controller tests:
+
+1. **Class Existence**: ensure the controller exports a class/function.
+2. **Success Response**: mock use case to return data and assert `statusCode: 200` with body.
+3. **Empty Result**: mock use case to return an empty array and assert the same success structure.
+4. **Optional Parameters**: test requests with only `params` or only `query`.
+5. **Dependency Calls**: spy on validator and use case to ensure they are called with the request.
+
+Example structure with Vitest:
+
+```ts
+import { describe, expect, it, vi } from 'vitest';
+import { FindDueCardsController } from './<feature>.controller';
+import { FindDueCardsValidator } from './<feature>.validator';
+
+describe('<Feature>Controller', () => {
+  it('is a class', () => { /* ... */ });
+  it('returns 200 and data on success', async () => { /* ... */ });
+  it('returns 200 and empty array when no data', async () => { /* ... */ });
+  it('handles optional params and query', async () => { /* ... */ });
+  it('calls validator and use case with correct args', async () => { /* ... */ });
+});
+```
+
+**Follow this full flow**: new controller → new validator → tests (validator & controller). This ensures consistency, edge validation, and maintainability.
