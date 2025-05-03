@@ -6,7 +6,6 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 
 import {
   FindDueCardsValidator,
@@ -31,11 +30,3 @@ export class FindDueCardsController extends BaseController<
     super(useCase, validator);
   }
 }
-
-// TODO: for now, but in future we will move to main layer where we will have the factory method implementations
-export const makeFindDueCardsController = (
-  useCase: UseCase<FindDueCardsRequest, FindDueCardsResponse[]>
-): Controller<FindDueCardsRequest, FindDueCardsResponse[]> => {
-  const validator = new FindDueCardsValidator();
-  return new FindDueCardsController(useCase, validator);
-};

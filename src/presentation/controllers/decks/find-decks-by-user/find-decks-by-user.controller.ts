@@ -1,10 +1,10 @@
+import { Deck } from "@/domain/entities/deck";
+
 import {
   BaseController,
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
-import { Controller } from "@/presentation/protocols/controller.protocol";
-import { Deck } from "@/domain/entities/deck";
 
 import {
   FindDecksByUserValidator,
@@ -26,11 +26,3 @@ export class FindDecksByUserController extends BaseController<
     super(useCase, validator);
   }
 }
-
-// TODO: for now, but in future we will move to main layer where we will have the factory method implementations
-export const makeFindDecksByUserController = (
-  useCase: UseCase<FindDecksByUserRequest, FindDecksByUserResponse>
-): Controller<FindDecksByUserRequest, FindDecksByUserResponse> => {
-  const validator = new FindDecksByUserValidator();
-  return new FindDecksByUserController(useCase, validator);
-};

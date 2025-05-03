@@ -3,7 +3,6 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 
 import {
   UpdateCardsValidator,
@@ -29,10 +28,3 @@ export class UpdateCardsController extends BaseController<
     super(useCase, validator);
   }
 }
-
-export const makeUpdateCardsController = (
-  useCase: UseCase<UpdateCardsRequest, UpdateCardsResponse>
-): Controller<UpdateCardsRequest, UpdateCardsResponse> => {
-  const validator = new UpdateCardsValidator();
-  return new UpdateCardsController(useCase, validator);
-};

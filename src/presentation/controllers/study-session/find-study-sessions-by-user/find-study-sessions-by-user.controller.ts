@@ -3,7 +3,6 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 import { StudySession } from "@/domain/entities/study-session";
 
 import {
@@ -30,17 +29,3 @@ export class FindStudySessionsByUserController extends BaseController<
     super(useCase, validator);
   }
 }
-
-// TODO: for now, but in future we will move to main layer where we will have the factory method implementations
-export const makeFindStudySessionsByUserController = (
-  useCase: UseCase<
-    FindStudySessionsByUserRequest,
-    FindStudySessionsByUserResponse
-  >
-): Controller<
-  FindStudySessionsByUserRequest,
-  FindStudySessionsByUserResponse
-> => {
-  const validator = new FindStudySessionsByUserValidator();
-  return new FindStudySessionsByUserController(useCase, validator);
-};

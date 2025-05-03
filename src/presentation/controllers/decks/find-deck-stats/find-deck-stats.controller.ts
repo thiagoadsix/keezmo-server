@@ -3,7 +3,6 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 
 import {
   FindDeckStatsValidator,
@@ -46,11 +45,3 @@ export class FindDeckStatsController extends BaseController<
     super(useCase, validator);
   }
 }
-
-// TODO: for now, but in future we will move to main layer where we will have the factory method implementations
-export const makeFindDeckStatsController = (
-  useCase: UseCase<FindDeckStatsRequest, FindDeckStatsResponse>
-): Controller<FindDeckStatsRequest, FindDeckStatsResponse> => {
-  const validator = new FindDeckStatsValidator();
-  return new FindDeckStatsController(useCase, validator);
-};
