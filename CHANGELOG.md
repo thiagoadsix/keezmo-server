@@ -1,3 +1,32 @@
+# [2.4.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.3.0...v2.4.0) (2025-05-03)
+
+
+### Bug Fixes
+
+* **docs:** update README formatting and improve clarity in structure ([745bd86](https://github.com/thiagoadsix/keezmo-server/commit/745bd8693a40f9472d569656a47120225b2a650d))
+
+
+### Features
+
+* **core:** add CreateCardController and CreateCardValidator with corresponding tests ([7ee3669](https://github.com/thiagoadsix/keezmo-server/commit/7ee3669167967ee9c3968bc02145ddf703af5c0b))
+* **core:** add DeleteCardController and DeleteCardValidator with unit tests ([54f542b](https://github.com/thiagoadsix/keezmo-server/commit/54f542b6218c9f33c2fcffbca15fe27654fc4295))
+* **core:** add UpdateCardsController and UpdateCardsValidator with unit tests ([56cc97b](https://github.com/thiagoadsix/keezmo-server/commit/56cc97b8695c2cb3d39581247d168460797f2a0f))
+* **core:** add UpdateDeckController and UpdateDeckValidator with corresponding tests ([591c5f8](https://github.com/thiagoadsix/keezmo-server/commit/591c5f8aaa00581f614d9b5b68513e1a426c2196))
+* **core:** implement CreateCardsBatchController and CreateCardsBatchValidator with unit tests ([1022448](https://github.com/thiagoadsix/keezmo-server/commit/10224485a6d9189b08064e482ffaaaccf9b3f9fd))
+* **core:** implement EndStudySessionController and EndStudySessionValidator with unit tests ([198b546](https://github.com/thiagoadsix/keezmo-server/commit/198b5461c70db34793f0cdde9026804ebdd99c60))
+* **core:** implement FindCardsByDeckIdController and FindCardsByDeckIdValidator with unit tests ([4884e6a](https://github.com/thiagoadsix/keezmo-server/commit/4884e6a4bcc48def03d7cec0571d68a5a20fc442))
+* **core:** implement FindDueCardsController and FindDueCardsValidator with unit tests ([1338302](https://github.com/thiagoadsix/keezmo-server/commit/133830272c866622a66f6d08daba58cdc62a16ee))
+* **core:** implement FindStudySessionsByUserController and FindStudySessionsByUserValidator with unit tests ([8a4ce3a](https://github.com/thiagoadsix/keezmo-server/commit/8a4ce3aff68710b658882147e5bffcb6a0166e2f))
+* **core:** implement ReviewCardController and ReviewCardValidator with unit tests ([70e7986](https://github.com/thiagoadsix/keezmo-server/commit/70e79869553603c661811b8520c6888f7262bcb1))
+* **core:** implement StartStudySessionController and StartStudySessionValidator with unit tests ([abefabd](https://github.com/thiagoadsix/keezmo-server/commit/abefabd8f940924848db57ca481a3b3f416595e2))
+* **core:** implement UpdateCardController and UpdateCardValidator with unit tests ([05365ae](https://github.com/thiagoadsix/keezmo-server/commit/05365ae708addcfb088ae802a73d74bf205733d9))
+* **docs:** add presentaion layer do docs ([12ba446](https://github.com/thiagoadsix/keezmo-server/commit/12ba446418c28274a68922ac875e98336d0f8b40))
+* **tests:** add delete deck controller and validator tests ([1776475](https://github.com/thiagoadsix/keezmo-server/commit/17764755f70e99a70c1b4ff67fa090582f210b6b))
+* **tests:** add FindDecksByUserController and FindDecksByUserValidator with corresponding tests ([ac1b572](https://github.com/thiagoadsix/keezmo-server/commit/ac1b5723f130359bfbbc86be826753a079c7734b))
+* **tests:** implement FindDeckByIdAndUser controller and validator with corresponding tests ([e9feb13](https://github.com/thiagoadsix/keezmo-server/commit/e9feb13709bc5470025db4127657006033b78811))
+* **tests:** implement FindDeckStatsController and FindDeckStatsValidator with corresponding tests ([9a96a43](https://github.com/thiagoadsix/keezmo-server/commit/9a96a436f445046a8ea7289050ad950849eb865b))
+* **tests:** update path for BaseValidator and CreateDeckController ([8b9e505](https://github.com/thiagoadsix/keezmo-server/commit/8b9e505599f5924d18c3fd597233a4cb4fbaff32))
+
 # [2.3.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.2.0...v2.3.0) (2025-05-01)
 
 
