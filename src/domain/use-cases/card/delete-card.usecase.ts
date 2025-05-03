@@ -1,9 +1,13 @@
-import { CardRepository, DeckRepository, ProgressRepository } from '@/domain/interfaces/repositories';
-import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error';
-import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error';
+import {
+  CardRepository,
+  DeckRepository,
+  ProgressRepository,
+} from "@/domain/interfaces/repositories";
+import { CardNotFoundError } from "@/domain/errors/card/card-not-found-error";
+import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
 
 interface DeleteCardRequest {
-  cardId: string;
+  id: string;
   deckId: string;
   userId: string;
 }
@@ -18,26 +22,31 @@ export class DeleteCardUseCase {
   ) {}
 
   async execute(request: DeleteCardRequest): Promise<DeleteCardResponse> {
-    const { cardId, deckId, userId } = request;
+    const { id, deckId, userId } = request;
 
-    console.log(`Starting DeleteCardUseCase for cardId: ${cardId}, deckId: ${deckId}`);
+    console.log(`Starting DeleteCardUseCase for id: ${id}, deckId: ${deckId}`);
 
     const deck = await this.deckRepository.findByIdAndUserId(deckId, userId);
     if (!deck) {
       throw new DeckNotFoundError(deckId, userId);
     }
 
-    const card = await this.cardRepository.findById(cardId);
+    const card = await this.cardRepository.findById(id);
     if (!card) {
-      throw new CardNotFoundError(cardId, deckId);
+      throw new CardNotFoundError(id, deckId);
     }
 
     if (card.deckId !== deckId) {
-      throw new CardNotFoundError(cardId, deckId);
+      throw new CardNotFoundError(id, deckId);
     }
 
-    await Promise.allSettled([this.progressRepository.deleteById(cardId), this.cardRepository.deleteById(cardId)]);
+    await Promise.allSettled([
+      this.progressRepository.deleteById(id),
+      this.cardRepository.deleteById(id),
+    ]);
 
-    console.log(`Successfully deleted card ${cardId} and progress from deck ${deckId}`);
+    console.log(
+      `Successfully deleted card ${id} and progress from deck ${deckId}`
+    );
   }
 }

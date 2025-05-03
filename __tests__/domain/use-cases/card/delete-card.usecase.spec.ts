@@ -50,7 +50,7 @@ describe("DeleteCardUseCase", () => {
 
   it("should delete card and its progress successfully", async () => {
     const request = {
-      cardId,
+      id: cardId,
       deckId,
       userId,
     };
@@ -70,7 +70,7 @@ describe("DeleteCardUseCase", () => {
     mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
     const request = {
-      cardId,
+      id: cardId,
       deckId: "non-existent-deck",
       userId,
     };
@@ -85,7 +85,7 @@ describe("DeleteCardUseCase", () => {
     mockCardRepository.findById.mockResolvedValueOnce(null);
 
     const request = {
-      cardId: "non-existent-card",
+      id: "non-existent-card",
       deckId,
       userId,
     };
@@ -106,7 +106,7 @@ describe("DeleteCardUseCase", () => {
     mockCardRepository.findById.mockResolvedValueOnce(differentDeckCard);
 
     const request = {
-      cardId,
+      id: cardId,
       deckId,
       userId,
     };
@@ -122,7 +122,7 @@ describe("DeleteCardUseCase", () => {
     );
 
     const request = {
-      cardId,
+      id: cardId,
       deckId,
       userId,
     };
