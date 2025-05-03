@@ -24,7 +24,11 @@ describe("ReviewCardValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      cardId: validRequest.params.cardId,
+      deckId: validRequest.params.deckId,
+      difficulty: validRequest.body.difficulty,
+    });
   });
 
   it("should throw ValidationError if cardId is not a valid UUID", () => {
