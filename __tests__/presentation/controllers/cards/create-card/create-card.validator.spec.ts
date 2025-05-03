@@ -25,7 +25,14 @@ describe("CreateCardValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      deckId: validRequest.params.deckId,
+      userId: validRequest.user.id,
+      data: {
+        question: validRequest.body.question,
+        answer: validRequest.body.answer,
+      },
+    });
   });
 
   it("should throw ValidationError if deckId is not a valid uuid", () => {
