@@ -144,7 +144,7 @@ describe("FindDeckStatsUseCase", () => {
 
   it("should return correct statistics for a deck", async () => {
     const request = {
-      deckId,
+      id: deckId,
       userId,
     };
 
@@ -177,7 +177,7 @@ describe("FindDeckStatsUseCase", () => {
     vi.mocked(progressRepository.findDueCards).mockReset();
 
     const request = {
-      deckId: "non-existent-deck",
+      id: "non-existent-deck",
       userId,
     };
 
@@ -190,7 +190,7 @@ describe("FindDeckStatsUseCase", () => {
     vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([]);
 
     const request = {
-      deckId,
+      id: deckId,
       userId,
     };
 
@@ -210,7 +210,7 @@ describe("FindDeckStatsUseCase", () => {
     vi.mocked(progressRepository.findDueCards).mockResolvedValueOnce([]);
 
     const request = {
-      deckId,
+      id: deckId,
       userId,
     };
 

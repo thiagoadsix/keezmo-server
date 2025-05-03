@@ -1,13 +1,20 @@
-import { CardRepository, DeckRepository, ProgressRepository } from '@/domain/interfaces/repositories';
-import { Card } from '@/domain/entities/card';
-import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error';
-import { Progress } from '@/domain/entities/progress';
+import {
+  CardRepository,
+  DeckRepository,
+  ProgressRepository,
+} from "@/domain/interfaces/repositories";
+import { Card } from "@/domain/entities/card";
+import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
+import { Progress } from "@/domain/entities/progress";
 
-import { DEFAULT_EASE_FACTOR, MATURE_CARD_THRESHOLD } from '@/shared/constants/srs';
-import { addDays, formatDateToYYYYMMDD } from '@/shared/utils/date';
+import {
+  DEFAULT_EASE_FACTOR,
+  MATURE_CARD_THRESHOLD,
+} from "@/shared/constants/srs";
+import { addDays, formatDateToYYYYMMDD } from "@/shared/utils/date";
 
 interface FindDeckStatsRequest {
-  deckId: string;
+  id: string;
   userId: string;
 }
 
@@ -50,19 +57,19 @@ export class FindDeckStatsUseCase {
   ) {}
 
   async execute(request: FindDeckStatsRequest): Promise<FindDeckStatsResponse> {
-    const { deckId, userId } = request;
+    const { id, userId } = request;
 
-    console.log(`Finding stats for deck: ${deckId}, user: ${userId}`);
+    console.log(`Finding stats for deck: ${id}, user: ${userId}`);
 
-    const deck = await this.deckRepository.findByIdAndUserId(deckId, userId);
+    const deck = await this.deckRepository.findByIdAndUserId(id, userId);
     if (!deck) {
-      throw new DeckNotFoundError(deckId, userId);
+      throw new DeckNotFoundError(id, userId);
     }
 
-    const cards = await this.cardRepository.findByDeckId(deckId);
+    const cards = await this.cardRepository.findByDeckId(id);
 
     const today = new Date();
-    const dueProgresses = await this.progressRepository.findDueCards(today, deckId);
+    const dueProgresses = await this.progressRepository.findDueCards(today, id);
     const dueCardsCount = dueProgresses.length;
 
     let newCards = 0;
@@ -73,8 +80,11 @@ export class FindDeckStatsUseCase {
     let cardsWithProgressCount = 0;
 
     await Promise.all(
-      cards.map(async card => {
-        const progress = await this.progressRepository.findByCardAndDeck(card.id, deckId);
+      cards.map(async (card) => {
+        const progress = await this.progressRepository.findByCardAndDeck(
+          card.id,
+          id
+        );
 
         if (!progress) {
           newCards++;
@@ -93,11 +103,16 @@ export class FindDeckStatsUseCase {
     );
 
     const averageEaseFactor =
-      cardsWithProgressCount > 0 ? totalEaseFactor / cardsWithProgressCount : DEFAULT_EASE_FACTOR;
+      cardsWithProgressCount > 0
+        ? totalEaseFactor / cardsWithProgressCount
+        : DEFAULT_EASE_FACTOR;
 
-    const successRate = this.calculateSuccessRate(cards, cardsWithProgressCount);
+    const successRate = this.calculateSuccessRate(
+      cards,
+      cardsWithProgressCount
+    );
 
-    const forecast = this.generateForecast(deckId, dueProgresses);
+    const forecast = this.generateForecast(id, dueProgresses);
 
     const response: FindDeckStatsResponse = {
       deck: {
@@ -119,11 +134,14 @@ export class FindDeckStatsUseCase {
       forecast,
     };
 
-    console.log(`Successfully retrieved stats for deck: ${deckId}`);
+    console.log(`Successfully retrieved stats for deck: ${id}`);
     return response;
   }
 
-  private calculateSuccessRate(cards: Card[], cardsWithProgressCount: number): number {
+  private calculateSuccessRate(
+    cards: Card[],
+    cardsWithProgressCount: number
+  ): number {
     if (cards.length === 0 || cardsWithProgressCount === 0) {
       return 0;
     }
@@ -131,7 +149,10 @@ export class FindDeckStatsUseCase {
     return (cardsWithProgressCount / cards.length) * 100;
   }
 
-  private generateForecast(deckId: string, dueProgresses: Progress[]): ForecastDay[] {
+  private generateForecast(
+    deckId: string,
+    dueProgresses: Progress[]
+  ): ForecastDay[] {
     const forecast: ForecastDay[] = [];
     const today = new Date();
 
@@ -144,7 +165,10 @@ export class FindDeckStatsUseCase {
       const forecastDate = addDays(today, i);
       const dateString = formatDateToYYYYMMDD(forecastDate);
 
-      const estimatedCount = Math.max(0, Math.floor(dueProgresses.length * (0.7 - i * 0.1)));
+      const estimatedCount = Math.max(
+        0,
+        Math.floor(dueProgresses.length * (0.7 - i * 0.1))
+      );
 
       forecast.push({
         date: dateString,
