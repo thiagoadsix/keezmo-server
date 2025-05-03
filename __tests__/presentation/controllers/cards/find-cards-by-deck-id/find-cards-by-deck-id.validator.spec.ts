@@ -18,7 +18,9 @@ describe("FindCardsByDeckIdValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      deckId: validRequest.params.deckId,
+    });
   });
 
   it("should throw ValidationError if deckId is not a valid uuid", () => {
