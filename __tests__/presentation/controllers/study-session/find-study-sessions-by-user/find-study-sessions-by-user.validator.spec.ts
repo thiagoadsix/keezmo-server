@@ -19,7 +19,9 @@ describe("FindStudySessionsByUserValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      userId: validRequest.params.userId,
+    });
   });
 
   it("should throw ValidationError if userId is not a valid UUID", () => {
