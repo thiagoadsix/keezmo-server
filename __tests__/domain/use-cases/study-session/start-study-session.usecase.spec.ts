@@ -27,6 +27,7 @@ describe("StartStudySessionUseCase", () => {
   it("should create a flashcard study session with correct start time", async () => {
     const request = {
       deckId: "deck-123",
+      userId: "user-123",
       studyMode: StudyModeEnum.FLASHCARD,
     };
 
@@ -47,6 +48,7 @@ describe("StartStudySessionUseCase", () => {
   it("should throw an error if repository fails", async () => {
     const request = {
       deckId: "deck-123",
+      userId: "user-123",
       studyMode: StudyModeEnum.FLASHCARD,
     };
 
@@ -60,6 +62,7 @@ describe("StartStudySessionUseCase", () => {
     const request = {
       deckId: "",
       studyMode: StudyModeEnum.FLASHCARD,
+      userId: "user-123",
     };
 
     await expect(sut.execute(request)).rejects.toThrow(

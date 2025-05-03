@@ -19,6 +19,7 @@ describe("CreateStudySessionUseCase", () => {
     it("should create a flashcard study session", async () => {
       const request = {
         deckId: "deck-123",
+        userId: "user-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
@@ -38,6 +39,7 @@ describe("CreateStudySessionUseCase", () => {
     it("should create a multiple choice study session", async () => {
       const request = {
         deckId: "deck-123",
+        userId: "user-123",
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
@@ -57,6 +59,7 @@ describe("CreateStudySessionUseCase", () => {
     it("should create a multiple choice study session with default hits and misses", async () => {
       const request = {
         deckId: "deck-123",
+        userId: "user-123",
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
@@ -71,6 +74,7 @@ describe("CreateStudySessionUseCase", () => {
     it("should throw an error if repository fails", async () => {
       const request = {
         deckId: "deck-123",
+        userId: "user-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
@@ -90,6 +94,7 @@ describe("CreateStudySessionUseCase", () => {
     it("Given valid flashcard study session data, When execute is called, Then repository save is invoked with correct data", async () => {
       const request = {
         deckId: "deck-123",
+        userId: "user-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
@@ -107,6 +112,7 @@ describe("CreateStudySessionUseCase", () => {
     it("Given valid multiple choice study session data, When execute is called, Then repository save is invoked with correct data", async () => {
       const request = {
         deckId: "deck-123",
+        userId: "user-123",
         studyMode: StudyModeEnum.MULTIPLE_CHOICE,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
@@ -124,6 +130,7 @@ describe("CreateStudySessionUseCase", () => {
     it("Given invalid study data with no deckId, When execute is called, Then it throws StudySessionValidationError", async () => {
       const request = {
         deckId: "",
+        userId: "user-123",
         studyMode: StudyModeEnum.FLASHCARD,
         totalQuestions: 10,
         startTime: "2023-01-01T10:00:00Z",
