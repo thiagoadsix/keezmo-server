@@ -1,21 +1,12 @@
-import { vi } from 'vitest'
+import { type Mock, vi } from "vitest";
 
-import { ProgressRepository } from '@/domain/interfaces/repositories'
+import { ProgressRepository } from "@/domain/interfaces/repositories";
 
-type MockedFunction<T> = T & {
-  mock: { calls: any[][] }
-  mockRejectedValueOnce: (value: Error) => void
-  mockResolvedValue: (value: any) => void
-  mockResolvedValueOnce: (value: any) => void
-}
+type MockProgressRepository = {
+  [K in keyof ProgressRepository]: Mock;
+};
 
-type MockedRepository<T> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => any
-    ? MockedFunction<T[K]>
-    : T[K]
-}
-
-export const mockProgressRepository: MockedRepository<ProgressRepository> = {
+export const mockProgressRepository: MockProgressRepository = {
   findByCardAndDeck: vi.fn(),
   findDueCards: vi.fn(),
   save: vi.fn(),
@@ -23,4 +14,4 @@ export const mockProgressRepository: MockedRepository<ProgressRepository> = {
   deleteById: vi.fn(),
   saveBatch: vi.fn(),
   deleteByDeckId: vi.fn(),
-}
+};

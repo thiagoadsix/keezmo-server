@@ -17,9 +17,21 @@
     "noImplicitAny": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/domain/*": ["./src/domain/*"],
-      "@/shared/*": ["./src/shared/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/domain/*": [
+        "./src/domain/*"
+      ],
+      "@/shared/*": [
+        "./src/shared/*"
+      ],
+      "@/infrastructure/*": [
+        "./src/infrastructure/*"
+      ],
+      "@/presentation/*": [
+        "./src/presentation/*"
+      ]
     }
   },
   "include": [

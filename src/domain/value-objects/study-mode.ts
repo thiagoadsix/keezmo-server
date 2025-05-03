@@ -1,4 +1,4 @@
-import { InvalidStudyModeError } from '@/domain/errors/deck/invalid-study-mode-error'
+import { InvalidStudyModeError } from '@/domain/errors/deck/invalid-study-mode-error';
 
 export enum StudyModeEnum {
   FLASHCARD = 'flashcard',
@@ -6,20 +6,20 @@ export enum StudyModeEnum {
 }
 
 export class StudyMode {
-  private readonly value: StudyModeEnum
+  private readonly value: StudyModeEnum;
 
   constructor(studyMode: string) {
     if (!this.isValidStudyMode(studyMode)) {
-      throw new InvalidStudyModeError(studyMode)
+      throw new InvalidStudyModeError(studyMode);
     }
-    this.value = studyMode as StudyModeEnum
+    this.value = studyMode as StudyModeEnum;
   }
 
   private isValidStudyMode(studyMode: string): boolean {
-    return Object.values(StudyModeEnum).includes(studyMode as StudyModeEnum)
+    return Object.values(StudyModeEnum).includes(studyMode as StudyModeEnum);
   }
 
   public getValue(): StudyModeEnum {
-    return this.value
+    return this.value;
   }
 }

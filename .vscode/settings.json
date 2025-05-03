@@ -1,7 +1,10 @@
 {
   "cSpell.words": [
+    "dtos",
     "keezmo",
-    "rocketseat"
+    "Português",
+    "rocketseat",
+    "Versão"
   ],
   "eslint.nodeEnv": "development",
   "eslint.nodePath": "${workspaceFolder}/node_modules/.pnpm/node_modules"

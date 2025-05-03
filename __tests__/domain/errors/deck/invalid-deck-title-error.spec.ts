@@ -1,14 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 
-import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error'
+import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error';
 
 describe('InvalidDeckTitleError', () => {
   it('should set the correct error message and name', () => {
-    const invalidTitle = ''
+    const invalidTitle = '';
 
-    const error = new InvalidDeckTitleError(invalidTitle)
+    const error = new InvalidDeckTitleError(invalidTitle);
 
-    expect(error.message).toBe(`The deck title "${invalidTitle}" is invalid.`)
-    expect(error.name).toBe('InvalidDeckTitleError')
-  })
-})
+    expect(error.message).toBe(`The deck title "${invalidTitle}" is invalid.`);
+    expect(error.name).toBe('InvalidDeckTitleError');
+  });
+});

@@ -1,69 +1,56 @@
-import { Deck } from '@/domain/entities/deck'
-import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error'
-import { DeckRepository } from '@/domain/interfaces/repositories'
-import { StudyMode } from '@/domain/value-objects'
+import { Deck } from '@/domain/entities/deck';
+import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error';
+import { DeckRepository } from '@/domain/interfaces/repositories';
+import { StudyMode } from '@/domain/value-objects';
 
 interface DeckUpdateData {
-  title: string
-  description: string
-  studyMode: string
+  title: string;
+  description: string;
+  studyMode: string;
 }
 
 interface UpdateDeckRequest {
-  deckId: string
-  userId: string
-  data: Partial<DeckUpdateData>
+  deckId: string;
+  userId: string;
+  data: Partial<DeckUpdateData>;
 }
 
-type UpdateDeckResponse = Deck
+type UpdateDeckResponse = Deck;
 
 export class UpdateDeckUseCase {
   constructor(private readonly deckRepository: DeckRepository) {}
 
   async execute(request: UpdateDeckRequest): Promise<UpdateDeckResponse> {
-    console.log(
-      `Starting UpdateDeckUseCase for deckId: ${request.deckId}, userId: ${request.userId}`,
-    )
+    console.log(`Starting UpdateDeckUseCase for deckId: ${request.deckId}, userId: ${request.userId}`);
 
-    const deck = await this.deckRepository.findByIdAndUserId(
-      request.deckId,
-      request.userId,
-    )
+    const deck = await this.deckRepository.findByIdAndUserId(request.deckId, request.userId);
 
     if (!deck) {
-      console.log(
-        `Deck with ID ${request.deckId} not found for user ${request.userId}`,
-      )
-      throw new DeckNotFoundError(request.deckId, request.userId)
+      console.log(`Deck with ID ${request.deckId} not found for user ${request.userId}`);
+      throw new DeckNotFoundError(request.deckId, request.userId);
     }
 
-    console.log(`Found deck: ${deck.title}, applying updates`)
+    console.log(`Found deck: ${deck.title}, applying updates`);
 
-    this.applyUpdates(deck, request.data)
+    this.applyUpdates(deck, request.data);
 
-    await this.deckRepository.save(deck)
+    await this.deckRepository.save(deck);
 
-    console.log(`Successfully updated deck ${request.deckId}`)
-    return deck
+    console.log(`Successfully updated deck ${request.deckId}`);
+    return deck;
   }
 
-  private applyUpdates(
-    deck: Deck,
-    updateData: UpdateDeckRequest['data'],
-  ): void {
+  private applyUpdates(deck: Deck, updateData: UpdateDeckRequest['data']): void {
     if (updateData.title && updateData.title !== deck.title) {
-      deck.updateTitle(updateData.title)
+      deck.updateTitle(updateData.title);
     }
 
     if (updateData.description && updateData.description !== deck.description) {
-      deck.updateDescription(updateData.description)
+      deck.updateDescription(updateData.description);
     }
 
-    if (
-      updateData.studyMode &&
-      updateData.studyMode !== deck.studyMode.getValue()
-    ) {
-      deck.updateStudyMode(new StudyMode(updateData.studyMode))
+    if (updateData.studyMode && updateData.studyMode !== deck.studyMode.getValue()) {
+      deck.updateStudyMode(new StudyMode(updateData.studyMode));
     }
   }
 }

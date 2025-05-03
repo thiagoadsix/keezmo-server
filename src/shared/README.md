@@ -29,6 +29,7 @@ export function generateId(): string {
 ```
 
 Use this in domain entities:
+
 ```ts
 import { generateId } from '@/shared/utils/generate-id';
 ```
@@ -48,7 +49,7 @@ export const DEFAULT_LANGUAGE = 'en';
 export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
-  GUEST = 'guest'
+  GUEST = 'guest',
 }
 
 export const MAX_ATTEMPTS = 3;
@@ -68,4 +69,4 @@ export const TOKEN_EXPIRATION_DAYS = 7;
 
 ---
 
-This layer empowers code reuse and helps enforce a clean separation of concerns within the architecture. 
+This layer empowers code reuse and helps enforce a clean separation of concerns within the architecture.

@@ -47,4 +47,4 @@ module.exports = {
   allowBreakingChanges: ['feat', 'fix'],
   skipQuestions: ['body', 'footer'],
   subjectLimit: 100,
-}
+};
