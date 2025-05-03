@@ -13,10 +13,19 @@ const cardSchema = z
     path: ["question", "answer"],
   });
 
-const updateCardsSchema = z.object({
-  deckId: z.string().min(1, "Deck ID is required"),
-  cards: z.array(cardSchema).nonempty("At least one card must be provided"),
-});
+const updateCardsSchema = z
+  .object({
+    params: z.object({
+      deckId: z.string().min(1, "Deck ID is required"),
+    }),
+    body: z.object({
+      cards: z.array(cardSchema).nonempty("At least one card must be provided"),
+    }),
+  })
+  .transform((data) => ({
+    deckId: data.params.deckId,
+    cards: data.body.cards,
+  }));
 
 export type UpdateCardsValidatorRequest = z.infer<typeof updateCardsSchema>;
 
