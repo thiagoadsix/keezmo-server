@@ -57,7 +57,7 @@ describe("UpdateCardUseCase", () => {
     it("should update card question when it exists in the deck", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "Updated question",
         },
@@ -76,7 +76,7 @@ describe("UpdateCardUseCase", () => {
     it("should update card answer when it exists in the deck", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           answer: "Updated answer",
         },
@@ -93,7 +93,7 @@ describe("UpdateCardUseCase", () => {
     it("should update multiple fields when provided together", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "New question",
           answer: "New answer",
@@ -112,7 +112,7 @@ describe("UpdateCardUseCase", () => {
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "Updated question",
         },
@@ -128,7 +128,7 @@ describe("UpdateCardUseCase", () => {
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "Updated question",
         },
@@ -152,7 +152,7 @@ describe("UpdateCardUseCase", () => {
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "Updated question",
         },
@@ -167,7 +167,7 @@ describe("UpdateCardUseCase", () => {
     it("Given a valid card in a deck, When execute is called with card updates, Then the card is updated", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "New question",
           answer: "New answer",
@@ -187,7 +187,7 @@ describe("UpdateCardUseCase", () => {
 
       const request = {
         deckId: "non-existent-deck-id",
-        cardId,
+        id: cardId,
         data: {
           question: "Updated",
         },
@@ -201,7 +201,7 @@ describe("UpdateCardUseCase", () => {
 
       const request = {
         deckId,
-        cardId: "non-existent-card-id",
+        id: "non-existent-card-id",
         data: {
           question: "Updated",
         },
@@ -224,7 +224,7 @@ describe("UpdateCardUseCase", () => {
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
         data: {
           question: "Updated",
         },

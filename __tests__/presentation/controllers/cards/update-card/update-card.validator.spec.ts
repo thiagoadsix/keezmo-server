@@ -23,7 +23,11 @@ describe("UpdateCardValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      deckId: validRequest.params.deckId,
+      data: validRequest.body,
+    });
   });
 
   it("should validate a request with only question update", () => {
@@ -38,7 +42,11 @@ describe("UpdateCardValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      deckId: validRequest.params.deckId,
+      data: validRequest.body,
+    });
   });
 
   it("should validate a request with only answer update", () => {
@@ -53,7 +61,11 @@ describe("UpdateCardValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      deckId: validRequest.params.deckId,
+      data: validRequest.body,
+    });
   });
 
   it("should throw ValidationError if card id is not a valid uuid", () => {
