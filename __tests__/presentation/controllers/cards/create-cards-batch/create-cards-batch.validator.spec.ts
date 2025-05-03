@@ -33,7 +33,11 @@ describe("CreateCardsBatchValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      deckId: validRequest.params.deckId,
+      userId: validRequest.user.id,
+      cards: validRequest.body.cards,
+    });
   });
 
   it("should validate a request with an empty cards array", () => {
@@ -50,7 +54,11 @@ describe("CreateCardsBatchValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      deckId: validRequest.params.deckId,
+      userId: validRequest.user.id,
+      cards: validRequest.body.cards,
+    });
   });
 
   it("should throw ValidationError if deckId is not a valid uuid", () => {
