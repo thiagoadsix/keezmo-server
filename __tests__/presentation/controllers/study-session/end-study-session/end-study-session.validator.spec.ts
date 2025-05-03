@@ -22,7 +22,10 @@ describe("EndStudySessionValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      sessionId: validRequest.params.sessionId,
+      totalQuestions: validRequest.body.totalQuestions,
+    });
   });
 
   it("should validate a valid end study session request without body", () => {
@@ -33,7 +36,9 @@ describe("EndStudySessionValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      sessionId: validRequest.params.sessionId,
+    });
   });
 
   it("should validate a valid end study session request with empty body", () => {
@@ -45,7 +50,9 @@ describe("EndStudySessionValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      sessionId: validRequest.params.sessionId,
+    });
   });
 
   it("should throw ValidationError if sessionId is not a valid UUID", () => {
