@@ -94,9 +94,11 @@ export class CardDynamoRepository implements CardRepository {
 
       const command = new BatchWriteItemCommand({
         RequestItems: {
-          [process.env.DECK_TABLE_NAME]: batch.map((schema) =>
-            schema.toMarshall()
-          ),
+          [process.env.DECK_TABLE_NAME]: batch.map((schema) => ({
+            PutRequest: {
+              Item: schema.toMarshall(),
+            },
+          })),
         },
       });
 

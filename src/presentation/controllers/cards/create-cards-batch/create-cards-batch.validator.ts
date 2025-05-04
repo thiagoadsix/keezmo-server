@@ -10,19 +10,17 @@ const createCardsBatchSchema = z
     user: z.object({
       id: z.string(),
     }),
-    body: z.object({
-      cards: z.array(
-        z.object({
-          question: z.string().min(1),
-          answer: z.string().min(1),
-        })
-      ),
-    }),
+    body: z.array(
+      z.object({
+        question: z.string().min(1),
+        answer: z.string().min(1),
+      })
+    ),
   })
   .transform((data) => ({
     deckId: data.params.deckId,
     userId: data.user.id,
-    cards: data.body.cards,
+    cards: data.body,
   }));
 
 export type CreateCardsBatchValidatorRequest = z.infer<

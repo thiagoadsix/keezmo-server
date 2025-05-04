@@ -18,25 +18,23 @@ describe("CreateCardsBatchValidator", () => {
       user: {
         id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
-      body: {
-        cards: [
-          {
-            question: "What is the capital of France?",
-            answer: "Paris",
-          },
-          {
-            question: "What is the capital of Germany?",
-            answer: "Berlin",
-          },
-        ],
-      },
+      body: [
+        {
+          question: "What is the capital of France?",
+          answer: "Paris",
+        },
+        {
+          question: "What is the capital of Germany?",
+          answer: "Berlin",
+        },
+      ],
     };
 
     const result = validator.validate(validRequest);
     expect(result).toEqual({
       deckId: validRequest.params.deckId,
       userId: validRequest.user.id,
-      cards: validRequest.body.cards,
+      cards: validRequest.body,
     });
   });
 
@@ -48,16 +46,14 @@ describe("CreateCardsBatchValidator", () => {
       user: {
         id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
-      body: {
-        cards: [],
-      },
+      body: [],
     };
 
     const result = validator.validate(validRequest);
     expect(result).toEqual({
       deckId: validRequest.params.deckId,
       userId: validRequest.user.id,
-      cards: validRequest.body.cards,
+      cards: validRequest.body,
     });
   });
 
@@ -69,14 +65,12 @@ describe("CreateCardsBatchValidator", () => {
       user: {
         id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
-      body: {
-        cards: [
-          {
-            question: "What is the capital of France?",
-            answer: "Paris",
-          },
-        ],
-      },
+      body: [
+        {
+          question: "What is the capital of France?",
+          answer: "Paris",
+        },
+      ],
     };
 
     expect(() => validator.validate(invalidRequest)).toThrow(ValidationError);
@@ -90,14 +84,12 @@ describe("CreateCardsBatchValidator", () => {
       user: {
         id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
-      body: {
-        cards: [
-          {
-            question: "",
-            answer: "Paris",
-          },
-        ],
-      },
+      body: [
+        {
+          question: "",
+          answer: "Paris",
+        },
+      ],
     };
 
     expect(() => validator.validate(invalidRequest)).toThrow(ValidationError);
@@ -111,14 +103,12 @@ describe("CreateCardsBatchValidator", () => {
       user: {
         id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
-      body: {
-        cards: [
-          {
-            question: "What is the capital of France?",
-            answer: "",
-          },
-        ],
-      },
+      body: [
+        {
+          question: "What is the capital of France?",
+          answer: "",
+        },
+      ],
     };
 
     expect(() => validator.validate(invalidRequest)).toThrow(ValidationError);
@@ -132,14 +122,12 @@ describe("CreateCardsBatchValidator", () => {
       user: {
         id: 123,
       },
-      body: {
-        cards: [
-          {
-            question: "What is the capital of France?",
-            answer: "Paris",
-          },
-        ],
-      },
+      body: [
+        {
+          question: "What is the capital of France?",
+          answer: "Paris",
+        },
+      ],
     };
 
     expect(() => validator.validate(invalidRequest)).toThrow(ValidationError);
