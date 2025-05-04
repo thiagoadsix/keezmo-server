@@ -18,6 +18,8 @@ import findDueCards from "@/main/endpoints/progress/find-due-cards";
 import initializeProgress from "@/main/endpoints/progress/initialize";
 import reviewCard from "@/main/endpoints/progress/review-card";
 
+import startStudySession from "@/main/endpoints/study-sessions/start-study-session";
+
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
   frameworkVersion: "4",
@@ -54,6 +56,8 @@ const serverlessConfiguration: AWS = {
     findDueCards,
     initializeProgress,
     reviewCard,
+
+    startStudySession,
   },
   package: { individually: true },
   custom: {
