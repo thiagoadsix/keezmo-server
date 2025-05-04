@@ -1,7 +1,7 @@
 import type { AWS } from "@serverless/typescript";
 
 import createDeck from "@/main/endpoints/decks/create";
-
+import deleteDeck from "@/main/endpoints/decks/delete";
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
   frameworkVersion: "4",
@@ -22,6 +22,7 @@ const serverlessConfiguration: AWS = {
   },
   functions: {
     createDeck,
+    deleteDeck,
   },
   package: { individually: true },
   custom: {

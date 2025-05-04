@@ -31,7 +31,10 @@ export class DeckDynamoRepository implements DeckRepository {
   async findByIdAndUserId(id: string, userId: string): Promise<Deck | null> {
     const command = new GetItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id }, userId: { S: userId } },
+      Key: {
+        PK: { S: DeckDynamoSchema.buildPK(userId) },
+        SK: { S: DeckDynamoSchema.buildSK(id) },
+      },
     });
 
     const result = await this.client.send(command);
@@ -71,10 +74,13 @@ export class DeckDynamoRepository implements DeckRepository {
     await this.client.send(command);
   }
 
-  async delete(id: string): Promise<void> {
+  async deleteByUser(id: string, userId: string): Promise<void> {
     const command = new DeleteItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id } },
+      Key: {
+        PK: { S: DeckDynamoSchema.buildPK(userId) },
+        SK: { S: DeckDynamoSchema.buildSK(id) },
+      },
     });
 
     await this.client.send(command);

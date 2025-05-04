@@ -8,7 +8,11 @@ import { userMiddleware } from "./middleware/user.middleware";
 
 export const middyfy = (handler: Handler) => {
   return middy(handler)
-    .use(jsonBodyParser())
+    .use(
+      jsonBodyParser({
+        disableContentTypeError: true,
+      })
+    )
     .use(httpSecurityHeaders())
     .use(userMiddleware());
 };

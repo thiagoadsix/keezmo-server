@@ -7,7 +7,7 @@ import { BaseValidator } from "@/presentation/controllers/base.validator";
 const startStudySessionSchema = z
   .object({
     user: z.object({
-      id: z.string().uuid("User ID must be a valid UUID"),
+      id: z.string(),
     }),
     body: z.object({
       deckId: z.string().uuid("Deck ID must be a valid UUID"),

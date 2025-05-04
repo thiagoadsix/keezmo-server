@@ -46,7 +46,7 @@ export class DeleteDeckUseCase {
     }
 
     console.log(`Deleting deck ${request.id}`);
-    await this.deckRepository.delete(request.id);
+    await this.deckRepository.deleteByUser(request.id, request.userId);
 
     console.log(`Successfully deleted deck ${request.id} and its cards`);
   }

@@ -8,7 +8,7 @@ const deleteDeckSchema = z
       id: z.string().uuid(),
     }),
     user: z.object({
-      id: z.string().uuid(),
+      id: z.string(),
     }),
   })
   .transform(({ params, user }) => ({

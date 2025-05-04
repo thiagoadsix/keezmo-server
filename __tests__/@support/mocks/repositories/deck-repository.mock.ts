@@ -11,5 +11,5 @@ export const mockDeckRepository: MockDeckRepository = {
   findByIdAndUserId: vi.fn(),
   findAllByUser: vi.fn(),
   save: vi.fn(),
-  delete: vi.fn(),
+  deleteByUser: vi.fn(),
 };

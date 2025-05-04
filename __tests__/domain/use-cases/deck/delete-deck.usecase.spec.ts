@@ -36,7 +36,7 @@ describe("DeleteDeckUseCase", () => {
     mockDeckWithCards = new Deck(validDeckWithCardsProps);
 
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
-    mockDeckRepository.delete.mockResolvedValue(undefined);
+    mockDeckRepository.deleteByUser.mockResolvedValue(undefined);
     mockCardRepository.deleteByIds.mockResolvedValue(undefined);
     mockProgressRepository.deleteByDeckId.mockResolvedValue(undefined);
     vi.clearAllMocks();
@@ -58,7 +58,10 @@ describe("DeleteDeckUseCase", () => {
         userId
       );
       expect(mockCardRepository.deleteByIds).not.toHaveBeenCalled();
-      expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId);
+      expect(mockDeckRepository.deleteByUser).toHaveBeenCalledWith(
+        mockId,
+        userId
+      );
     });
 
     it("should delete a deck with its cards and progress", async () => {
@@ -74,7 +77,10 @@ describe("DeleteDeckUseCase", () => {
         userId
       );
       expect(mockCardRepository.deleteByIds).toHaveBeenCalledWith(cardIds);
-      expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId);
+      expect(mockDeckRepository.deleteByUser).toHaveBeenCalledWith(
+        mockId,
+        userId
+      );
       expect(mockProgressRepository.deleteByDeckId).toHaveBeenCalledWith(
         mockId
       );
@@ -91,7 +97,7 @@ describe("DeleteDeckUseCase", () => {
         `Deck with ID ${mockId} not found for user ${userId}`
       );
       expect(mockCardRepository.deleteByIds).not.toHaveBeenCalled();
-      expect(mockDeckRepository.delete).not.toHaveBeenCalled();
+      expect(mockDeckRepository.deleteByUser).not.toHaveBeenCalled();
     });
   });
 
@@ -102,7 +108,10 @@ describe("DeleteDeckUseCase", () => {
       await useCase.execute(request);
 
       expect(mockCardRepository.deleteByIds).not.toHaveBeenCalled();
-      expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId);
+      expect(mockDeckRepository.deleteByUser).toHaveBeenCalledWith(
+        mockId,
+        userId
+      );
     });
 
     it("Given a deck with cards, When execute is called, Then both cards and deck are deleted", async () => {
@@ -114,7 +123,10 @@ describe("DeleteDeckUseCase", () => {
       expect(mockCardRepository.deleteByIds).toHaveBeenCalledWith(
         mockDeckWithCards.cards.map((card) => card.id)
       );
-      expect(mockDeckRepository.delete).toHaveBeenCalledWith(mockId);
+      expect(mockDeckRepository.deleteByUser).toHaveBeenCalledWith(
+        mockId,
+        userId
+      );
     });
 
     it("Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
