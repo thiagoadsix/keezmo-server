@@ -1,6 +1,5 @@
 import {
   DynamoDBClient,
-  GetItemCommand,
   QueryCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
@@ -38,7 +37,7 @@ describe("ProgressDynamoRepository", () => {
 
     await repository.save(progress);
 
-    await repository.deleteById(progress.id);
+    await repository.deleteByIdAndDeckId(progress.id, progress.deckId);
   });
 
   it("should be able to delete a progress by deck id", async () => {
@@ -199,11 +198,13 @@ describe("ProgressDynamoRepository", () => {
     it("should be able to find a progress by card and deck", async () => {
       const progress = new Progress(validProgressProps);
 
-      dynamoMock.on(GetItemCommand).resolves({
-        Item: marshall(progress, {
-          convertClassInstanceToMap: true,
-          removeUndefinedValues: true,
-        }),
+      dynamoMock.on(QueryCommand).resolves({
+        Items: [
+          marshall(progress, {
+            convertClassInstanceToMap: true,
+            removeUndefinedValues: true,
+          }),
+        ],
       });
 
       await repository.save(progress);
@@ -218,7 +219,9 @@ describe("ProgressDynamoRepository", () => {
     });
 
     it("should return null if the progress is not found", async () => {
-      dynamoMock.on(GetItemCommand).resolves({});
+      dynamoMock.on(QueryCommand).resolves({
+        Items: [],
+      });
 
       const result = await repository.findByCardAndDeck(
         validProgressProps.cardId,

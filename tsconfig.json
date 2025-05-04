@@ -4,6 +4,7 @@
       "ES2023"
     ],
     "moduleResolution": "node",
+    "target": "ES2024",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,

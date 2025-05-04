@@ -35,7 +35,10 @@ export class UpdateCardUseCase {
       throw new DeckNotFoundError(request.deckId, "unknown");
     }
 
-    const card = await this.cardRepository.findById(request.id);
+    const card = await this.cardRepository.findByIdAndDeckId(
+      request.id,
+      request.deckId
+    );
 
     if (!card) {
       console.log(

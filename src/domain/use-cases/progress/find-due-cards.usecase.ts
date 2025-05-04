@@ -1,6 +1,9 @@
-import { CardRepository, ProgressRepository } from '@/domain/interfaces/repositories';
-import { Card } from '@/domain/entities/card';
-import { Progress } from '@/domain/entities/progress';
+import {
+  CardRepository,
+  ProgressRepository,
+} from "@/domain/interfaces/repositories";
+import { Card } from "@/domain/entities/card";
+import { Progress } from "@/domain/entities/progress";
 
 export interface DueCard {
   card: Card;
@@ -20,10 +23,20 @@ export class FindDueCardsUseCase {
     private readonly cardRepository: CardRepository
   ) {}
 
-  public async execute({ date = new Date(), deckId }: FindDueCardsRequest = {}): Promise<FindDueCardsResponse> {
-    console.log(`Finding due cards for date=${date.toISOString()}${deckId ? ` in deck=${deckId}` : ''}`);
+  public async execute({
+    date = new Date(),
+    deckId,
+  }: FindDueCardsRequest = {}): Promise<FindDueCardsResponse> {
+    console.log(
+      `Finding due cards for date=${date.toISOString()}${
+        deckId ? ` in deck=${deckId}` : ""
+      }`
+    );
 
-    const dueProgresses = await this.progressRepository.findDueCards(date, deckId);
+    const dueProgresses = await this.progressRepository.findDueCards(
+      date,
+      deckId
+    );
 
     console.log(`Found ${dueProgresses.length} due progress records`);
 
@@ -31,14 +44,20 @@ export class FindDueCardsUseCase {
       return [];
     }
 
-    const cardIds = [...new Set(dueProgresses.map(progress => progress.cardId))];
+    const cardIds = [
+      ...new Set(dueProgresses.map((progress) => progress.cardId)),
+    ];
 
-    const cards = await Promise.all(cardIds.map(cardId => this.cardRepository.findById(cardId)));
+    const cards = await Promise.all(
+      cardIds.map((cardId) =>
+        this.cardRepository.findByIdAndDeckId(cardId, deckId ?? "")
+      )
+    );
 
     const validCards = cards.filter((card): card is Card => card !== null);
 
     const cardMap = new Map<string, Card>();
-    validCards.forEach(card => cardMap.set(card.id, card));
+    validCards.forEach((card) => cardMap.set(card.id, card));
 
     const dueCards: DueCard[] = [];
     for (const progress of dueProgresses) {
@@ -48,7 +67,9 @@ export class FindDueCardsUseCase {
       }
     }
 
-    const sortedDueCards = dueCards.sort((a, b) => b.progress.interval - a.progress.interval);
+    const sortedDueCards = dueCards.sort(
+      (a, b) => b.progress.interval - a.progress.interval
+    );
 
     console.log(`Returning ${sortedDueCards.length} due cards`);
 

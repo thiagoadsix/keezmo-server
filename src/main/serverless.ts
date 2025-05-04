@@ -9,6 +9,7 @@ import updateDeck from "@/main/endpoints/decks/update";
 
 import createCard from "@/main/endpoints/cards/create";
 import createCardsBatch from "@/main/endpoints/cards/create-batch";
+import deleteCard from "@/main/endpoints/cards/delete";
 
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
@@ -38,6 +39,7 @@ const serverlessConfiguration: AWS = {
 
     createCard,
     createCardsBatch,
+    deleteCard,
   },
   package: { individually: true },
   custom: {

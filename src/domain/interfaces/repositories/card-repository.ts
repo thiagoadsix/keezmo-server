@@ -1,10 +1,10 @@
-import { Card } from '@/domain/entities/card';
+import { Card } from "@/domain/entities/card";
 
 export interface CardRepository {
-  findById(id: string): Promise<Card | null>;
+  findByIdAndDeckId(id: string, deckId: string): Promise<Card | null>;
   findByDeckId(deckId: string): Promise<Card[]>;
   save(card: Card): Promise<void>;
-  deleteById(id: string): Promise<void>;
+  deleteByIdAndDeckId(id: string, deckId: string): Promise<void>;
   deleteByIds(ids: string[]): Promise<void>;
   saveBatch(cards: Card[]): Promise<void>;
 }

@@ -52,7 +52,7 @@ describe("ReviewCardUseCase", () => {
   });
 
   beforeEach(() => {
-    mockCardRepository.findById.mockResolvedValue(mockCard);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValue(mockCard);
     mockProgressRepository.findByCardAndDeck.mockResolvedValue(mockProgress);
 
     sut = new ReviewCardUseCase(mockProgressRepository, mockCardRepository);
@@ -67,7 +67,9 @@ describe("ReviewCardUseCase", () => {
   });
 
   it("should update progress using SM2 scheduler when reviewing a card", async () => {
-    vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(mockCard);
+    vi.mocked(mockCardRepository.findByIdAndDeckId).mockResolvedValueOnce(
+      mockCard
+    );
     vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(
       mockProgress
     );
@@ -78,7 +80,10 @@ describe("ReviewCardUseCase", () => {
       difficulty: DifficultyEnum.NORMAL,
     });
 
-    expect(mockCardRepository.findById).toHaveBeenCalledWith(mockCardId);
+    expect(mockCardRepository.findByIdAndDeckId).toHaveBeenCalledWith(
+      mockCardId,
+      mockDeckId
+    );
     expect(mockProgressRepository.findByCardAndDeck).toHaveBeenCalledWith(
       mockCardId,
       mockDeckId
@@ -99,7 +104,7 @@ describe("ReviewCardUseCase", () => {
   });
 
   it("should throw CardNotFoundError when card does not exist", async () => {
-    vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(null);
+    vi.mocked(mockCardRepository.findByIdAndDeckId).mockResolvedValueOnce(null);
 
     await expect(
       sut.execute({
@@ -115,7 +120,9 @@ describe("ReviewCardUseCase", () => {
   });
 
   it("should throw ProgressNotFoundError when progress does not exist", async () => {
-    vi.mocked(mockCardRepository.findById).mockResolvedValueOnce(mockCard);
+    vi.mocked(mockCardRepository.findByIdAndDeckId).mockResolvedValueOnce(
+      mockCard
+    );
     vi.mocked(mockProgressRepository.findByCardAndDeck).mockResolvedValueOnce(
       null
     );

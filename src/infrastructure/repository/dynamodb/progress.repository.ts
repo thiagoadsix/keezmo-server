@@ -2,7 +2,6 @@ import {
   BatchWriteItemCommand,
   DeleteItemCommand,
   DynamoDBClient,
-  GetItemCommand,
   PutItemCommand,
   QueryCommand,
   UpdateItemCommand,
@@ -19,18 +18,20 @@ export class ProgressDynamoRepository implements ProgressRepository {
     cardId: string,
     deckId: string
   ): Promise<Progress | null> {
-    const command = new GetItemCommand({
+    const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: {
-        PK: { S: ProgressDynamoSchema.buildPK(deckId) },
-        SK: { S: ProgressDynamoSchema.buildSK(cardId) },
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk AND GSI1SK = :gsi1sk",
+      ExpressionAttributeValues: {
+        ":gsi1pk": { S: ProgressDynamoSchema.buildGSI1PK(deckId) },
+        ":gsi1sk": { S: ProgressDynamoSchema.buildGSI1SK(cardId) },
       },
     });
 
     const result = await this.dynamoDbClient.send(command);
 
-    if (result.Item) {
-      return ProgressDynamoSchema.fromDynamoItem(result.Item);
+    if (result.Items && result.Items.length > 0) {
+      return ProgressDynamoSchema.fromDynamoItem(result.Items[0]);
     }
 
     return null;
@@ -91,11 +92,14 @@ export class ProgressDynamoRepository implements ProgressRepository {
     );
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteByIdAndDeckId(id: string, deckId: string): Promise<void> {
     await this.dynamoDbClient.send(
       new DeleteItemCommand({
         TableName: process.env.DECK_TABLE_NAME,
-        Key: { id: { S: id } },
+        Key: {
+          PK: { S: ProgressDynamoSchema.buildPK(deckId) },
+          SK: { S: ProgressDynamoSchema.buildSK(id) },
+        },
       })
     );
   }

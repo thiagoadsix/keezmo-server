@@ -5,6 +5,7 @@ import {
 } from "@/domain/interfaces/repositories";
 import { CardNotFoundError } from "@/domain/errors/card/card-not-found-error";
 import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
+import { ProgressNotFoundError } from "@/domain/errors/progress";
 
 interface DeleteCardRequest {
   id: string;
@@ -31,18 +32,28 @@ export class DeleteCardUseCase {
       throw new DeckNotFoundError(deckId, userId);
     }
 
-    const card = await this.cardRepository.findById(id);
+    const card = await this.cardRepository.findByIdAndDeckId(id, deckId);
     if (!card) {
       throw new CardNotFoundError(id, deckId);
     }
 
+    // TODO: This is not correct, we should have an error for when DeckID mismatch
     if (card.deckId !== deckId) {
       throw new CardNotFoundError(id, deckId);
     }
 
+    const progress = await this.progressRepository.findByCardAndDeck(
+      id,
+      deckId
+    );
+
+    if (!progress) {
+      throw new ProgressNotFoundError(id, deckId);
+    }
+
     await Promise.allSettled([
-      this.progressRepository.deleteById(id),
-      this.cardRepository.deleteById(id),
+      this.progressRepository.deleteByIdAndDeckId(progress.id, deckId),
+      this.cardRepository.deleteByIdAndDeckId(id, deckId),
     ]);
 
     console.log(

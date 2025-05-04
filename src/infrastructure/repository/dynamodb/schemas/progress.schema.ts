@@ -42,7 +42,7 @@ export class ProgressDynamoSchema implements ProgressDynamoItem {
     this.interval = progress.interval;
     this.easeFactor = progress.easeFactor;
     this.nextReview = progress.nextReview;
-    this.lastReviewed = progress.lastReviewed;
+    this.lastReviewed = progress.lastReviewed ?? "";
     this.createdAt = progress.createdAt;
     this.updatedAt = progress.updatedAt;
 

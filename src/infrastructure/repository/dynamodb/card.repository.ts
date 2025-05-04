@@ -14,10 +14,13 @@ import { CardRepository } from "@/domain/interfaces/repositories";
 export class CardDynamoRepository implements CardRepository {
   constructor(private readonly client: DynamoDBClient) {}
 
-  async findById(id: string): Promise<Card | null> {
+  async findByIdAndDeckId(id: string, deckId: string): Promise<Card | null> {
     const command = new GetItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id } },
+      Key: {
+        PK: { S: CardDynamoSchema.buildPK(deckId) },
+        SK: { S: CardDynamoSchema.buildSK(id) },
+      },
     });
 
     const result = await this.client.send(command);
@@ -57,10 +60,13 @@ export class CardDynamoRepository implements CardRepository {
     await this.client.send(command);
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteByIdAndDeckId(id: string, deckId: string): Promise<void> {
     const command = new DeleteItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id } },
+      Key: {
+        PK: { S: CardDynamoSchema.buildPK(deckId) },
+        SK: { S: CardDynamoSchema.buildSK(id) },
+      },
     });
 
     await this.client.send(command);
