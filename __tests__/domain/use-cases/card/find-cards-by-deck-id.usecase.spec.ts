@@ -23,6 +23,8 @@ describe("FindCardsByDeckIdUseCase", () => {
   let mockDeckWithCards: Deck;
   let mockCards: Card[];
 
+  const mockUserId = "user-123";
+
   beforeEach(() => {
     useCase = new FindCardsByDeckIdUseCase(
       mockCardRepository,
@@ -35,7 +37,7 @@ describe("FindCardsByDeckIdUseCase", () => {
     mockDeckWithCards = new Deck(validDeckWithCardsProps);
     mockCards = mockDeckWithCards.cards;
 
-    mockDeckRepository.findById.mockResolvedValue(mockDeck);
+    mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
     mockCardRepository.findByDeckId.mockResolvedValue(mockCards);
 
     vi.clearAllMocks();
@@ -48,26 +50,29 @@ describe("FindCardsByDeckIdUseCase", () => {
 
   describe("Unit Tests", () => {
     it("should fetch cards from repository when deck exists", async () => {
-      const request = { deckId: mockId };
+      const request = { deckId: mockId, userId: mockUserId };
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findById).toHaveBeenCalledWith(mockId);
+      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+        mockId,
+        mockUserId
+      );
       expect(mockCardRepository.findByDeckId).toHaveBeenCalledWith(mockId);
       expect(result).toEqual(mockCards);
       expect(result).toHaveLength(mockCards.length);
     });
 
     it("should throw DeckNotFoundError when deck is not found", async () => {
-      const request = { deckId: mockId };
-      mockDeckRepository.findById.mockResolvedValue(null);
+      const request = { deckId: mockId, userId: mockUserId };
+      mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError);
       expect(mockCardRepository.findByDeckId).not.toHaveBeenCalled();
     });
 
     it("should propagate repository errors", async () => {
-      const request = { deckId: mockId };
+      const request = { deckId: mockId, userId: mockUserId };
       const repoError = new Error("Repository error");
       mockCardRepository.findByDeckId.mockRejectedValueOnce(repoError);
 
@@ -77,11 +82,14 @@ describe("FindCardsByDeckIdUseCase", () => {
 
   describe("BDD Scenarios", () => {
     it("Given an existing deck, When execute is called, Then fetch cards from repository", async () => {
-      const request = { deckId: mockId };
+      const request = { deckId: mockId, userId: mockUserId };
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findById).toHaveBeenCalledWith(request.deckId);
+      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+        request.deckId,
+        request.userId
+      );
       expect(mockCardRepository.findByDeckId).toHaveBeenCalledWith(
         request.deckId
       );
@@ -89,14 +97,14 @@ describe("FindCardsByDeckIdUseCase", () => {
     });
 
     it("Given a non-existent deck, When execute is called, Then throw DeckNotFoundError", async () => {
-      const request = { deckId: "non-existent-id" };
-      mockDeckRepository.findById.mockResolvedValue(null);
+      const request = { deckId: "non-existent-id", userId: mockUserId };
+      mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError);
     });
 
     it("Given a repository error, When execute is called, Then propagate the error", async () => {
-      const request = { deckId: mockId };
+      const request = { deckId: mockId, userId: mockUserId };
       const error = new Error("Database connection failed");
       mockCardRepository.findByDeckId.mockRejectedValueOnce(error);
 

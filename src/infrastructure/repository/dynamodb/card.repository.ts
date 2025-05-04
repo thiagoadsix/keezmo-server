@@ -35,9 +35,10 @@ export class CardDynamoRepository implements CardRepository {
   async findByDeckId(deckId: string): Promise<Card[]> {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      KeyConditionExpression: "PK = :pk",
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
       ExpressionAttributeValues: {
         ":pk": { S: CardDynamoSchema.buildPK(deckId) },
+        ":sk": { S: "CARD#" },
       },
     });
 
