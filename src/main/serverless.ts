@@ -13,6 +13,9 @@ import deleteCard from "@/main/endpoints/cards/delete";
 import findCardsByDeckId from "@/main/endpoints/cards/find-by-deck";
 import updateCard from "@/main/endpoints/cards/update";
 import updateCardsBatch from "@/main/endpoints/cards/update-batch";
+
+import findDueCards from "@/main/endpoints/progress/find-due-cards";
+
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
   frameworkVersion: "4",
@@ -45,6 +48,8 @@ const serverlessConfiguration: AWS = {
     findCardsByDeckId,
     updateCard,
     updateCardsBatch,
+
+    findDueCards,
   },
   package: { individually: true },
   custom: {

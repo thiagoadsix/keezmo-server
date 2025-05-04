@@ -5,7 +5,7 @@ import { BaseValidator } from "@/presentation/controllers/base.validator";
 const findDueCardsSchema = z
   .object({
     params: z.object({
-      deckId: z.string().uuid().optional(),
+      deckId: z.string().uuid(),
     }),
     query: z.object({
       date: z

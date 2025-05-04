@@ -37,14 +37,14 @@ export class ProgressDynamoRepository implements ProgressRepository {
     return null;
   }
 
-  async findDueCards(date: Date, deckId?: string): Promise<Progress[]> {
+  async findDueCards(date: Date, deckId: string): Promise<Progress[]> {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
       KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
       FilterExpression: "nextReview <= :date",
       ExpressionAttributeValues: {
-        ":pk": { S: deckId ? `DECK#${deckId}` : "DECK" },
-        ":sk": { S: "CARD#" },
+        ":pk": { S: ProgressDynamoSchema.buildPK(deckId) },
+        ":sk": { S: "PROGRESS#" },
         ":date": { S: date.toISOString() },
       },
     });

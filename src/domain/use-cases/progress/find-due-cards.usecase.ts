@@ -11,8 +11,8 @@ export interface DueCard {
 }
 
 type FindDueCardsRequest = {
+  deckId: string;
   date?: Date;
-  deckId?: string;
 };
 
 type FindDueCardsResponse = DueCard[];
@@ -26,7 +26,7 @@ export class FindDueCardsUseCase {
   public async execute({
     date = new Date(),
     deckId,
-  }: FindDueCardsRequest = {}): Promise<FindDueCardsResponse> {
+  }: FindDueCardsRequest): Promise<FindDueCardsResponse> {
     console.log(
       `Finding due cards for date=${date.toISOString()}${
         deckId ? ` in deck=${deckId}` : ""
