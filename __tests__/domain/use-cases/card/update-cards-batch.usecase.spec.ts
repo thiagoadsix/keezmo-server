@@ -13,21 +13,24 @@ import { Card } from "@/domain/entities/card";
 import { CardNotFoundError } from "@/domain/errors/card/card-not-found-error";
 import { Deck } from "@/domain/entities/deck";
 import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
-import { UpdateCardsUseCase } from "@/domain/use-cases/card/update-cards.usecase";
+import { UpdateCardsBatchUseCase } from "@/domain/use-cases/card/update-cards-batch.usecase";
 
-describe("UpdateCardsUseCase", () => {
-  let useCase: UpdateCardsUseCase;
+describe("UpdateCardsBatchUseCase", () => {
+  let useCase: UpdateCardsBatchUseCase;
   let mockDeck: Deck;
   let mockCards: Card[];
   const deckId = mockId;
   const card1Id = "card-1";
   const card2Id = "card-2";
-
+  const userId = "user-123";
   beforeEach(() => {
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
 
-    useCase = new UpdateCardsUseCase(mockCardRepository, mockDeckRepository);
+    useCase = new UpdateCardsBatchUseCase(
+      mockCardRepository,
+      mockDeckRepository
+    );
     mockDeck = new Deck(validDeckProps);
 
     mockCards = [
@@ -49,7 +52,7 @@ describe("UpdateCardsUseCase", () => {
       ),
     ];
 
-    mockDeckRepository.findById.mockResolvedValue(mockDeck);
+    mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
     mockCardRepository.findByDeckId.mockResolvedValue(mockCards);
     mockCardRepository.save.mockResolvedValue(undefined);
 
@@ -73,6 +76,7 @@ describe("UpdateCardsUseCase", () => {
 
       const request = {
         deckId,
+        userId,
         cards: [
           {
             id: card1.id,
@@ -88,7 +92,10 @@ describe("UpdateCardsUseCase", () => {
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findById).toHaveBeenCalledWith(deckId);
+      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+        deckId,
+        userId
+      );
       expect(mockCardRepository.findByDeckId).toHaveBeenCalledWith(deckId);
 
       expect(card1.updateQuestion).toHaveBeenCalledWith("Updated question 1");
@@ -105,10 +112,11 @@ describe("UpdateCardsUseCase", () => {
     });
 
     it("should throw DeckNotFoundError when deck is not found", async () => {
-      mockDeckRepository.findById.mockResolvedValueOnce(null);
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
       const request = {
         deckId,
+        userId,
         cards: [{ id: mockCards[0].id, question: "Updated" }],
       };
 
@@ -120,6 +128,7 @@ describe("UpdateCardsUseCase", () => {
     it("should throw CardNotFoundError when a card is not found in the deck", async () => {
       const request = {
         deckId,
+        userId,
         cards: [{ id: "non-existent-card-id", question: "Updated" }],
       };
 
@@ -135,6 +144,7 @@ describe("UpdateCardsUseCase", () => {
 
       const request = {
         deckId,
+        userId,
         cards: [
           {
             id: card1.id,
@@ -159,10 +169,11 @@ describe("UpdateCardsUseCase", () => {
     });
 
     it("Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
-      mockDeckRepository.findById.mockResolvedValueOnce(null);
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
       const request = {
         deckId: "non-existent-deck-id",
+        userId,
         cards: [{ id: mockCards[0].id, question: "Updated" }],
       };
 
@@ -172,6 +183,7 @@ describe("UpdateCardsUseCase", () => {
     it("Given a non-existent card, When execute is called, Then CardNotFoundError is thrown", async () => {
       const request = {
         deckId,
+        userId,
         cards: [{ id: "non-existent-card-id", question: "Updated" }],
       };
 

@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  UpdateCardsController,
-  UpdateCardsRequest,
-} from "@/presentation/controllers/cards/update-cards/update-cards.controller";
-import { UpdateCardsValidator } from "@/presentation/controllers/cards/update-cards/update-cards.validator";
+  UpdateCardsBatchController,
+  UpdateCardsBatchRequest,
+} from "@/presentation/controllers/cards/update-cards-batch";
+import { UpdateCardsBatchValidator } from "@/presentation/controllers/cards/update-cards-batch/update-cards-batch.validator";
 
-describe("UpdateCardsController", () => {
+describe("UpdateCardsBatchController", () => {
   it("should be a class", () => {
-    expect(UpdateCardsController).toBeInstanceOf(Function);
+    expect(UpdateCardsBatchController).toBeInstanceOf(Function);
   });
 
   it("should return ok response when use case returns a success response", async () => {
@@ -29,27 +29,30 @@ describe("UpdateCardsController", () => {
       execute: vi.fn().mockResolvedValue(mockCards),
     };
 
-    const validator = new UpdateCardsValidator();
+    const validator = new UpdateCardsBatchValidator();
     const validatorSpy = vi
       .spyOn(validator, "validate")
-      .mockImplementation((data: unknown) => data as UpdateCardsRequest);
+      .mockImplementation((data: unknown) => data as UpdateCardsBatchRequest);
 
-    const controller = new UpdateCardsController(useCase, validator);
+    const controller = new UpdateCardsBatchController(useCase, validator);
 
     const validRequest = {
-      body: {
-        deckId: "deck-123",
-        cards: [
-          {
-            id: "card-1",
-            question: "Updated Question 1",
-          },
-          {
-            id: "card-2",
-            answer: "Updated Answer 2",
-          },
-        ],
+      user: {
+        id: "user-123",
       },
+      params: {
+        deckId: "deck-123",
+      },
+      body: [
+        {
+          id: "card-1",
+          question: "Updated Question 1",
+        },
+        {
+          id: "card-2",
+          answer: "Updated Answer 2",
+        },
+      ],
     };
 
     const response = await controller.handle(validRequest);
