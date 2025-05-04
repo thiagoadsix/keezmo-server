@@ -16,6 +16,8 @@ import updateCardsBatch from "@/main/endpoints/cards/update-batch";
 
 import findDueCards from "@/main/endpoints/progress/find-due-cards";
 import initializeProgress from "@/main/endpoints/progress/initialize";
+import reviewCard from "@/main/endpoints/progress/review-card";
+
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
   frameworkVersion: "4",
@@ -51,6 +53,7 @@ const serverlessConfiguration: AWS = {
 
     findDueCards,
     initializeProgress,
+    reviewCard,
   },
   package: { individually: true },
   custom: {

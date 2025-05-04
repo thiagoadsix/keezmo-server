@@ -75,11 +75,18 @@ export class ProgressDynamoRepository implements ProgressRepository {
         TableName: process.env.DECK_TABLE_NAME,
         Key: {
           PK: { S: ProgressDynamoSchema.buildPK(progress.deckId) },
-          SK: { S: ProgressDynamoSchema.buildSK(progress.cardId) },
+          SK: { S: ProgressDynamoSchema.buildSK(progress.id) },
         },
         UpdateExpression:
           "set #nextReview = :nextReview, #interval = :interval, #repetitions = :repetitions, #easeFactor = :easeFactor, #lastReviewed = :lastReviewed, #updatedAt = :updatedAt",
-        ExpressionAttributeValues: progressDynamoSchema.toMarshall(),
+        ExpressionAttributeValues: {
+          ":nextReview": progressDynamoSchema.toMarshall().nextReview,
+          ":interval": progressDynamoSchema.toMarshall().interval,
+          ":repetitions": progressDynamoSchema.toMarshall().repetitions,
+          ":easeFactor": progressDynamoSchema.toMarshall().easeFactor,
+          ":lastReviewed": progressDynamoSchema.toMarshall().lastReviewed,
+          ":updatedAt": progressDynamoSchema.toMarshall().updatedAt,
+        },
         ExpressionAttributeNames: {
           "#nextReview": "nextReview",
           "#interval": "interval",
