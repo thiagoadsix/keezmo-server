@@ -4,6 +4,9 @@ import { BaseValidator } from "@/presentation/controllers/base.validator";
 
 const updateCardSchema = z
   .object({
+    user: z.object({
+      id: z.string(),
+    }),
     params: z.object({
       id: z.string().uuid(),
       deckId: z.string().uuid(),
@@ -20,6 +23,7 @@ const updateCardSchema = z
   .transform((data) => ({
     id: data.params.id,
     deckId: data.params.deckId,
+    userId: data.user.id,
     data: data.body,
   }));
 

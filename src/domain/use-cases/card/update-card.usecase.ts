@@ -14,6 +14,7 @@ interface CardData {
 interface UpdateCardRequest {
   id: string;
   deckId: string;
+  userId: string;
   data: Partial<CardData>;
 }
 
@@ -28,7 +29,10 @@ export class UpdateCardUseCase {
       `Starting UpdateCardUseCase for id: ${request.id}, deckId: ${request.deckId}`
     );
 
-    const deck = await this.deckRepository.findById(request.deckId);
+    const deck = await this.deckRepository.findByIdAndUserId(
+      request.deckId,
+      request.userId
+    );
 
     if (!deck) {
       console.log(`Deck with ID ${request.deckId} not found`);

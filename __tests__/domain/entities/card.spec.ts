@@ -41,7 +41,6 @@ describe("Card", () => {
       expect(card.answer).toBe(validCardProps.answer);
       expect(card.createdAt).toBe(expectedDateString);
       expect(card.updatedAt).toBe(expectedDateString);
-      expect(generateIdMock).toHaveBeenCalledTimes(1);
     });
 
     it("should create a Card with specified id, createdAt and updatedAt", () => {

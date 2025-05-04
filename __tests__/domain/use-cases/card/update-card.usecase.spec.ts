@@ -21,7 +21,7 @@ describe("UpdateCardUseCase", () => {
   let mockCard: Card;
   const deckId = mockId;
   const cardId = "card-1";
-
+  const userId = "user-123";
   beforeEach(() => {
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
@@ -38,7 +38,7 @@ describe("UpdateCardUseCase", () => {
       { id: cardId }
     );
 
-    mockDeckRepository.findById.mockResolvedValue(mockDeck);
+    mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
     mockCardRepository.findByIdAndDeckId.mockResolvedValue(mockCard);
     mockCardRepository.save.mockResolvedValue(undefined);
 
@@ -58,6 +58,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -65,7 +66,10 @@ describe("UpdateCardUseCase", () => {
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findById).toHaveBeenCalledWith(deckId);
+      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+        deckId,
+        userId
+      );
       expect(mockCardRepository.findByIdAndDeckId).toHaveBeenCalledWith(
         cardId,
         deckId
@@ -80,6 +84,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           answer: "Updated answer",
         },
@@ -97,6 +102,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "New question",
           answer: "New answer",
@@ -111,11 +117,12 @@ describe("UpdateCardUseCase", () => {
     });
 
     it("should throw DeckNotFoundError when deck is not found", async () => {
-      mockDeckRepository.findById.mockResolvedValueOnce(null);
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -132,6 +139,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -158,6 +166,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -173,6 +182,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "New question",
           answer: "New answer",
@@ -188,11 +198,12 @@ describe("UpdateCardUseCase", () => {
     });
 
     it("Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
-      mockDeckRepository.findById.mockResolvedValueOnce(null);
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
       const request = {
         deckId: "non-existent-deck-id",
         id: cardId,
+        userId,
         data: {
           question: "Updated",
         },
@@ -207,6 +218,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: "non-existent-card-id",
+        userId,
         data: {
           question: "Updated",
         },
@@ -232,6 +244,7 @@ describe("UpdateCardUseCase", () => {
       const request = {
         deckId,
         id: cardId,
+        userId,
         data: {
           question: "Updated",
         },

@@ -35,7 +35,7 @@ export class Deck {
       throw new InvalidDeckDescriptionError(props.description);
     }
 
-    this.id = props.id || generateId();
+    this.id = props.id ?? generateId();
     this.userId = props.userId;
     this.title = props.title;
     this.description = props.description;
