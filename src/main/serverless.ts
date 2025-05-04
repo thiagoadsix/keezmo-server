@@ -5,6 +5,7 @@ import deleteDeck from "@/main/endpoints/decks/delete";
 import findDeckByIdAndUser from "@/main/endpoints/decks/find-by-id-and-user";
 import findDeckStats from "@/main/endpoints/decks/find-stats";
 import findDecksByUser from "@/main/endpoints/decks/find-by-user";
+import updateDeck from "@/main/endpoints/decks/update";
 
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
@@ -30,6 +31,7 @@ const serverlessConfiguration: AWS = {
     findDeckByIdAndUser,
     findDeckStats,
     findDecksByUser,
+    updateDeck,
   },
   package: { individually: true },
   custom: {
