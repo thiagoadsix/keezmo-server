@@ -1,9 +1,9 @@
-import { Card } from '@/domain/entities/card';
-import { InvalidDeckDescriptionError } from '@/domain/errors/deck/invalid-deck-description-error';
-import { InvalidDeckTitleError } from '@/domain/errors/deck/invalid-deck-title-error';
-import { StudyMode } from '@/domain/value-objects';
+import { Card } from "@/domain/entities/card";
+import { InvalidDeckDescriptionError } from "@/domain/errors/deck/invalid-deck-description-error";
+import { InvalidDeckTitleError } from "@/domain/errors/deck/invalid-deck-title-error";
+import { StudyMode } from "@/domain/value-objects";
 
-import { generateId } from '@/shared/utils/generate-id';
+import { generateId } from "@/shared/utils/generate-id";
 
 interface DeckProps {
   id?: string | null;
@@ -82,11 +82,11 @@ export class Deck {
   }
 
   public removeCard(cardId: string): void {
-    this.cards = this.cards.filter(card => card.id !== cardId);
+    this.cards = this.cards.filter((card) => card.id !== cardId);
     this.updatedAt = new Date().toISOString();
   }
 
   public getCardById(cardId: string): Card | undefined {
-    return this.cards.find(card => card.id === cardId);
+    return this.cards.find((card) => card.id === cardId);
   }
 }
