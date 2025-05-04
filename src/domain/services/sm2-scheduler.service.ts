@@ -81,7 +81,12 @@ export class SM2SchedulerService {
   private adjustEaseFactor(quality: number): SM2SchedulerService {
     this.easeFactor = Math.max(
       1.3,
-      this.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+      parseFloat(
+        (
+          this.easeFactor +
+          (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
+        ).toFixed(2)
+      )
     );
     return this;
   }
