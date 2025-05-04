@@ -1,7 +1,11 @@
-import { CardRepository, DeckRepository, ProgressRepository } from '@/domain/interfaces/repositories';
-import { Card } from '@/domain/entities/card';
-import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error';
-import { Progress } from '@/domain/entities/progress';
+import {
+  CardRepository,
+  DeckRepository,
+  ProgressRepository,
+} from "@/domain/interfaces/repositories";
+import { Card } from "@/domain/entities/card";
+import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
+import { Progress } from "@/domain/entities/progress";
 
 interface CardData {
   question: string;
@@ -48,7 +52,10 @@ export class CreateCardUseCase {
       repetitions: 0,
     });
 
-    await Promise.all([this.cardRepository.save(card), this.progressRepository.save(progress)]);
+    await Promise.all([
+      this.cardRepository.save(card),
+      this.progressRepository.save(progress),
+    ]);
 
     console.log(`Successfully created card ${card.id} in deck ${deckId}`);
 

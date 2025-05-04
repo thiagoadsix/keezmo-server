@@ -7,6 +7,8 @@ import findDeckStats from "@/main/endpoints/decks/find-stats";
 import findDecksByUser from "@/main/endpoints/decks/find-by-user";
 import updateDeck from "@/main/endpoints/decks/update";
 
+import createCard from "@/main/endpoints/cards/create";
+
 const serverlessConfiguration: AWS = {
   service: "keezmo-service",
   frameworkVersion: "4",
@@ -32,6 +34,8 @@ const serverlessConfiguration: AWS = {
     findDeckStats,
     findDecksByUser,
     updateDeck,
+
+    createCard,
   },
   package: { individually: true },
   custom: {

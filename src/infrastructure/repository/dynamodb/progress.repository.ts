@@ -6,16 +6,19 @@ import {
   PutItemCommand,
   QueryCommand,
   UpdateItemCommand,
-} from '@aws-sdk/client-dynamodb';
+} from "@aws-sdk/client-dynamodb";
 
-import { Progress } from '@/domain/entities/progress';
-import { ProgressDynamoSchema } from '@/infrastructure/repository/dynamodb/schemas/progress.schema';
-import { ProgressRepository } from '@/domain/interfaces/repositories';
+import { Progress } from "@/domain/entities/progress";
+import { ProgressDynamoSchema } from "@/infrastructure/repository/dynamodb/schemas/progress.schema";
+import { ProgressRepository } from "@/domain/interfaces/repositories";
 
 export class ProgressDynamoRepository implements ProgressRepository {
   constructor(private readonly dynamoDbClient: DynamoDBClient) {}
 
-  async findByCardAndDeck(cardId: string, deckId: string): Promise<Progress | null> {
+  async findByCardAndDeck(
+    cardId: string,
+    deckId: string
+  ): Promise<Progress | null> {
     const command = new GetItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
       Key: {
@@ -36,29 +39,31 @@ export class ProgressDynamoRepository implements ProgressRepository {
   async findDueCards(date: Date, deckId?: string): Promise<Progress[]> {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk and begins_with(SK, :sk)',
-      FilterExpression: 'nextReview <= :date',
+      KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
+      FilterExpression: "nextReview <= :date",
       ExpressionAttributeValues: {
-        ':pk': { S: deckId ? `DECK#${deckId}` : 'DECK' },
-        ':sk': { S: 'CARD#' },
-        ':date': { S: date.toISOString() },
+        ":pk": { S: deckId ? `DECK#${deckId}` : "DECK" },
+        ":sk": { S: "CARD#" },
+        ":date": { S: date.toISOString() },
       },
     });
 
     const result = await this.dynamoDbClient.send(command);
 
-    return result.Items?.map(item => ProgressDynamoSchema.fromDynamoItem(item)) ?? [];
+    return (
+      result.Items?.map((item) => ProgressDynamoSchema.fromDynamoItem(item)) ??
+      []
+    );
   }
 
   async save(progress: Progress): Promise<void> {
     const progressDynamoSchema = new ProgressDynamoSchema(progress);
+    const command = new PutItemCommand({
+      TableName: process.env.DECK_TABLE_NAME,
+      Item: progressDynamoSchema.toMarshall(),
+    });
 
-    await this.dynamoDbClient.send(
-      new PutItemCommand({
-        TableName: process.env.DECK_TABLE_NAME,
-        Item: progressDynamoSchema.toMarshall(),
-      })
-    );
+    await this.dynamoDbClient.send(command);
   }
 
   async update(progress: Progress): Promise<void> {
@@ -72,15 +77,15 @@ export class ProgressDynamoRepository implements ProgressRepository {
           SK: { S: ProgressDynamoSchema.buildSK(progress.cardId) },
         },
         UpdateExpression:
-          'set #nextReview = :nextReview, #interval = :interval, #repetitions = :repetitions, #easeFactor = :easeFactor, #lastReviewed = :lastReviewed, #updatedAt = :updatedAt',
+          "set #nextReview = :nextReview, #interval = :interval, #repetitions = :repetitions, #easeFactor = :easeFactor, #lastReviewed = :lastReviewed, #updatedAt = :updatedAt",
         ExpressionAttributeValues: progressDynamoSchema.toMarshall(),
         ExpressionAttributeNames: {
-          '#nextReview': 'nextReview',
-          '#interval': 'interval',
-          '#repetitions': 'repetitions',
-          '#easeFactor': 'easeFactor',
-          '#lastReviewed': 'lastReviewed',
-          '#updatedAt': 'updatedAt',
+          "#nextReview": "nextReview",
+          "#interval": "interval",
+          "#repetitions": "repetitions",
+          "#easeFactor": "easeFactor",
+          "#lastReviewed": "lastReviewed",
+          "#updatedAt": "updatedAt",
         },
       })
     );
@@ -96,7 +101,9 @@ export class ProgressDynamoRepository implements ProgressRepository {
   }
 
   async saveBatch(progresses: Progress[]): Promise<void> {
-    const schema = progresses.map(progress => new ProgressDynamoSchema(progress));
+    const schema = progresses.map(
+      (progress) => new ProgressDynamoSchema(progress)
+    );
 
     const chunk = 25;
 
@@ -105,7 +112,9 @@ export class ProgressDynamoRepository implements ProgressRepository {
 
       const command = new BatchWriteItemCommand({
         RequestItems: {
-          [process.env.DECK_TABLE_NAME]: batch.map(schema => schema.toMarshall()),
+          [process.env.DECK_TABLE_NAME]: batch.map((schema) =>
+            schema.toMarshall()
+          ),
         },
       });
 

@@ -1,7 +1,7 @@
-import { MissingProgressIdsError } from '@/domain/errors/progress/missing-ids-error';
+import { MissingProgressIdsError } from "@/domain/errors/progress/missing-ids-error";
 
-import { DEFAULT_EASE_FACTOR } from '@/shared/constants/srs';
-import { generateId } from '@/shared/utils/generate-id';
+import { DEFAULT_EASE_FACTOR } from "@/shared/constants/srs";
+import { generateId } from "@/shared/utils/generate-id";
 
 export interface ProgressProps {
   id?: string;
@@ -11,7 +11,7 @@ export interface ProgressProps {
   interval?: number;
   easeFactor?: number;
   nextReview?: string;
-  lastReviewed?: string;
+  lastReviewed?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -24,7 +24,7 @@ export class Progress {
   public interval: number;
   public easeFactor: number;
   public nextReview: string;
-  public lastReviewed: string;
+  public lastReviewed: string | null;
   public readonly createdAt: string;
   public updatedAt: string;
 
@@ -40,7 +40,7 @@ export class Progress {
     this.interval = props.interval ?? 0;
     this.easeFactor = props.easeFactor ?? DEFAULT_EASE_FACTOR;
     this.nextReview = props.nextReview ?? new Date().toISOString();
-    this.lastReviewed = props.lastReviewed ?? this.nextReview;
+    this.lastReviewed = props.lastReviewed ?? null;
     this.createdAt = props.createdAt ?? this.nextReview;
     this.updatedAt = props.updatedAt ?? this.createdAt;
   }
@@ -59,7 +59,12 @@ export class Progress {
    * the date when the item is scheduled for the next review. It is a `Date` object that specifies the
    * next review date for the item being scheduled.
    */
-  public applyScheduling(repetitions: number, interval: number, easeFactor: number, nextReview: Date) {
+  public applyScheduling(
+    repetitions: number,
+    interval: number,
+    easeFactor: number,
+    nextReview: Date
+  ) {
     this.repetitions = repetitions;
     this.interval = interval;
     this.easeFactor = easeFactor;
