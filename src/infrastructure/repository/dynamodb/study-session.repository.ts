@@ -1,23 +1,31 @@
-import { DynamoDBClient, GetItemCommand, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb';
+import {
+  DynamoDBClient,
+  PutItemCommand,
+  QueryCommand,
+} from "@aws-sdk/client-dynamodb";
 
-import { StudySession } from '@/domain/entities/study-session';
-import { StudySessionRepository } from '@/domain/interfaces/repositories';
+import { StudySession } from "@/domain/entities/study-session";
+import { StudySessionRepository } from "@/domain/interfaces/repositories";
 
-import { StudySessionDynamoSchema } from './schemas/study-session.schema';
+import { StudySessionDynamoSchema } from "./schemas/study-session.schema";
 
 export class StudySessionDynamoRepository implements StudySessionRepository {
   constructor(private readonly client: DynamoDBClient) {}
 
   async findById(id: string): Promise<StudySession | null> {
-    const command = new GetItemCommand({
+    const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id } },
+      IndexName: "GSI2",
+      KeyConditionExpression: "GSI2PK = :gsi2pk",
+      ExpressionAttributeValues: {
+        ":gsi2pk": { S: StudySessionDynamoSchema.buildGSI2PK(id) },
+      },
     });
 
     const result = await this.client.send(command);
 
-    if (result.Item) {
-      return StudySessionDynamoSchema.fromDynamoItem(result.Item);
+    if (result.Items && result.Items.length > 0) {
+      return StudySessionDynamoSchema.fromDynamoItem(result.Items[0]);
     }
 
     return null;
@@ -26,17 +34,19 @@ export class StudySessionDynamoRepository implements StudySessionRepository {
   async findByUserId(userId: string): Promise<StudySession[]> {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      IndexName: 'GSI1',
-      KeyConditionExpression: 'GSI1PK = :gsi1pk',
+      IndexName: "GSI1",
+      KeyConditionExpression: "GSI1PK = :gsi1pk",
       ExpressionAttributeValues: {
-        ':gsi1pk': { S: StudySessionDynamoSchema.buildGSI1PK(userId) },
+        ":gsi1pk": { S: StudySessionDynamoSchema.buildGSI1PK(userId) },
       },
     });
 
     const result = await this.client.send(command);
 
     if (result.Items) {
-      return result.Items.map(item => StudySessionDynamoSchema.fromDynamoItem(item));
+      return result.Items.map((item) =>
+        StudySessionDynamoSchema.fromDynamoItem(item)
+      );
     }
 
     return [];

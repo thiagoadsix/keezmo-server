@@ -18,6 +18,7 @@ import findDueCards from "@/main/endpoints/progress/find-due-cards";
 import initializeProgress from "@/main/endpoints/progress/initialize";
 import reviewCard from "@/main/endpoints/progress/review-card";
 
+import endStudySession from "@/main/endpoints/study-sessions/end-study-session";
 import startStudySession from "@/main/endpoints/study-sessions/start-study-session";
 
 const serverlessConfiguration: AWS = {
@@ -58,6 +59,7 @@ const serverlessConfiguration: AWS = {
     reviewCard,
 
     startStudySession,
+    endStudySession,
   },
   package: { individually: true },
   custom: {
