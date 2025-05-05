@@ -15,10 +15,16 @@ describe("FindCardsByDeckIdValidator", () => {
       params: {
         deckId: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
+      user: {
+        id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
+      },
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      deckId: validRequest.params.deckId,
+      userId: validRequest.user.id,
+    });
   });
 
   it("should throw ValidationError if deckId is not a valid uuid", () => {

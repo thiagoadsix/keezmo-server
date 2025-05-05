@@ -1,8 +1,8 @@
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { AttributeValue } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { AttributeValue } from "@aws-sdk/client-dynamodb";
 
-import { StudyModeEnum } from '@/domain/value-objects';
-import { StudySession } from '@/domain/entities/study-session';
+import { StudyModeEnum } from "@/domain/value-objects";
+import { StudySession } from "@/domain/entities/study-session";
 
 interface StudySessionDynamoItem {
   id: string;
@@ -21,6 +21,9 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
 
   readonly GSI1PK: string;
   readonly GSI1SK: string;
+
+  readonly GSI2PK: string;
+  readonly GSI2SK: string;
 
   id: string;
   deckId: string;
@@ -46,6 +49,9 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
 
     this.GSI1PK = StudySessionDynamoSchema.buildGSI1PK(this.userId);
     this.GSI1SK = StudySessionDynamoSchema.buildGSI1SK(this.studyMode);
+
+    this.GSI2PK = StudySessionDynamoSchema.buildGSI2PK(this.id);
+    this.GSI2SK = StudySessionDynamoSchema.buildGSI2SK(this.id);
   }
 
   static buildPK(deckId: string) {
@@ -62,6 +68,14 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
 
   static buildGSI1SK(studyMode: StudyModeEnum) {
     return `STUDY_MODE#${studyMode}`;
+  }
+
+  static buildGSI2PK(id: string) {
+    return `STUDY_SESSION#${id}`;
+  }
+
+  static buildGSI2SK(id: string) {
+    return `STUDY_SESSION#${id}`;
   }
 
   toMarshall() {

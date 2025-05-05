@@ -45,7 +45,7 @@ describe("UpdateDeckUseCase", () => {
   describe("Unit Tests", () => {
     it("should update deck title when it changes", async () => {
       const newTitle = "Advanced Math";
-      const request = { deckId: mockId, userId, data: { title: newTitle } };
+      const request = { id: mockId, userId, data: { title: newTitle } };
 
       const result = await useCase.execute(request);
 
@@ -61,7 +61,7 @@ describe("UpdateDeckUseCase", () => {
     it("should update deck description when it changes", async () => {
       const newDescription = "Advanced topics in mathematics";
       const request = {
-        deckId: mockId,
+        id: mockId,
         userId,
         data: { description: newDescription },
       };
@@ -76,7 +76,7 @@ describe("UpdateDeckUseCase", () => {
     it("should update deck study mode when it changes", async () => {
       const newStudyMode = "multiple_choice";
       const request = {
-        deckId: mockId,
+        id: mockId,
         userId,
         data: { studyMode: newStudyMode },
       };
@@ -91,7 +91,7 @@ describe("UpdateDeckUseCase", () => {
     });
 
     it("should not update fields that are not provided", async () => {
-      const request = { deckId: mockId, userId, data: {} };
+      const request = { id: mockId, userId, data: {} };
 
       await useCase.execute(request);
 
@@ -103,7 +103,7 @@ describe("UpdateDeckUseCase", () => {
 
     it("should not update fields that are the same as current values", async () => {
       const request = {
-        deckId: mockId,
+        id: mockId,
         userId,
         data: {
           title: initialTitle,
@@ -125,7 +125,7 @@ describe("UpdateDeckUseCase", () => {
       const newDescription = "Advanced topics in mathematics";
       const newStudyMode = "multiple_choice";
       const request = {
-        deckId: mockId,
+        id: mockId,
         userId,
         data: {
           title: newTitle,
@@ -145,7 +145,7 @@ describe("UpdateDeckUseCase", () => {
     });
 
     it("should throw DeckNotFoundError when deck is not found", async () => {
-      const request = { deckId: mockId, userId, data: {} };
+      const request = { id: mockId, userId, data: {} };
       mockDeckRepository.findByIdAndUserId.mockResolvedValue(null);
 
       const promise = useCase.execute(request);
@@ -158,7 +158,7 @@ describe("UpdateDeckUseCase", () => {
   describe("BDD Scenarios", () => {
     it("Given valid deckId and userId with new title, When execute is called, Then deck title is updated", async () => {
       const newTitle = "Advanced Math";
-      const request = { deckId: mockId, userId, data: { title: newTitle } };
+      const request = { id: mockId, userId, data: { title: newTitle } };
 
       const result = await useCase.execute(request);
 
@@ -169,7 +169,7 @@ describe("UpdateDeckUseCase", () => {
 
     it("Given valid deckId and userId with no changes, When execute is called, Then no updates are applied", async () => {
       const request = {
-        deckId: mockId,
+        id: mockId,
         userId,
         data: {
           title: initialTitle,
@@ -188,7 +188,7 @@ describe("UpdateDeckUseCase", () => {
 
     it("Given valid deckId and userId with multiple changes, When execute is called, Then all provided fields are updated", async () => {
       const request = {
-        deckId: mockId,
+        id: mockId,
         userId,
         data: {
           title: "New Title",
@@ -212,7 +212,7 @@ describe("UpdateDeckUseCase", () => {
 
     it("Given non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
       const request = {
-        deckId: "non-existent-id",
+        id: "non-existent-id",
         userId,
         data: { title: "New Title" },
       };

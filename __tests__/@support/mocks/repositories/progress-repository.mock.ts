@@ -11,7 +11,7 @@ export const mockProgressRepository: MockProgressRepository = {
   findDueCards: vi.fn(),
   save: vi.fn(),
   update: vi.fn(),
-  deleteById: vi.fn(),
+  deleteByIdAndDeckId: vi.fn(),
   saveBatch: vi.fn(),
   deleteByDeckId: vi.fn(),
 };

@@ -9,6 +9,7 @@ import { CardNotFoundError } from "@/domain/errors/card/card-not-found-error";
 import { Deck } from "@/domain/entities/deck";
 import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
 import { DeleteCardUseCase } from "@/domain/use-cases/card/delete-card.usecase";
+import { Progress } from "@/domain/entities/progress";
 import { StudyMode } from "@/domain/value-objects";
 
 describe("DeleteCardUseCase", () => {
@@ -31,15 +32,21 @@ describe("DeleteCardUseCase", () => {
   });
   Object.defineProperty(mockCard, "id", { value: cardId });
 
+  const mockProgress = new Progress({
+    cardId,
+    deckId,
+  });
+
   let sut: DeleteCardUseCase;
 
   beforeEach(() => {
     vi.resetAllMocks();
 
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
-    mockCardRepository.findById.mockResolvedValue(mockCard);
-    mockProgressRepository.deleteById.mockResolvedValue(undefined);
-    mockCardRepository.deleteById.mockResolvedValue(undefined);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValue(mockCard);
+    mockProgressRepository.findByCardAndDeck.mockResolvedValue(mockProgress);
+    mockProgressRepository.deleteByIdAndDeckId.mockResolvedValue(undefined);
+    mockCardRepository.deleteByIdAndDeckId.mockResolvedValue(undefined);
 
     sut = new DeleteCardUseCase(
       mockCardRepository,
@@ -50,7 +57,7 @@ describe("DeleteCardUseCase", () => {
 
   it("should delete card and its progress successfully", async () => {
     const request = {
-      cardId,
+      id: cardId,
       deckId,
       userId,
     };
@@ -61,38 +68,51 @@ describe("DeleteCardUseCase", () => {
       deckId,
       userId
     );
-    expect(mockCardRepository.findById).toHaveBeenCalledWith(cardId);
-    expect(mockProgressRepository.deleteById).toHaveBeenCalledWith(cardId);
-    expect(mockCardRepository.deleteById).toHaveBeenCalledWith(cardId);
+    expect(mockCardRepository.findByIdAndDeckId).toHaveBeenCalledWith(
+      cardId,
+      deckId
+    );
+    expect(mockProgressRepository.findByCardAndDeck).toHaveBeenCalledWith(
+      cardId,
+      deckId
+    );
+    expect(mockProgressRepository.deleteByIdAndDeckId).toHaveBeenCalledWith(
+      mockProgress.id,
+      deckId
+    );
+    expect(mockCardRepository.deleteByIdAndDeckId).toHaveBeenCalledWith(
+      cardId,
+      deckId
+    );
   });
 
   it("should throw DeckNotFoundError when deck does not exist", async () => {
     mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
     const request = {
-      cardId,
+      id: cardId,
       deckId: "non-existent-deck",
       userId,
     };
 
     await expect(sut.execute(request)).rejects.toThrow(DeckNotFoundError);
-    expect(mockCardRepository.findById).not.toHaveBeenCalled();
-    expect(mockProgressRepository.deleteById).not.toHaveBeenCalled();
-    expect(mockCardRepository.deleteById).not.toHaveBeenCalled();
+    expect(mockCardRepository.findByIdAndDeckId).not.toHaveBeenCalled();
+    expect(mockProgressRepository.deleteByIdAndDeckId).not.toHaveBeenCalled();
+    expect(mockCardRepository.deleteByIdAndDeckId).not.toHaveBeenCalled();
   });
 
   it("should throw CardNotFoundError when card does not exist", async () => {
-    mockCardRepository.findById.mockResolvedValueOnce(null);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(null);
 
     const request = {
-      cardId: "non-existent-card",
+      id: "non-existent-card",
       deckId,
       userId,
     };
 
     await expect(sut.execute(request)).rejects.toThrow(CardNotFoundError);
-    expect(mockProgressRepository.deleteById).not.toHaveBeenCalled();
-    expect(mockCardRepository.deleteById).not.toHaveBeenCalled();
+    expect(mockProgressRepository.deleteByIdAndDeckId).not.toHaveBeenCalled();
+    expect(mockCardRepository.deleteByIdAndDeckId).not.toHaveBeenCalled();
   });
 
   it("should throw CardNotFoundError when card belongs to a different deck", async () => {
@@ -103,33 +123,41 @@ describe("DeleteCardUseCase", () => {
     });
     Object.defineProperty(differentDeckCard, "id", { value: cardId });
 
-    mockCardRepository.findById.mockResolvedValueOnce(differentDeckCard);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(
+      differentDeckCard
+    );
 
     const request = {
-      cardId,
+      id: cardId,
       deckId,
       userId,
     };
 
     await expect(sut.execute(request)).rejects.toThrow(CardNotFoundError);
-    expect(mockProgressRepository.deleteById).not.toHaveBeenCalled();
-    expect(mockCardRepository.deleteById).not.toHaveBeenCalled();
+    expect(mockProgressRepository.deleteByIdAndDeckId).not.toHaveBeenCalled();
+    expect(mockCardRepository.deleteByIdAndDeckId).not.toHaveBeenCalled();
   });
 
   it("should continue deleting card even if progress deletion fails", async () => {
-    mockProgressRepository.deleteById.mockRejectedValueOnce(
+    mockProgressRepository.deleteByIdAndDeckId.mockRejectedValueOnce(
       new Error("Progress deletion failed")
     );
 
     const request = {
-      cardId,
+      id: cardId,
       deckId,
       userId,
     };
 
     await sut.execute(request);
 
-    expect(mockProgressRepository.deleteById).toHaveBeenCalledWith(cardId);
-    expect(mockCardRepository.deleteById).toHaveBeenCalledWith(cardId);
+    expect(mockProgressRepository.deleteByIdAndDeckId).toHaveBeenCalledWith(
+      mockProgress.id,
+      deckId
+    );
+    expect(mockCardRepository.deleteByIdAndDeckId).toHaveBeenCalledWith(
+      cardId,
+      deckId
+    );
   });
 });

@@ -1,19 +1,21 @@
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 export class DynamoClient {
   private init: DynamoDBClient;
 
   constructor() {
     this.init = new DynamoDBClient({
-      region: process.env.AWS_REGION || 'us-east-1',
-      endpoint: process.env.ENVIRONMENT === 'local' ? 'http://localhost:8000' : undefined,
+      region: process.env.AWS_REGION || "us-east-1",
+      endpoint:
+        process.env.IS_OFFLINE === "true" ? "http://localhost:4566" : undefined,
     });
   }
 
-  public async client(): Promise<DynamoDBClient> {
+  public client(): DynamoDBClient {
     this.init = new DynamoDBClient({
-      region: process.env.AWS_REGION || 'us-east-1',
-      endpoint: process.env.ENVIRONMENT === 'local' ? 'http://localhost:8000' : undefined,
+      region: process.env.AWS_REGION || "us-east-1",
+      endpoint:
+        process.env.IS_OFFLINE === "true" ? "http://localhost:4566" : undefined,
     });
 
     return this.init;

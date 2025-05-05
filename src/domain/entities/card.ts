@@ -1,7 +1,7 @@
-import { InvalidCardAnswerError } from '@/domain/errors/card/invalid-card-answer-error';
-import { InvalidCardQuestionError } from '@/domain/errors/card/invalid-card-question-error';
+import { InvalidCardAnswerError } from "@/domain/errors/card/invalid-card-answer-error";
+import { InvalidCardQuestionError } from "@/domain/errors/card/invalid-card-question-error";
 
-import { generateId } from '@/shared/utils/generate-id';
+import { generateId } from "@/shared/utils/generate-id";
 
 interface CardProps {
   id?: string | null;
@@ -29,7 +29,7 @@ export class Card {
       throw new InvalidCardAnswerError(props.answer);
     }
 
-    this.id = generateId();
+    this.id = props.id ?? generateId();
     this.deckId = props.deckId;
     this.question = props.question;
     this.answer = props.answer;
@@ -38,7 +38,9 @@ export class Card {
   }
 
   private isValidQuestion(question: string): boolean {
-    return question !== null && question !== undefined && question.trim().length > 0;
+    return (
+      question !== null && question !== undefined && question.trim().length > 0
+    );
   }
 
   private isValidAnswer(answer: string): boolean {

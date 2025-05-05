@@ -3,7 +3,7 @@
     "src"
   ],
   "ext": "ts",
-  "exec": "ts-node ./src/index.ts",
+  "exec": "serverless offline start --config src/main/serverless.ts",
   "ignore": [
     "src/**/*.spec.ts"
   ]

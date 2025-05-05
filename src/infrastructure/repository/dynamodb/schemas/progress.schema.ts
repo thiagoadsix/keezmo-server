@@ -1,7 +1,7 @@
-import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
-import { AttributeValue } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
+import { AttributeValue } from "@aws-sdk/client-dynamodb";
 
-import { Progress } from '@/domain/entities/progress';
+import { Progress } from "@/domain/entities/progress";
 
 interface ProgressDynamoItem {
   id: string;
@@ -17,6 +17,12 @@ interface ProgressDynamoItem {
 }
 
 export class ProgressDynamoSchema implements ProgressDynamoItem {
+  readonly PK: string;
+  readonly SK: string;
+
+  readonly GSI1PK: string;
+  readonly GSI1SK: string;
+
   id: string;
   cardId: string;
   deckId: string;
@@ -36,21 +42,27 @@ export class ProgressDynamoSchema implements ProgressDynamoItem {
     this.interval = progress.interval;
     this.easeFactor = progress.easeFactor;
     this.nextReview = progress.nextReview;
-    this.lastReviewed = progress.lastReviewed;
+    this.lastReviewed = progress.lastReviewed ?? "";
     this.createdAt = progress.createdAt;
     this.updatedAt = progress.updatedAt;
+
+    this.PK = ProgressDynamoSchema.buildPK(progress.deckId);
+    this.SK = ProgressDynamoSchema.buildSK(progress.id);
+
+    this.GSI1PK = ProgressDynamoSchema.buildGSI1PK(progress.deckId);
+    this.GSI1SK = ProgressDynamoSchema.buildGSI1SK(progress.cardId);
   }
 
   static buildPK(deckId: string) {
     return `DECK#${deckId}`;
   }
 
-  static buildSK(cardId: string) {
-    return `CARD#${cardId}`;
+  static buildSK(id: string) {
+    return `PROGRESS#${id}`;
   }
 
-  static buildGSI1PK(cardId: string) {
-    return `CARD#${cardId}`;
+  static buildGSI1PK(deckId: string) {
+    return `DECK#${deckId}`;
   }
 
   static buildGSI1SK(cardId: string) {

@@ -7,7 +7,6 @@ import {
   HttpResponse,
   noContent,
 } from "@/presentation/protocols/http.protocol";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 
 import {
   DeleteDeckValidator,
@@ -33,11 +32,3 @@ export class DeleteDeckController extends BaseController<
     return noContent() as HttpResponse<DeleteDeckResponse>;
   }
 }
-
-// TODO: for now, but in future we will move to main layer where we will have the factory method implementations
-export const makeDeleteDeckController = (
-  useCase: UseCase<DeleteDeckRequest, DeleteDeckResponse>
-): Controller<DeleteDeckRequest, DeleteDeckResponse> => {
-  const validator = new DeleteDeckValidator();
-  return new DeleteDeckController(useCase, validator);
-};

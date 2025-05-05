@@ -21,7 +21,7 @@ describe("UpdateCardUseCase", () => {
   let mockCard: Card;
   const deckId = mockId;
   const cardId = "card-1";
-
+  const userId = "user-123";
   beforeEach(() => {
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
@@ -38,8 +38,8 @@ describe("UpdateCardUseCase", () => {
       { id: cardId }
     );
 
-    mockDeckRepository.findById.mockResolvedValue(mockDeck);
-    mockCardRepository.findById.mockResolvedValue(mockCard);
+    mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValue(mockCard);
     mockCardRepository.save.mockResolvedValue(undefined);
 
     vi.clearAllMocks();
@@ -57,7 +57,8 @@ describe("UpdateCardUseCase", () => {
     it("should update card question when it exists in the deck", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -65,8 +66,14 @@ describe("UpdateCardUseCase", () => {
 
       const result = await useCase.execute(request);
 
-      expect(mockDeckRepository.findById).toHaveBeenCalledWith(deckId);
-      expect(mockCardRepository.findById).toHaveBeenCalledWith(cardId);
+      expect(mockDeckRepository.findByIdAndUserId).toHaveBeenCalledWith(
+        deckId,
+        userId
+      );
+      expect(mockCardRepository.findByIdAndDeckId).toHaveBeenCalledWith(
+        cardId,
+        deckId
+      );
       expect(mockCard.updateQuestion).toHaveBeenCalledWith("Updated question");
       expect(mockCard.updateAnswer).not.toHaveBeenCalled();
       expect(mockCardRepository.save).toHaveBeenCalledWith(mockCard);
@@ -76,7 +83,8 @@ describe("UpdateCardUseCase", () => {
     it("should update card answer when it exists in the deck", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           answer: "Updated answer",
         },
@@ -93,7 +101,8 @@ describe("UpdateCardUseCase", () => {
     it("should update multiple fields when provided together", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "New question",
           answer: "New answer",
@@ -108,27 +117,29 @@ describe("UpdateCardUseCase", () => {
     });
 
     it("should throw DeckNotFoundError when deck is not found", async () => {
-      mockDeckRepository.findById.mockResolvedValueOnce(null);
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
       };
 
       await expect(useCase.execute(request)).rejects.toThrow(DeckNotFoundError);
-      expect(mockCardRepository.findById).not.toHaveBeenCalled();
+      expect(mockCardRepository.findByIdAndDeckId).not.toHaveBeenCalled();
       expect(mockCardRepository.save).not.toHaveBeenCalled();
     });
 
     it("should throw CardNotFoundError when card is not found", async () => {
-      mockCardRepository.findById.mockResolvedValueOnce(null);
+      mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(null);
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -148,11 +159,14 @@ describe("UpdateCardUseCase", () => {
         { id: cardId }
       );
 
-      mockCardRepository.findById.mockResolvedValueOnce(differentDeckCard);
+      mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(
+        differentDeckCard
+      );
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "Updated question",
         },
@@ -167,7 +181,8 @@ describe("UpdateCardUseCase", () => {
     it("Given a valid card in a deck, When execute is called with card updates, Then the card is updated", async () => {
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "New question",
           answer: "New answer",
@@ -183,11 +198,12 @@ describe("UpdateCardUseCase", () => {
     });
 
     it("Given a non-existent deck, When execute is called, Then DeckNotFoundError is thrown", async () => {
-      mockDeckRepository.findById.mockResolvedValueOnce(null);
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(null);
 
       const request = {
         deckId: "non-existent-deck-id",
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "Updated",
         },
@@ -197,11 +213,12 @@ describe("UpdateCardUseCase", () => {
     });
 
     it("Given a non-existent card, When execute is called, Then CardNotFoundError is thrown", async () => {
-      mockCardRepository.findById.mockResolvedValueOnce(null);
+      mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(null);
 
       const request = {
         deckId,
-        cardId: "non-existent-card-id",
+        id: "non-existent-card-id",
+        userId,
         data: {
           question: "Updated",
         },
@@ -220,11 +237,14 @@ describe("UpdateCardUseCase", () => {
         { id: cardId }
       );
 
-      mockCardRepository.findById.mockResolvedValueOnce(differentDeckCard);
+      mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(
+        differentDeckCard
+      );
 
       const request = {
         deckId,
-        cardId,
+        id: cardId,
+        userId,
         data: {
           question: "Updated",
         },

@@ -26,7 +26,15 @@ describe("UpdateDeckValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      userId: validRequest.user.id,
+      data: {
+        title: validRequest.body.title,
+        description: validRequest.body.description,
+        studyMode: validRequest.body.studyMode,
+      },
+    });
   });
 
   it("should validate a request with partial body updates", () => {
@@ -43,7 +51,13 @@ describe("UpdateDeckValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      userId: validRequest.user.id,
+      data: {
+        title: validRequest.body.title,
+      },
+    });
   });
 
   it("should throw ValidationError if id is not a valid uuid", () => {

@@ -57,7 +57,7 @@ describe("Progress", () => {
       expect(progress.interval).toBe(0);
       expect(progress.easeFactor).toBe(2.5);
       expect(progress.nextReview).toBe(expectedDateString);
-      expect(progress.lastReviewed).toBe(expectedDateString);
+      expect(progress.lastReviewed).toBe(null);
       expect(progress.createdAt).toBe(expectedDateString);
       expect(progress.updatedAt).toBe(expectedDateString);
     });

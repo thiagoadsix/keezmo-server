@@ -22,7 +22,7 @@ export interface CookieOptions {
     secure?: boolean;
     domain?: string;
     path?: string;
-    sameSite?: boolean | 'lax' | 'strict' | 'none';
+    sameSite?: boolean | "lax" | "strict" | "none";
     signed?: boolean;
   };
 }
@@ -57,12 +57,16 @@ export const noContent = (): HttpResponse => ({
   body: undefined,
 });
 
-export const badRequest = (error: Error): HttpResponse<{ message: string }> => ({
+export const badRequest = (
+  error: Error
+): HttpResponse<{ message: string }> => ({
   statusCode: HttpStatusCode.BAD_REQUEST,
-  body: { message: error.message },
+  body: { ...error },
 });
 
-export const unauthorized = (error: Error): HttpResponse<{ message: string }> => ({
+export const unauthorized = (
+  error: Error
+): HttpResponse<{ message: string }> => ({
   statusCode: HttpStatusCode.UNAUTHORIZED,
   body: { message: error.message },
 });
@@ -82,17 +86,23 @@ export const conflict = (error: Error): HttpResponse<{ message: string }> => ({
   body: { message: error.message },
 });
 
-export const unprocessableEntity = (error: Error): HttpResponse<{ message: string }> => ({
+export const unprocessableEntity = (
+  error: Error
+): HttpResponse<{ message: string }> => ({
   statusCode: HttpStatusCode.UNPROCESSABLE_ENTITY,
   body: { message: error.message },
 });
 
-export const serverError = (error: Error): HttpResponse<{ message: string }> => ({
+export const serverError = (
+  error: Error
+): HttpResponse<{ message: string }> => ({
   statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
   body: { message: error.message },
 });
 
-export const badGateway = (error: Error): HttpResponse<{ message: string }> => ({
+export const badGateway = (
+  error: Error
+): HttpResponse<{ message: string }> => ({
   statusCode: HttpStatusCode.BAD_GATEWAY,
   body: { message: error.message },
 });

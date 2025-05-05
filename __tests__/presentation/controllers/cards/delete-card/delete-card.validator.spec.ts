@@ -22,7 +22,11 @@ describe("DeleteCardValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      deckId: validRequest.params.deckId,
+      userId: validRequest.user.id,
+    });
   });
 
   it("should throw ValidationError if card id is not a valid uuid", () => {

@@ -6,7 +6,6 @@ import {
   UseCase,
   Validator,
 } from "@/presentation/controllers/base.controller";
-import { Controller } from "@/presentation/protocols/controller.protocol";
 
 import {
   CreateCardValidator,
@@ -31,11 +30,3 @@ export class CreateCardController extends BaseController<
     super(useCase, validator);
   }
 }
-
-// TODO: for now, but in future we will move to main layer where we will have the factory method implementations
-export const makeCreateCardController = (
-  useCase: UseCase<CreateCardRequest, CreateCardResponse>
-): Controller<CreateCardRequest, CreateCardResponse> => {
-  const validator = new CreateCardValidator();
-  return new CreateCardController(useCase, validator);
-};

@@ -1,7 +1,7 @@
-import { Deck } from '@/domain/entities/deck';
-import { DeckNotFoundError } from '@/domain/errors/deck/deck-not-found-error';
-import { DeckRepository } from '@/domain/interfaces/repositories';
-import { StudyMode } from '@/domain/value-objects';
+import { Deck } from "@/domain/entities/deck";
+import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
+import { DeckRepository } from "@/domain/interfaces/repositories";
+import { StudyMode } from "@/domain/value-objects";
 
 interface DeckUpdateData {
   title: string;
@@ -10,7 +10,7 @@ interface DeckUpdateData {
 }
 
 interface UpdateDeckRequest {
-  deckId: string;
+  id: string;
   userId: string;
   data: Partial<DeckUpdateData>;
 }
@@ -21,13 +21,20 @@ export class UpdateDeckUseCase {
   constructor(private readonly deckRepository: DeckRepository) {}
 
   async execute(request: UpdateDeckRequest): Promise<UpdateDeckResponse> {
-    console.log(`Starting UpdateDeckUseCase for deckId: ${request.deckId}, userId: ${request.userId}`);
+    console.log(
+      `Starting UpdateDeckUseCase for id: ${request.id}, userId: ${request.userId}`
+    );
 
-    const deck = await this.deckRepository.findByIdAndUserId(request.deckId, request.userId);
+    const deck = await this.deckRepository.findByIdAndUserId(
+      request.id,
+      request.userId
+    );
 
     if (!deck) {
-      console.log(`Deck with ID ${request.deckId} not found for user ${request.userId}`);
-      throw new DeckNotFoundError(request.deckId, request.userId);
+      console.log(
+        `Deck with ID ${request.id} not found for user ${request.userId}`
+      );
+      throw new DeckNotFoundError(request.id, request.userId);
     }
 
     console.log(`Found deck: ${deck.title}, applying updates`);
@@ -36,11 +43,14 @@ export class UpdateDeckUseCase {
 
     await this.deckRepository.save(deck);
 
-    console.log(`Successfully updated deck ${request.deckId}`);
+    console.log(`Successfully updated deck ${request.id}`);
     return deck;
   }
 
-  private applyUpdates(deck: Deck, updateData: UpdateDeckRequest['data']): void {
+  private applyUpdates(
+    deck: Deck,
+    updateData: UpdateDeckRequest["data"]
+  ): void {
     if (updateData.title && updateData.title !== deck.title) {
       deck.updateTitle(updateData.title);
     }
@@ -49,7 +59,10 @@ export class UpdateDeckUseCase {
       deck.updateDescription(updateData.description);
     }
 
-    if (updateData.studyMode && updateData.studyMode !== deck.studyMode.getValue()) {
+    if (
+      updateData.studyMode &&
+      updateData.studyMode !== deck.studyMode.getValue()
+    ) {
       deck.updateStudyMode(new StudyMode(updateData.studyMode));
     }
   }

@@ -51,11 +51,7 @@ describe("UpdateDeckController", () => {
     const response = await controller.handle(validRequest);
 
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
-    expect(useCase.execute).toHaveBeenCalledWith({
-      deckId: validRequest.params.id,
-      userId: validRequest.user.id,
-      data: validRequest.body,
-    });
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 200,
       body: mockDeck,
@@ -100,11 +96,7 @@ describe("UpdateDeckController", () => {
     const response = await controller.handle(validRequest);
 
     expect(validatorSpy).toHaveBeenCalledWith(validRequest);
-    expect(useCase.execute).toHaveBeenCalledWith({
-      deckId: validRequest.params.id,
-      userId: validRequest.user.id,
-      data: validRequest.body,
-    });
+    expect(useCase.execute).toHaveBeenCalledWith(validRequest);
     expect(response).toEqual({
       statusCode: 200,
       body: mockDeck,

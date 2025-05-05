@@ -3,8 +3,8 @@
     "lib": [
       "ES2023"
     ],
-    "target": "ES2022",
-    "module": "Node16",
+    "moduleResolution": "node",
+    "target": "ES2024",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
@@ -36,7 +36,8 @@
   },
   "include": [
     "src",
-    "__tests__"
+    "__tests__",
+    "src/@types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

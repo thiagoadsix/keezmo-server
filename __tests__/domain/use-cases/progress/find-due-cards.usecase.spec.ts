@@ -66,16 +66,16 @@ describe("FindDueCardsUseCase", () => {
       mockProgress2,
     ]);
 
-    mockCardRepository.findById.mockResolvedValueOnce(mockCard1);
-    mockCardRepository.findById.mockResolvedValueOnce(mockCard2);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(mockCard1);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(mockCard2);
 
-    const result = await sut.execute({ date: today });
+    const result = await sut.execute({ date: today, deckId: mockDeckId });
 
     expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
-      undefined
+      mockDeckId
     );
-    expect(mockCardRepository.findById).toHaveBeenCalledTimes(2);
+    expect(mockCardRepository.findByIdAndDeckId).toHaveBeenCalledTimes(2);
     expect(result).toHaveLength(2);
 
     expect(result[0].progress.interval).toBe(10);
@@ -84,27 +84,14 @@ describe("FindDueCardsUseCase", () => {
     expect(result[1].card.question).toBe("Question 2");
   });
 
-  it("should filter by deckId when provided", async () => {
-    const specificDeckId = "specific-deck";
-    mockProgressRepository.findDueCards.mockResolvedValue([mockProgress1]);
-    mockCardRepository.findById.mockResolvedValue(mockCard1);
-
-    await sut.execute({ date: today, deckId: specificDeckId });
-
-    expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
-      today,
-      specificDeckId
-    );
-  });
-
   it("should return empty array when no due cards found", async () => {
     mockProgressRepository.findDueCards.mockResolvedValue([]);
 
-    const result = await sut.execute();
+    const result = await sut.execute({ deckId: mockDeckId });
 
     expect(result).toEqual([]);
 
-    expect(mockCardRepository.findById).not.toHaveBeenCalled();
+    expect(mockCardRepository.findByIdAndDeckId).not.toHaveBeenCalled();
   });
 
   it("should exclude cards that could not be found", async () => {
@@ -113,10 +100,10 @@ describe("FindDueCardsUseCase", () => {
       mockProgress2,
     ]);
 
-    mockCardRepository.findById.mockResolvedValueOnce(mockCard1);
-    mockCardRepository.findById.mockResolvedValueOnce(null);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(mockCard1);
+    mockCardRepository.findByIdAndDeckId.mockResolvedValueOnce(null);
 
-    const result = await sut.execute();
+    const result = await sut.execute({ deckId: mockDeckId });
 
     expect(result).toHaveLength(1);
     expect(result[0].card.id).toBe("card-1");
@@ -125,11 +112,11 @@ describe("FindDueCardsUseCase", () => {
   it("should use current date when no date provided", async () => {
     mockProgressRepository.findDueCards.mockResolvedValue([]);
 
-    await sut.execute();
+    await sut.execute({ deckId: mockDeckId });
 
     expect(mockProgressRepository.findDueCards).toHaveBeenCalledWith(
       today,
-      undefined
+      mockDeckId
     );
   });
 });

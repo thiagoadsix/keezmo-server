@@ -32,17 +32,17 @@ describe("ProgressDynamoSchema", () => {
   });
 
   it("should build a sort key (SK) from a card ID", () => {
-    const cardId = "card-456";
-    const sk = ProgressDynamoSchema.buildSK(cardId);
+    const progressId = "progress-456";
+    const sk = ProgressDynamoSchema.buildSK(progressId);
 
-    expect(sk).toBe("CARD#card-456");
+    expect(sk).toBe("PROGRESS#progress-456");
   });
 
-  it("should build a GSI1PK from a card ID", () => {
-    const cardId = "card-789";
-    const gsi1pk = ProgressDynamoSchema.buildGSI1PK(cardId);
+  it("should build a GSI1PK from a deck ID", () => {
+    const deckId = "deck-789";
+    const gsi1pk = ProgressDynamoSchema.buildGSI1PK(deckId);
 
-    expect(gsi1pk).toBe("CARD#card-789");
+    expect(gsi1pk).toBe("DECK#deck-789");
   });
 
   it("should build a GSI1SK from a card ID", () => {

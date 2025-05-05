@@ -1,9 +1,12 @@
-import { CardRepository, ProgressRepository } from '@/domain/interfaces/repositories';
-import { CardNotFoundError } from '@/domain/errors/card/card-not-found-error';
-import { DifficultyEnum } from '@/domain/value-objects';
-import { Progress } from '@/domain/entities/progress';
-import { ProgressNotFoundError } from '@/domain/errors/progress/progress-not-found-error';
-import { SM2SchedulerService } from '@/domain/services/sm2-scheduler.service';
+import {
+  CardRepository,
+  ProgressRepository,
+} from "@/domain/interfaces/repositories";
+import { CardNotFoundError } from "@/domain/errors/card/card-not-found-error";
+import { DifficultyEnum } from "@/domain/value-objects";
+import { Progress } from "@/domain/entities/progress";
+import { ProgressNotFoundError } from "@/domain/errors/progress/progress-not-found-error";
+import { SM2SchedulerService } from "@/domain/services/sm2-scheduler.service";
 
 type ReviewCardRequest = {
   cardId: string;
@@ -22,16 +25,25 @@ export class ReviewCardUseCase {
     private readonly cardRepository: CardRepository
   ) {}
 
-  public async execute({ cardId, deckId, difficulty }: ReviewCardRequest): Promise<ReviewCardResponse> {
-    console.log(`Reviewing card id=${cardId} in deck=${deckId} with difficulty=${difficulty}`);
+  public async execute({
+    cardId,
+    deckId,
+    difficulty,
+  }: ReviewCardRequest): Promise<ReviewCardResponse> {
+    console.log(
+      `Reviewing card id=${cardId} in deck=${deckId} with difficulty=${difficulty}`
+    );
 
-    const card = await this.cardRepository.findById(cardId);
+    const card = await this.cardRepository.findByIdAndDeckId(cardId, deckId);
     if (!card) {
       console.log(`Card not found: id=${cardId}`);
       throw new CardNotFoundError(cardId, deckId);
     }
 
-    const progress = await this.progressRepository.findByCardAndDeck(cardId, deckId);
+    const progress = await this.progressRepository.findByCardAndDeck(
+      cardId,
+      deckId
+    );
     if (!progress) {
       console.log(`Progress not found for card=${cardId} in deck=${deckId}`);
       throw new ProgressNotFoundError(cardId, deckId);
@@ -41,7 +53,9 @@ export class ReviewCardUseCase {
 
     await this.progressRepository.update(updated);
 
-    console.log(`Card review processed: card=${cardId}, next review in ${updated.interval} days`);
+    console.log(
+      `Card review processed: card=${cardId}, next review in ${updated.interval} days`
+    );
 
     const nextReview = new Date(updated.nextReview);
 

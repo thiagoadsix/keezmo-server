@@ -1,6 +1,5 @@
 import {
   DynamoDBClient,
-  GetItemCommand,
   QueryCommand,
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
@@ -10,6 +9,8 @@ import { mockClient } from "aws-sdk-client-mock";
 
 import { Progress } from "@/domain/entities/progress";
 import { ProgressDynamoRepository } from "@/infrastructure/repository/dynamodb/progress.repository";
+
+import { ProgressDynamoSchema } from "@/infrastructure/repository/dynamodb/schemas/progress.schema";
 
 import { validProgressProps } from "__tests__/@support/fixtures/progress.fixtures";
 
@@ -38,7 +39,7 @@ describe("ProgressDynamoRepository", () => {
 
     await repository.save(progress);
 
-    await repository.deleteById(progress.id);
+    await repository.deleteByIdAndDeckId(progress.id, progress.deckId);
   });
 
   it("should be able to delete a progress by deck id", async () => {
@@ -101,8 +102,10 @@ describe("ProgressDynamoRepository", () => {
 
       expect(input.ExpressionAttributeValues).toBeDefined();
       if (input.ExpressionAttributeValues) {
-        expect(input.ExpressionAttributeValues[":pk"].S).toBe(`DECK#${deckId}`);
-        expect(input.ExpressionAttributeValues[":sk"].S).toBe("CARD#");
+        expect(input.ExpressionAttributeValues[":pk"].S).toBe(
+          ProgressDynamoSchema.buildPK(deckId)
+        );
+        expect(input.ExpressionAttributeValues[":sk"].S).toBe("PROGRESS#");
         expect(input.ExpressionAttributeValues[":date"].S).toBe(
           dueDate.toISOString()
         );
@@ -113,40 +116,6 @@ describe("ProgressDynamoRepository", () => {
       expect(result[1]).toBeInstanceOf(Progress);
     });
 
-    it("should be able to find due progresses without deckId parameter", async () => {
-      const dueDate = new Date();
-      const progresses = [
-        new Progress({
-          ...validProgressProps,
-          nextReview: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-        }),
-      ];
-
-      dynamoMock.on(QueryCommand).resolves({
-        Items: progresses.map((progress) =>
-          marshall(progress, {
-            convertClassInstanceToMap: true,
-            removeUndefinedValues: true,
-          })
-        ),
-      });
-
-      const result = await repository.findDueCards(dueDate);
-
-      const calls = dynamoMock.commandCalls(QueryCommand);
-      expect(calls).toHaveLength(1);
-
-      const call = calls[0];
-      const input = call.args[0].input;
-
-      expect(input.ExpressionAttributeValues).toBeDefined();
-      if (input.ExpressionAttributeValues) {
-        expect(input.ExpressionAttributeValues[":pk"].S).toBe("DECK");
-      }
-
-      expect(result).toHaveLength(1);
-    });
-
     it("should return empty array when no items found", async () => {
       const dueDate = new Date();
 
@@ -154,7 +123,7 @@ describe("ProgressDynamoRepository", () => {
         Items: [],
       });
 
-      const result = await repository.findDueCards(dueDate);
+      const result = await repository.findDueCards(dueDate, "deck-123");
 
       expect(result).toEqual([]);
     });
@@ -166,7 +135,7 @@ describe("ProgressDynamoRepository", () => {
         Items: undefined,
       });
 
-      const result = await repository.findDueCards(dueDate);
+      const result = await repository.findDueCards(dueDate, "deck-123");
 
       expect(result).toEqual([]);
     });
@@ -199,11 +168,13 @@ describe("ProgressDynamoRepository", () => {
     it("should be able to find a progress by card and deck", async () => {
       const progress = new Progress(validProgressProps);
 
-      dynamoMock.on(GetItemCommand).resolves({
-        Item: marshall(progress, {
-          convertClassInstanceToMap: true,
-          removeUndefinedValues: true,
-        }),
+      dynamoMock.on(QueryCommand).resolves({
+        Items: [
+          marshall(progress, {
+            convertClassInstanceToMap: true,
+            removeUndefinedValues: true,
+          }),
+        ],
       });
 
       await repository.save(progress);
@@ -218,7 +189,9 @@ describe("ProgressDynamoRepository", () => {
     });
 
     it("should return null if the progress is not found", async () => {
-      dynamoMock.on(GetItemCommand).resolves({});
+      dynamoMock.on(QueryCommand).resolves({
+        Items: [],
+      });
 
       const result = await repository.findByCardAndDeck(
         validProgressProps.cardId,

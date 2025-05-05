@@ -21,7 +21,10 @@ describe("DeleteDeckValidator", () => {
     };
 
     const result = validator.validate(validRequest);
-    expect(result).toEqual(validRequest);
+    expect(result).toEqual({
+      id: validRequest.params.id,
+      userId: validRequest.user.id,
+    });
   });
 
   it("should throw ValidationError if id is not a valid uuid", () => {

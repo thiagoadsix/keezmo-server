@@ -5,19 +5,22 @@ import {
   GetItemCommand,
   PutItemCommand,
   QueryCommand,
-} from '@aws-sdk/client-dynamodb';
+} from "@aws-sdk/client-dynamodb";
 
-import { Card } from '@/domain/entities/card';
-import { CardDynamoSchema } from './schemas/card.schema';
-import { CardRepository } from '@/domain/interfaces/repositories';
+import { Card } from "@/domain/entities/card";
+import { CardDynamoSchema } from "./schemas/card.schema";
+import { CardRepository } from "@/domain/interfaces/repositories";
 
 export class CardDynamoRepository implements CardRepository {
   constructor(private readonly client: DynamoDBClient) {}
 
-  async findById(id: string): Promise<Card | null> {
+  async findByIdAndDeckId(id: string, deckId: string): Promise<Card | null> {
     const command = new GetItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id } },
+      Key: {
+        PK: { S: CardDynamoSchema.buildPK(deckId) },
+        SK: { S: CardDynamoSchema.buildSK(id) },
+      },
     });
 
     const result = await this.client.send(command);
@@ -32,16 +35,17 @@ export class CardDynamoRepository implements CardRepository {
   async findByDeckId(deckId: string): Promise<Card[]> {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      KeyConditionExpression: 'PK = :pk',
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
       ExpressionAttributeValues: {
-        ':pk': { S: CardDynamoSchema.buildPK(deckId) },
+        ":pk": { S: CardDynamoSchema.buildPK(deckId) },
+        ":sk": { S: "CARD#" },
       },
     });
 
     const result = await this.client.send(command);
 
     if (result.Items) {
-      return result.Items.map(item => CardDynamoSchema.fromDynamoItem(item));
+      return result.Items.map((item) => CardDynamoSchema.fromDynamoItem(item));
     }
 
     return [];
@@ -57,17 +61,20 @@ export class CardDynamoRepository implements CardRepository {
     await this.client.send(command);
   }
 
-  async deleteById(id: string): Promise<void> {
+  async deleteByIdAndDeckId(id: string, deckId: string): Promise<void> {
     const command = new DeleteItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
-      Key: { id: { S: id } },
+      Key: {
+        PK: { S: CardDynamoSchema.buildPK(deckId) },
+        SK: { S: CardDynamoSchema.buildSK(id) },
+      },
     });
 
     await this.client.send(command);
   }
 
   async deleteByIds(ids: string[]): Promise<void> {
-    const toDelete = ids.map(id => ({
+    const toDelete = ids.map((id) => ({
       DeleteRequest: {
         Key: { id: { S: id } },
       },
@@ -85,7 +92,7 @@ export class CardDynamoRepository implements CardRepository {
   }
 
   async saveBatch(cards: Card[]): Promise<void> {
-    const schema = cards.map(card => new CardDynamoSchema(card));
+    const schema = cards.map((card) => new CardDynamoSchema(card));
 
     const chunk = 25;
 
@@ -94,7 +101,11 @@ export class CardDynamoRepository implements CardRepository {
 
       const command = new BatchWriteItemCommand({
         RequestItems: {
-          [process.env.DECK_TABLE_NAME]: batch.map(schema => schema.toMarshall()),
+          [process.env.DECK_TABLE_NAME]: batch.map((schema) => ({
+            PutRequest: {
+              Item: schema.toMarshall(),
+            },
+          })),
         },
       });
 
