@@ -41,7 +41,7 @@ export class DeckDynamoSchema implements DeckDynamoItem {
     this.PK = DeckDynamoSchema.buildPK(this.userId);
     this.SK = DeckDynamoSchema.buildSK(this.id);
 
-    this.GSI1PK = DeckDynamoSchema.buildGSI1PK(this.id);
+    this.GSI1PK = DeckDynamoSchema.buildGSI1PK(this.userId);
     this.GSI1SK = DeckDynamoSchema.buildGSI1SK(this.studyMode);
   }
 

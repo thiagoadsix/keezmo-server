@@ -4,12 +4,12 @@ import { BaseValidator } from "@/presentation/controllers/base.validator";
 
 const findStudySessionsByUserSchema = z
   .object({
-    params: z.object({
-      userId: z.string().uuid("User ID must be a valid UUID"),
+    user: z.object({
+      id: z.string(),
     }),
   })
   .transform((data) => ({
-    userId: data.params.userId,
+    userId: data.user.id,
   }));
 
 export type FindStudySessionsByUserValidatorRequest = z.infer<

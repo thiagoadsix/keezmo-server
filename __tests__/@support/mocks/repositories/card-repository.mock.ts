@@ -9,6 +9,7 @@ type MockCardRepository = {
 export const mockCardRepository: MockCardRepository = {
   findByDeckId: vi.fn(),
   findByIdAndDeckId: vi.fn(),
+  findByDeckIds: vi.fn(),
   save: vi.fn(),
   deleteByIdAndDeckId: vi.fn(),
   deleteByIds: vi.fn(),

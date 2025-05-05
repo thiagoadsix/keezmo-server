@@ -14,6 +14,27 @@ import { CardRepository } from "@/domain/interfaces/repositories";
 export class CardDynamoRepository implements CardRepository {
   constructor(private readonly client: DynamoDBClient) {}
 
+  async findByDeckIds(deckIds: string[]): Promise<Card[]> {
+    const cards: Card[] = [];
+
+    for (const deckId of deckIds) {
+      const command = new QueryCommand({
+        TableName: process.env.DECK_TABLE_NAME,
+      KeyConditionExpression: "PK = :pk AND begins_with(SK, :sk)",
+      ExpressionAttributeValues: {
+        ":pk": { S: CardDynamoSchema.buildPK(deckId) },
+        ":sk": { S: "CARD#" },
+      },
+    });
+
+    const result = await this.client.send(command);
+
+    cards.push(...(result.Items?.map((item) => CardDynamoSchema.fromDynamoItem(item)) || []));
+    }
+
+    return cards;
+  }
+
   async findByIdAndDeckId(id: string, deckId: string): Promise<Card | null> {
     const command = new GetItemCommand({
       TableName: process.env.DECK_TABLE_NAME,
