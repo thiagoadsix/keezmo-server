@@ -9,26 +9,35 @@ import {
   validDeckProps,
   validDeckWithCardsProps,
 } from "__tests__/@support/fixtures/deck.fixtures";
+import { mockCardRepository } from "__tests__/@support/mocks/repositories/card-repository.mock";
 import { mockDeckRepository } from "__tests__/@support/mocks/repositories/deck-repository.mock";
 
+import { Card } from "@/domain/entities/card";
 import { Deck } from "@/domain/entities/deck";
 import { FindDecksByUserUseCase } from "@/domain/use-cases/deck/find-decks-by-user.usecase";
+import { validCardProps } from "__tests__/@support/fixtures/card.fixtures";
 
 describe("FindDecksByUserUseCase", () => {
   let useCase: FindDecksByUserUseCase;
   let mockDecks: Deck[];
+  let mockCards: Card[];
   const userId = "user-123";
 
   beforeEach(() => {
-    useCase = new FindDecksByUserUseCase(mockDeckRepository);
+    useCase = new FindDecksByUserUseCase(mockDeckRepository, mockCardRepository);
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
 
     const deck1 = new Deck(validDeckProps);
     const deck2 = new Deck(validDeckWithCardsProps);
 
+    const card1 = new Card(validCardProps);
+    const card2 = new Card(validCardProps);
+
     mockDecks = [deck1, deck2];
+    mockCards = [card1, card2];
     mockDeckRepository.findAllByUser.mockResolvedValue(mockDecks);
+    mockCardRepository.findByDeckIds.mockResolvedValue(mockCards);
 
     vi.clearAllMocks();
   });

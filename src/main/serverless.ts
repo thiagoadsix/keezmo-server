@@ -19,6 +19,7 @@ import initializeProgress from "@/main/endpoints/progress/initialize";
 import reviewCard from "@/main/endpoints/progress/review-card";
 
 import endStudySession from "@/main/endpoints/study-sessions/end-study-session";
+import findStudySessionsByUser from "@/main/endpoints/study-sessions/find-by-user";
 import startStudySession from "@/main/endpoints/study-sessions/start-study-session";
 
 const serverlessConfiguration: AWS = {
@@ -60,6 +61,7 @@ const serverlessConfiguration: AWS = {
 
     startStudySession,
     endStudySession,
+    findStudySessionsByUser,
   },
   package: { individually: true },
   custom: {

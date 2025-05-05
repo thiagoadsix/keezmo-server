@@ -81,6 +81,11 @@ export class Deck {
     this.updatedAt = new Date().toISOString();
   }
 
+  public addCards(cards: Card[]): void {
+    this.cards.push(...cards);
+    this.updatedAt = new Date().toISOString();
+  }
+
   public removeCard(cardId: string): void {
     this.cards = this.cards.filter((card) => card.id !== cardId);
     this.updatedAt = new Date().toISOString();

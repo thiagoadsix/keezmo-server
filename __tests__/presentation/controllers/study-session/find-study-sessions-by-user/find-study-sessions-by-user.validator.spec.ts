@@ -13,21 +13,21 @@ describe("FindStudySessionsByUserValidator", () => {
 
   it("should validate a valid find study sessions by user request", () => {
     const validRequest = {
-      params: {
-        userId: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
+      user: {
+        id: "3fa1adbb-6beb-4d46-813b-9ece825d39d4",
       },
     };
 
     const result = validator.validate(validRequest);
     expect(result).toEqual({
-      userId: validRequest.params.userId,
+      userId: validRequest.user.id,
     });
   });
 
   it("should throw ValidationError if userId is not a valid UUID", () => {
     const invalidRequest = {
-      params: {
-        userId: "invalid-uuid",
+      user: {
+        id: 1,
       },
     };
 
@@ -42,7 +42,7 @@ describe("FindStudySessionsByUserValidator", () => {
 
   it("should throw ValidationError when userId is missing", () => {
     const invalidRequest = {
-      params: {},
+      user: {},
     };
 
     expect(() => validator.validate(invalidRequest)).toThrow(ValidationError);
