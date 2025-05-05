@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/thiagoadsix/keezmo-server/compare/v3.0.0...v3.1.0) (2025-05-05)
+
+
+### Features
+
+* **core:** enhance FindDecksByUser use case to include cards by deck IDs, add findStudySessionsByUser endpoint ([f0f0f1f](https://github.com/thiagoadsix/keezmo-server/commit/f0f0f1f1827bbcb909c7fb0039819e0cef354775))
+
 # [3.0.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.4.0...v3.0.0) (2025-05-05)
 
 
