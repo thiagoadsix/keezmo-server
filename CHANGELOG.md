@@ -1,3 +1,59 @@
+# [3.0.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.4.0...v3.0.0) (2025-05-05)
+
+
+### Bug Fixes
+
+* **core:** make description field required in createDeckSchema ([36d42e0](https://github.com/thiagoadsix/keezmo-server/commit/36d42e0147743363a5cd0b010a6aec3642dfa6d6))
+* **core:** refine ease factor calculation for improved accuracy ([ee93ecc](https://github.com/thiagoadsix/keezmo-server/commit/ee93ecc30452c56e5b16e386469054c902c5e38b))
+* **core:** update CreateDeckValidator to use nested request structure and enhance validation logic ([676fe3e](https://github.com/thiagoadsix/keezmo-server/commit/676fe3e6a7a93ccbec93554e0f862a832c65b1d9))
+
+
+### Features
+
+* **config:** add serverless configuration for AWS Lambda with createDeck function ([d5d69d3](https://github.com/thiagoadsix/keezmo-server/commit/d5d69d37678fee925e5ee7a7d467f942337e8f4c))
+* **config:** add user property to APIGatewayProxyEventBase and create utility for resolving handler paths ([d9c6891](https://github.com/thiagoadsix/keezmo-server/commit/d9c6891304d098ac8935b497e958afbb37b940cf))
+* **core): feat(core:** enhance CreateCardValidator to transform input data structure for improved usability ([64791f2](https://github.com/thiagoadsix/keezmo-server/commit/64791f23f7953d208829080df901688d94756fe8))
+* **core:** add AWS Lambda adapter to convert events to controller interface and format responses ([e326f6d](https://github.com/thiagoadsix/keezmo-server/commit/e326f6da3ee39ae593de829e414c902a00c15a1c))
+* **core:** add factories for card use cases including create, delete, update, and find by deck ID ([44d38e2](https://github.com/thiagoadsix/keezmo-server/commit/44d38e2a939fad07b5f67bf2e243733272137a16))
+* **core:** add factories for progress usecases including find due cards, initialize progress, and review card ([698c19a](https://github.com/thiagoadsix/keezmo-server/commit/698c19ae5dfcc07846f14f6121c99fe215bf4149))
+* **core:** add factories for study session use cases including end, find by user, and start ([3ca83aa](https://github.com/thiagoadsix/keezmo-server/commit/3ca83aa4725ad0ac3df4c3c94772d4732b86366a))
+* **core:** add findCardsByDeckId endpoint with handler, validation, and user-specific access control ([f459497](https://github.com/thiagoadsix/keezmo-server/commit/f459497ccc858b510bf02695da6e92936768326c))
+* **core:** add FindCardsByDeckIdController factory and update validator to transform request structure ([5fd45f9](https://github.com/thiagoadsix/keezmo-server/commit/5fd45f95a1d212e79bb8a812a9bf11b396143c29))
+* **core:** add findDeckByIdAndUser endpoint with handler and serverless configuration ([0b82848](https://github.com/thiagoadsix/keezmo-server/commit/0b82848818b35b061ddc5f6f9cc83cb48efab1f2))
+* **core:** add findDecksByUser endpoint with handler and serverless configuration ([4ea9bc3](https://github.com/thiagoadsix/keezmo-server/commit/4ea9bc3eeaaaa36589b3b0b97d049fe819e72ce5))
+* **core:** add FindDecksByUser use case and controller factory, update validator to transform user ID ([a3cb2e3](https://github.com/thiagoadsix/keezmo-server/commit/a3cb2e3b48ac082b99f5d1fb3ae05e5007ad1296))
+* **core:** add findDeckStats endpoint with handler and serverless configuration ([f680e53](https://github.com/thiagoadsix/keezmo-server/commit/f680e530d3559a76c7fcf0615f37257b30e68f04))
+* **core:** add InitializeProgressController and validator with corresponding tests and factory ([9f62912](https://github.com/thiagoadsix/keezmo-server/commit/9f629124f82ab4a984ed47f414096ea0426a7c1b))
+* **core:** add ReviewCardController factory and update ReviewCardValidator to transform request structure ([99d57f0](https://github.com/thiagoadsix/keezmo-server/commit/99d57f04de6ba1159425a491e776cc207b847ab0))
+* **core:** add startStudySession endpoint with handler and serverless configuration ([c692872](https://github.com/thiagoadsix/keezmo-server/commit/c692872700af86c2ff649ea82526126d805e0d94))
+* **core:** add startStudySession endpoint with handler and serverless configuration ([74240ee](https://github.com/thiagoadsix/keezmo-server/commit/74240ee0b90df7991fbf9824791b78c007575787))
+* **core:** add updateDeck endpoint with handler and serverless configuration ([f0d192a](https://github.com/thiagoadsix/keezmo-server/commit/f0d192a551815bb833880d5de171303675ff8488))
+* **core:** enhance UpdateCardsValidator and controller factory to support new request structure ([5f2051c](https://github.com/thiagoadsix/keezmo-server/commit/5f2051ce58f793c670a2ea2d25137630f35ed3b5))
+* **core:** implement create deck endpoint with middleware for user authentication ([5a1275d](https://github.com/thiagoadsix/keezmo-server/commit/5a1275dd62209be8b8eb31b94e335c2271fc5340))
+* **core:** implement createCard endpoint with handler and serverless configuration ([8375c8e](https://github.com/thiagoadsix/keezmo-server/commit/8375c8e7dcc8d30d49e7f776f816fd22a1a7fa6f))
+* **core:** implement createCardsBatch endpoint with handler, validation, and serverless configuration ([87bbb17](https://github.com/thiagoadsix/keezmo-server/commit/87bbb1771cd8519550226a1cec2009031bc26758))
+* **core:** implement CreateCardsBatchController factory and enhance validator to transform request structure ([132301a](https://github.com/thiagoadsix/keezmo-server/commit/132301a1356e0d815c7818acefa80b7f1d4bc77d))
+* **core:** implement delete deck functionality with user-specific access control ([a7f0e38](https://github.com/thiagoadsix/keezmo-server/commit/a7f0e38f07e2946a2fdc9de6b589b83dc5b03ea4))
+* **core:** implement deleteCard endpoint with handler, update repository methods for card, progress deletion ([22f7463](https://github.com/thiagoadsix/keezmo-server/commit/22f74631f1c7c2105320c7fa20646346a8ca9287))
+* **core:** implement DeleteDeckValidator and factory for DeleteDeckController ([30177a8](https://github.com/thiagoadsix/keezmo-server/commit/30177a8b3d95e45b5a61a8b65e03d67b652357f1))
+* **core:** implement factories (repository \& usecase) for card, deck, progress, and study session ([9eb1958](https://github.com/thiagoadsix/keezmo-server/commit/9eb19584f8d5e64097c154962cd75c7b5b006fec))
+* **core:** implement findDueCards endpoint with handler, validation, and repository updates ([7a4512b](https://github.com/thiagoadsix/keezmo-server/commit/7a4512b9bd1cda61e3694ff73cee6c11291877bf))
+* **core:** implement FindDueCardsController factory and update validator to transform date format ([b1a003c](https://github.com/thiagoadsix/keezmo-server/commit/b1a003c897c87e9d0356d85e3e0c7bcf8262e15e))
+* **core:** implement FindStudySessionsByUserController factory, update validator to transform request structure ([6ad9a40](https://github.com/thiagoadsix/keezmo-server/commit/6ad9a40e6e90827fcb2a47936f8f069902189747))
+* **core:** implement initializeProgress endpoint with handler and serverless configuration ([c5709e1](https://github.com/thiagoadsix/keezmo-server/commit/c5709e178a561c55be3c75f374014e15721c1c7f))
+* **core:** implement reviewCard endpoint with handler and serverless configuration ([f851568](https://github.com/thiagoadsix/keezmo-server/commit/f8515680e852f860547eae33f3cd5f9cb08b5719))
+* **core:** implement updateCard endpoint with handler, validation, and user-specific access control ([c1e59e8](https://github.com/thiagoadsix/keezmo-server/commit/c1e59e8547e42b18c5de9737cddfb3e7d2fcbd48))
+* **core:** implement updateCardsBatch endpoint with handler, validation, and serverless configuration ([09332a8](https://github.com/thiagoadsix/keezmo-server/commit/09332a8f0c3d66be9b769e7028f05a4c6010306a))
+* **core:** update EndStudySessionValidator to transform request structure and add controller factory ([6c52568](https://github.com/thiagoadsix/keezmo-server/commit/6c52568fdff80db90d6b5ddc7375f1fba1b6291e))
+* **core:** update FindDeckStats use case and validator to consistently use 'id' instead of 'deckId' ([0982cfc](https://github.com/thiagoadsix/keezmo-server/commit/0982cfc6d59c5d18881f848f17bb315faaa7faa3))
+* **core:** update StartStudySessionValidator to transform request structure and add controller factory ([62dd75e](https://github.com/thiagoadsix/keezmo-server/commit/62dd75e7f4445f975c6004e31c4d781f9549ecb6))
+
+
+### BREAKING CHANGES
+
+* **core:** make ease factor be more precise
+* **core:** our entity require description, but our validation was set as optional
+
 # [2.4.0](https://github.com/thiagoadsix/keezmo-server/compare/v2.3.0...v2.4.0) (2025-05-03)
 
 
