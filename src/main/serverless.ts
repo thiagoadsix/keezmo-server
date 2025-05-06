@@ -5,6 +5,7 @@ import deleteDeck from "@/main/endpoints/decks/delete";
 import findDeckByIdAndUser from "@/main/endpoints/decks/find-by-id-and-user";
 import findDeckStats from "@/main/endpoints/decks/find-stats";
 import findDecksByUser from "@/main/endpoints/decks/find-by-user";
+import findDecksStats from "@/main/endpoints/decks/find-all-states";
 import updateDeck from "@/main/endpoints/decks/update";
 
 import createCard from "@/main/endpoints/cards/create";
@@ -46,6 +47,7 @@ const serverlessConfiguration: AWS = {
     findDeckByIdAndUser,
     findDeckStats,
     findDecksByUser,
+    findDecksStats,
     updateDeck,
 
     createCard,
