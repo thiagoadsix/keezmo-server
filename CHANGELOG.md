@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/thiagoadsix/keezmo-server/compare/v3.1.0...v3.2.0) (2025-05-06)
+
+
+### Features
+
+* **core:** implement FindDecksStats use case with controller, validation, and endpoint integration ([ebca72a](https://github.com/thiagoadsix/keezmo-server/commit/ebca72abed7c8dbd8cea1057811cbc4b187c7e44))
+
 # [3.1.0](https://github.com/thiagoadsix/keezmo-server/compare/v3.0.0...v3.1.0) (2025-05-05)
 
 
