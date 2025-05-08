@@ -35,9 +35,10 @@ export class StudySessionDynamoRepository implements StudySessionRepository {
     const command = new QueryCommand({
       TableName: process.env.DECK_TABLE_NAME,
       IndexName: "GSI1",
-      KeyConditionExpression: "GSI1PK = :gsi1pk",
+      KeyConditionExpression: "GSI1PK = :gsi1pk and begins_with(GSI1SK, :gsi1sk)",
       ExpressionAttributeValues: {
         ":gsi1pk": { S: StudySessionDynamoSchema.buildGSI1PK(userId) },
+        ":gsi1sk": { S: "STUDY_SESSION#STUDY_MODE#" },
       },
     });
 

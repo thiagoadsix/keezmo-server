@@ -67,7 +67,7 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
   }
 
   static buildGSI1SK(studyMode: StudyModeEnum) {
-    return `STUDY_MODE#${studyMode}`;
+    return `STUDY_SESSION#STUDY_MODE#${studyMode}`;
   }
 
   static buildGSI2PK(id: string) {
@@ -87,6 +87,7 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
   }
 
   static fromDynamoItem(item: Record<string, AttributeValue>): StudySession {
+    console.log("item", item);
     const studySession = unmarshall(item);
 
     return new StudySession({
