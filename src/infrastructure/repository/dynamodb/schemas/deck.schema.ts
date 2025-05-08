@@ -58,7 +58,7 @@ export class DeckDynamoSchema implements DeckDynamoItem {
   }
 
   static buildGSI1SK(studyMode: StudyModeEnum) {
-    return `STUDY_MODE#${studyMode}`;
+    return `DECK#STUDY_MODE#${studyMode}`;
   }
 
   toMarshall() {
