@@ -22,7 +22,7 @@ export class UpdateDeckUseCase {
 
   async execute(request: UpdateDeckRequest): Promise<UpdateDeckResponse> {
     console.log(
-      `Starting UpdateDeckUseCase for id: ${request.id}, userId: ${request.userId}`
+      `Starting UpdateDeckUseCase for id: ${request.id}, userId: ${request.userId}, data: ${JSON.stringify(request.data, null, 2)}`
     );
 
     const deck = await this.deckRepository.findByIdAndUserId(
