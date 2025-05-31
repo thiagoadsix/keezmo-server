@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/thiagoadsix/keezmo-server/compare/v3.2.0...v4.0.0) (2025-05-08)
+
+
+### Bug Fixes
+
+* **core:** update GSI1SK format and enhance query conditions for study sessions ([6e8d125](https://github.com/thiagoadsix/keezmo-server/commit/6e8d12543a26003706edeaaae3eda107aceb413e))
+
+
+### BREAKING CHANGES
+
+* **core:** we were retrieving mixed entities for the same GSI1SK/PK
+
 # [3.2.0](https://github.com/thiagoadsix/keezmo-server/compare/v3.1.0...v3.2.0) (2025-05-06)
 
 
