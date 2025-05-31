@@ -1,3 +1,10 @@
+# [4.1.0](https://github.com/thiagoadsix/keezmo-server/compare/v4.0.0...v4.1.0) (2025-05-31)
+
+
+### Features
+
+* **core:** make cards be possible to return with study sessions ([27163c4](https://github.com/thiagoadsix/keezmo-server/commit/27163c4bd8a5a066cd1e6352b2e412578e5b925c))
+
 # [4.0.0](https://github.com/thiagoadsix/keezmo-server/compare/v3.2.0...v4.0.0) (2025-05-08)
 
 
