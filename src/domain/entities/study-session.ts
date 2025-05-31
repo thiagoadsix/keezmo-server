@@ -4,6 +4,8 @@ import { StudySessionValidationError } from '@/domain/errors/study-session/study
 
 import { generateId } from '@/shared/utils/generate-id';
 
+import { Deck } from './deck';
+
 interface StudySessionProps {
   id?: string;
   deckId: string;
@@ -11,6 +13,7 @@ interface StudySessionProps {
   startTime: string;
   endTime?: string | null;
   studyMode: StudyModeEnum;
+  deck?: Deck;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -22,6 +25,7 @@ export class StudySession {
   public startTime: string;
   public endTime?: string | null;
   public studyMode: StudyModeEnum;
+  public deck?: Deck;
   public readonly createdAt: string;
   public updatedAt: string;
 
@@ -34,6 +38,7 @@ export class StudySession {
     this.startTime = props.startTime;
     this.endTime = props.endTime;
     this.studyMode = props.studyMode;
+    this.deck = props.deck;
 
     this.createdAt = props.createdAt ?? new Date().toISOString();
     this.updatedAt = props.updatedAt ?? this.createdAt;

@@ -1,6 +1,6 @@
+import { CardRepository, DeckRepository } from "@/domain/interfaces/repositories";
 import { Deck } from "@/domain/entities/deck";
 import { DeckNotFoundError } from "@/domain/errors/deck/deck-not-found-error";
-import { DeckRepository } from "@/domain/interfaces/repositories";
 
 interface FindDeckByIdAndUserRequest {
   id: string;
@@ -10,7 +10,10 @@ interface FindDeckByIdAndUserRequest {
 type FindDeckByIdAndUserResponse = Deck;
 
 export class FindDeckByIdAndUserUseCase {
-  constructor(private readonly deckRepository: DeckRepository) {}
+  constructor(
+    private readonly deckRepository: DeckRepository,
+    private readonly cardRepository: CardRepository
+  ) {}
 
   async execute(
     request: FindDeckByIdAndUserRequest
@@ -30,6 +33,10 @@ export class FindDeckByIdAndUserUseCase {
       );
       throw new DeckNotFoundError(request.id, request.userId);
     }
+
+    const cards = await this.cardRepository.findByDeckId(request.id);
+
+    deck.addCards(cards);
 
     console.log(`Found deck: ${deck.title} with ${deck.cards.length} cards`);
     return deck;

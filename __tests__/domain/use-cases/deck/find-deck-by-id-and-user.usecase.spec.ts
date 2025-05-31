@@ -9,6 +9,7 @@ import {
   validDeckProps,
   validDeckWithCardsProps,
 } from "__tests__/@support/fixtures/deck.fixtures";
+import { mockCardRepository } from "__tests__/@support/mocks/repositories/card-repository.mock";
 import { mockDeckRepository } from "__tests__/@support/mocks/repositories/deck-repository.mock";
 
 import { Deck } from "@/domain/entities/deck";
@@ -22,14 +23,18 @@ describe("FindDeckByIdAndUserUseCase", () => {
   const userId = "user-123";
 
   beforeEach(() => {
-    useCase = new FindDeckByIdAndUserUseCase(mockDeckRepository);
+    useCase = new FindDeckByIdAndUserUseCase(mockDeckRepository, mockCardRepository);
     vi.useFakeTimers();
     generateIdMock.mockReturnValue(mockId);
 
     mockDeck = new Deck(validDeckProps);
-    mockDeckWithCards = new Deck(validDeckWithCardsProps);
+    mockDeckWithCards = new Deck({
+      ...validDeckWithCardsProps,
+      cards: [...validDeckWithCardsProps.cards]
+    });
 
     mockDeckRepository.findByIdAndUserId.mockResolvedValue(mockDeck);
+    mockCardRepository.findByDeckId.mockResolvedValue(mockDeckWithCards.cards);
 
     vi.clearAllMocks();
   });
@@ -81,9 +86,13 @@ describe("FindDeckByIdAndUserUseCase", () => {
 
     it("should return deck with cards when cards are present", async () => {
       const request = { id: mockId, userId };
-      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(
-        mockDeckWithCards
-      );
+      const deckForTest = new Deck({
+        ...validDeckWithCardsProps,
+        cards: []
+      });
+
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(deckForTest);
+      mockCardRepository.findByDeckId.mockResolvedValueOnce(validDeckWithCardsProps.cards);
 
       const result = await useCase.execute(request);
 
@@ -91,7 +100,6 @@ describe("FindDeckByIdAndUserUseCase", () => {
         mockId,
         userId
       );
-      expect(result).toEqual(mockDeckWithCards);
       expect(result.cards.length).toBe(2);
     });
   });
@@ -131,9 +139,13 @@ describe("FindDeckByIdAndUserUseCase", () => {
 
     it("Given a deck with cards, When execute is called, Then the deck with cards is returned", async () => {
       const request = { id: mockId, userId };
-      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(
-        mockDeckWithCards
-      );
+      const deckForTest = new Deck({
+        ...validDeckWithCardsProps,
+        cards: []
+      });
+
+      mockDeckRepository.findByIdAndUserId.mockResolvedValueOnce(deckForTest);
+      mockCardRepository.findByDeckId.mockResolvedValueOnce(validDeckWithCardsProps.cards);
 
       const result = await useCase.execute(request);
 

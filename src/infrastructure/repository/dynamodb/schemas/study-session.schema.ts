@@ -87,7 +87,6 @@ export class StudySessionDynamoSchema implements StudySessionDynamoItem {
   }
 
   static fromDynamoItem(item: Record<string, AttributeValue>): StudySession {
-    console.log("item", item);
     const studySession = unmarshall(item);
 
     return new StudySession({
